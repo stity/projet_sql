@@ -27,7 +27,7 @@ class DB {
     }
 }
 
-var $db = new DB();
-$db->close();
+//var $db = new DB();
+//$db->close();
 
 ?>
