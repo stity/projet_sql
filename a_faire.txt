@@ -1,0 +1,24 @@
+Users :
+    - Inscription utilisateur (pas admin)
+    - Édition profil (admin et pas admin)
+    - Suppression utilisateur (admin si suppression compte)
+    - Raccourci vers facturation
+    - Deux grades d'utilisateurs
+    
+Facturation :
+    - Récupérer forfait
+    - Récupérer conso (sms, mms, internet et appels)
+    - Générer PDF
+    - Récupérer infos client
+    
+Formules :
+    - Récupération liste des formules
+    - Commande d'une formule
+    - Enregistrement formule à l'achat
+    - Gérer les promotions
+    
+Consommation :
+    - Génération des consommations (aléat - admin)
+    
+Téléphone :
+    - Créer les téléphones (admin)

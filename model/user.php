@@ -1,6 +1,5 @@
 <?php
 
-
 class User {
     var $name;
     var $mail;
