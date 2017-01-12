@@ -10,8 +10,20 @@ CREATE PROCEDURE addUser (
     IN mdp VARCHAR(255),
     INOUT id INT)
     BEGIN
-        INSERT INTO utilisateur (nom, mail, adresse, mot_de_passe) VALUES (n, m, adr, mdp);
-        SET id = (SELECT idutilisateur FROM utilisateur WHERE nom=n AND mail=m AND adresse=adr AND mot_de_passe=mdp ORDER BY idutilisateur DESC LIMIT 1);
+        DECLARE existsAlready BOOLEAN;
+        START TRANSACTION;
+        IF EXISTS (SELECT * FROM utilisateur WHERE mail=m) THEN
+			/* get id of existing record with same mail */
+			SET id = (SELECT idutilisateur FROM utilisateur WHERE mail=m ORDER BY idutilisateur DESC LIMIT 1);
+			/* update record */
+			UPDATE utilisateur SET nom=n, mail=m, adresse=adr, mot_de_passe=mdp WHERE idutilisateur=id;
+		ELSE
+			/* insert new user */
+        	INSERT INTO utilisateur (nom, mail, adresse, mot_de_passe) VALUES (n, m, adr, mdp);
+			/* get generated id */
+        	SET id = (SELECT idutilisateur FROM utilisateur WHERE nom=n AND mail=m AND adresse=adr AND mot_de_passe=mdp ORDER BY idutilisateur DESC LIMIT 1);
+		END IF;
+        COMMIT;
     END|
 
 /* function example */
