@@ -1,5 +1,6 @@
 <?php
 
+    require 'database/DB.php';
     require 'controleur/users_controller.php';
     require 'controleur/bills_controller.php';
     require 'controleur/phones_controller.php';
@@ -35,7 +36,9 @@
         }
     }
     catch (Exception $e) {
-        include('vue/main.html');
+        include('./vue/main.html');
         erreur($e->getMessage());
     }
 ?>
+
+<script src="./assets/scripts/jquery.min.js"></script>

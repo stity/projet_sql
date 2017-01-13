@@ -89,7 +89,7 @@ a.text-content:hover{
 }
 
 #inner_content{
-	position: absolute;
+	display: block;
 	margin-left: 230px;
 	top: 5px;
 	width: calc(100% - 250px);
@@ -168,8 +168,9 @@ a.text-content:hover{
 }
 
 .form-label{
-	display: inline-block;
+    display: table-cell;
 	margin-right: 20px;
+    min-width: 100px;
 }
 
 .main-label{
@@ -201,14 +202,10 @@ select{
 }
 
 input{
-	width: 20px;
-	margin-bottom: 10px;
-}
-
-input[type='number']{
-	vertical-align: top;
-	height: 20px;
+    display: table-cell;
+    vertical-align: top;
 	width: 100px;
+	margin-bottom: 10px;
 }
 
 input[type='number'] {
@@ -357,4 +354,114 @@ input::-webkit-inner-spin-button {
    float:right;
    display: inline-block;
    width:50%;
+}
+
+.modal {
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    border-radius: 10pt;
+    position: relative;
+    background-color: #fefefe;
+    padding: 10pt 10pt 17pt 10pt;
+    width: auto; /* Could be more or less, depending on screen size */
+    max-width: 50%;
+    margin: auto;
+    top: 50%;
+    transform: translate(0,-50%);
+}
+
+.modal-title {
+    margin: 0pt;
+}
+
+.modal-row{
+    margin-bottom: 20pt;
+}
+
+.modal-button{
+    position: absolute;
+    right: 15pt;
+    margin-top: -10pt;
+}
+
+.modal-ok{
+    display: inline-block;
+    position: fixed;
+    background-color: green;
+}
+
+.modal-cancel{
+    display: inline-block;
+    background-color: darkred;
+    margin-right: 100px;
+}
+
+.modal-button{
+	border: 0px;
+	padding: 5px 10px;
+	color: white;
+    font-size: 12pt;
+    min-width: 75px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 75%;
+    margin: auto;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){
+    background-color: #f2f2f2
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.icon-remove{
+    color: red !important;
+}
+
+.notif-pb{
+    padding-left: 10pt;
+    width: 90%;
+    background-color: darksalmon;
+    border: 1px solid red;
+}
+
+.notif-ok{
+    padding-left: 10pt;
+    width: 90%;
+    background-color: azure;
+    border: 1px solid blue;
+}
+
+.notif-content{
+    width: 85%;
+    display: inline;
+    color: inherit;
+}
+
+.notif-close{
+    width: 15%;
+    display: inline;
+    color: inherit;
 }

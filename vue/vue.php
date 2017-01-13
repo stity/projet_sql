@@ -7,7 +7,8 @@
         private $file;                                  // Fichier principal de la vue
         private $__path_vues = 'vue/';                  // Chemin vers les vues
         private $__main_layout = 'vue/main.html.php';
-        public function display($vue, $title, $subtitle) {
+
+        public function display($vue, $title, $subtitle, $controleur) {
             // Chercher le nom de fichier en fonction de la vue demandée.
             include ($this->__main_layout);
             if($vue != 'default'){

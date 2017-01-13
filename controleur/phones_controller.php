@@ -3,7 +3,7 @@
         var $user;
 
         function __construct($vue)  {
-            $vue->display('phones', 'Les téléphones', 'Liste des téléphones');
+            $vue->display('phones', 'Les téléphones', 'Liste des téléphones', $this);
         }
     }
 ?>

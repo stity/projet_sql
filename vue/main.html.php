@@ -54,7 +54,6 @@ var _current_subsection = '';
 // clic sur une sous-section.
 $('.sidebar-with-children').on('click', function(e){
 	var section_name = this.getAttribute('data-section-name');
-    console.log(section_name)
 	var associated_sections = $('.sidebar-subpart-container[data-section="' + section_name + '"]');
 	if(associated_sections.css('display') == 'none' || associated_sections.css('display') == ''){
 		$(this).find('.icon')[0].className = 'icon fa fa-chevron-up';
