@@ -170,7 +170,7 @@ a.text-content:hover{
 .form-label{
     display: table-cell;
 	margin-right: 20px;
-    min-width: 100px;
+    min-width: 110px;
 }
 
 .main-label{
@@ -204,7 +204,8 @@ select{
 input{
     display: table-cell;
     vertical-align: top;
-	width: 100px;
+	width: 110px;
+    margin-right: 10px;
 	margin-bottom: 10px;
 }
 
@@ -268,7 +269,7 @@ input::-webkit-inner-spin-button {
 	margin-left: 5px;
 }
 
-#languages{
+#user-login{
 	position: absolute;
 	bottom: 5px;
 	width: 100%;
@@ -276,13 +277,13 @@ input::-webkit-inner-spin-button {
 	text-align: center;
 }
 
-.language-choice{
+.user-login-choice{
 	display: inline-block;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
-.language-current{
+.user-login-current{
 	background-color: rgb(13,186,27);
 	border-radius: 25%;
 }
@@ -416,6 +417,17 @@ input::-webkit-inner-spin-button {
     text-align: center;
 }
 
+.login-button{
+    background-color: green;
+	border: 0px;
+	padding: 5px 10px;
+	color: white;
+    font-size: 12pt;
+    min-width: 75px;
+    max-width: 80px;
+    text-align: center;
+}
+
 table {
     border-collapse: collapse;
     width: 75%;
@@ -464,4 +476,10 @@ th {
     width: 15%;
     display: inline;
     color: inherit;
+}
+
+.radio-btn{
+    width: auto;
+    vertical-align: middle;
+    display: inline;
 }

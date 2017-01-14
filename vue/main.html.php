@@ -28,10 +28,14 @@
                 <div id="main_content">
                 </div>
             </div>
+            <div data-load="login">
+                <a href="<?= "index.php?vue=login" ?>" class="user-login-choice">
+                    <i class="icon fa fa-user"></i>
+                </a>
+            </div>
         </div>
 	</body>
 </html>
-
 <script type="text/javascript">
 
 /*

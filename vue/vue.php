@@ -37,6 +37,9 @@
                 case 'my_products':
                     return 'my_products.html.php';
                     break;
+                case 'login':
+                    return 'login.html.php';
+                    break;
             }
         }
 

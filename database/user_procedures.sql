@@ -17,6 +17,8 @@ CREATE PROCEDURE deleteUser (
         COMMIT;
     END|
 
+DROP PROCEDURE IF EXISTS checkPassword|
+
 CREATE PROCEDURE checkPassword (
     IN mdp VARCHAR(255),
     IN email VARCHAR(255),

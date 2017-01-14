@@ -2,8 +2,14 @@
     class UsersController {
         var $user;
 
-        function __construct($vue)  {
-            $vue->display('users', 'Les utilisateurs', 'Liste des utilisateurs', $this);
+        function __construct($vue, $log_in, $login_level)  {
+            if($log_in && $login_level){
+                $vue->display('users', 'Les utilisateurs', 'Liste des utilisateurs', $this);
+            } else if($log_in) {
+                $vue->display('users', 'Votre compte', 'Caractéristiques du compte', $this);
+            } else {
+                $vue->display('users', '', '', $this);
+            }
         }
 
         function get_all_users() {
@@ -13,13 +19,31 @@
             return $result;
         }
 
-        function create_new_user($nom, $mail, $adress){
+        function create_new_user($nom, $mail, $adress, $is_admin){
             try {
                 $db = new DB();
                 $nom = $db->escape_var($nom);
                 $mail = $db->escape_var($mail);
                 $adress = $db->escape_var($adress);
-                $sql = "CALL addUser('".$nom."', '".$mail."', '".$adress."', '".$nom."0000', @id);";
+                $is_admin = $db->escape_var($is_admin);
+                $is_admin = ($is_admin == 'oui' ? 1 : 0);
+                $sql = "CALL addUser('".$nom."', '".$mail."', '".$adress."', '".$nom."0000', '".$is_admin."', @id);";
+                $result = $db->execute($sql);
+            } catch (Exception $e) {
+                return $result = 'error';
+            }
+        }
+
+        function update_user($nom, $mail, $adresse, $mdp, $is_admin){
+            try {
+                $db = new DB();
+                $nom = $db->escape_var($nom);
+                $mail = $db->escape_var($mail);
+                $adresse = $db->escape_var($adresse);
+                $mdp = $db->escape_var($mdp);
+                $is_admin = $db->escape_var($is_admin);
+                $is_admin = ($is_admin == 'oui' ? 1 : 0);
+                $sql = "CALL addUser('".$nom."', '".$mail."', '".$adresse."', '".$mdp."', '".$is_admin."', @id);";
                 $result = $db->execute($sql);
             } catch (Exception $e) {
                 return $result = 'error';

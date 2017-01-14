@@ -1,4 +1,8 @@
 <?php
+    session_start();
+?>
+
+<?php
 
     require 'database/DB.php';
     require 'controleur/users_controller.php';
@@ -6,6 +10,7 @@
     require 'controleur/phones_controller.php';
     require 'controleur/products_controller.php';
     require 'controleur/my_products_controller.php';
+    require 'controleur/login_controller.php';
     require 'vue/vue.php';
 
     $pages = array("users", "bills", "phones", "products");
@@ -15,19 +20,22 @@
         if (isset($_GET['vue'])){
             switch($_GET['vue']){
                 case 'users':
-                    $controleur = new UsersController($vue);
+                    $controleur = new UsersController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
                     break;
                 case 'bills':
-                    $controleur = new BillsController($vue);
+                    $controleur = new BillsController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
                     break;
                 case 'phones':
-                    $controleur = new PhonesController($vue);
+                    $controleur = new PhonesController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
                     break;
                 case 'products':
-                    $controleur = new ProductsController($vue);
+                    $controleur = new ProductsController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
                     break;
                 case 'my_products':
-                    $controleur = new MyProductsController($vue);
+                    $controleur = new MyProductsController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
+                    break;
+                case 'login':
+                    $controleur = new LoginController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
                     break;
             }
         }
@@ -36,8 +44,8 @@
         }
     }
     catch (Exception $e) {
-        include('./vue/main.html');
-        erreur($e->getMessage());
+        include('./vue/main.html.php');
+        //erreur($e->getMessage());
     }
 ?>
 
