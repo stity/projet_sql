@@ -12,9 +12,11 @@
 	</head>
 	<body>
 		<div id="sidebar">
-            <div data-load="login" style="text-align: center;margin-top: 12px;font-size: 18pt">
-                <a href="<?= "index.php?vue=login" ?>" class="user-login-choice">
-                    <i class="icon fa fa-user" style="color: <?php echo $_SESSION['log_in'] ? 'greenyellow' : 'crimson' ?>"></i>
+            <div data-load="login" style="text-align: center; margin-top: 12px; color:white;">
+                <a style="color:white; text-decoration:none; text-align:center" href="<?= "index.php?vue=login" ?>" class="user-login-choice">
+                    <i class="icon fa fa-user" style="float: inherit; width:50%; margin: 0 auto; font-size:18pt; color: <?php echo $_SESSION['log_in'] ? 'greenyellow' : 'crimson' ?>"></i>
+                    <br>
+                    <?php echo $_SESSION['log_in'] ? $_SESSION['usr_mail'] : ''?>
                 </a>
             </div>
             <hr style="height:3pt; background-color: green; border:green;"/>
@@ -48,14 +50,16 @@
                     Les téléphones
                 </a>
             </div>
-			<div class="sidebar-part sidebar-with-children" data-load="products_all" data-section-name="products_all">
+
+            <div class="sidebar-part sidebar-with-children" data-load="products_all" data-section-name="products_all">
                 <div class="text-content">Abonnements</div>
                 <i class="icon fa fa-chevron-down"></i>
             </div>
-			<div class="sidebar-subpart-container" data-section="products_all">
-				<div class="sidebar-subpart <?= $vue=="my_products" ? "selected" : "" ?>" data-load="my_products"><a href="<?= "index.php?vue=my_products" ?>" class="text-content">Mes abonnements</a></div>
-				<div class="sidebar-subpart <?= $vue=="products" ? "selected" : "" ?>" data-load="products"><a href="<?= "index.php?vue=products" ?>" class="text-content">Nouvel abonnement</a></div>
-		    </div>
+            <div class="sidebar-subpart-container" data-section="products_all">
+                <?php if($_SESSION['login_level'] != 'admin' && $_SESSION['log_in']) { ?> <div class="sidebar-subpart <?= $vue=="my_products" ? "selected" : "" ?>" data-load="my_products"><a href="<?= "index.php?vue=my_products" ?>" class="text-content">Mes abonnements</a></div> <?php } ?>
+                <div class="sidebar-subpart <?= $vue=="foreign_products" ? "selected" : "" ?>" data-load="foreign_products"><a href="<?= "index.php?vue=foreign_products" ?>" class="text-content">Vers l'étranger</a></div>
+                <div class="sidebar-subpart <?= $vue=="products" ? "selected" : "" ?>" data-load="products"><a href="<?= "index.php?vue=products" ?>" class="text-content"><?php echo ($_SESSION['login_level'] == 'admin') ? 'Les' : 'Nouvel' ?> abonnement</a></div>
+            </div>
         </div>
 
         <?php

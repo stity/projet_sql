@@ -1,9 +1,9 @@
 Users :
     - Inscription utilisateur (pas admin)
-    - Édition profil (admin et pas admin)
-    - Suppression utilisateur (admin si suppression compte)
+    - Édition profil (admin et pas admin)                    [xxxx]
+    - Suppression utilisateur (admin si suppression compte)  [xxxx]
     - Raccourci vers facturation
-    - Deux grades d'utilisateurs
+    - Deux grades d'utilisateurs                             [xxxx]
     
 Facturation :
     - Récupérer forfait
@@ -21,4 +21,4 @@ Consommation :
     - Génération des consommations (aléat - admin)
     
 Téléphone :
-    - Créer les téléphones (admin)
+    - Créer les téléphones (admin)                           [xxxx]

@@ -230,6 +230,30 @@ CREATE TABLE IF NOT EXISTS `forfait_etranger_plage_horaire` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `forfait_forfait_etranger`
+--
+
+CREATE TABLE IF NOT EXISTS `formule_forfait_etranger` (
+  `formule` int(11) DEFAULT NULL,
+  `forfait_etranger` int(11) DEFAULT NULL,
+  KEY `formule_forfait_etranger_idx` (`formule`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `forfait_telephone`
+--
+
+CREATE TABLE IF NOT EXISTS `formule_telephone` (
+  `formule` int(11) DEFAULT NULL,
+  `telephone` int(11) DEFAULT NULL,
+  KEY `formule_telephone_idx` (`formule`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `formule`
 --
 

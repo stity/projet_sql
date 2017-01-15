@@ -26,7 +26,7 @@
 
             <table style="margin-top:10pt;">
                 <tr>
-                    <th>Marque</th> <th>Modèle</th> <th>Prix</th> <th>RAM</th> <th style="text-align:center">Visuel</th> <?php ($_SESSION['login_level'] == 'admin') ? '<th></th>' : '' ?>
+                    <th>Marque</th> <th>Modèle</th> <th>Prix</th> <th>RAM</th> <th style="text-align:center">Visuel</th> <?php echo ($_SESSION['login_level'] == 'admin') ? '<th></th>' : '' ?>
                 </tr>
                     <?php
                         $result = $controleur->get_all_phones();

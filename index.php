@@ -14,6 +14,7 @@
     require 'controleur/phones_controller.php';
     require 'controleur/products_controller.php';
     require 'controleur/my_products_controller.php';
+    require 'controleur/foreign_products_controller.php';
     require 'controleur/login_controller.php';
     require 'vue/vue.php';
 
@@ -38,13 +39,16 @@
                 case 'my_products':
                     $controleur = new MyProductsController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
                     break;
+                case 'foreign_products':
+                    $controleur = new ForeignProductsController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
+                    break;
                 case 'login':
                     $controleur = new LoginController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
                     break;
             }
         }
         else {
-            $vue -> display('default', 'Ma comagnie de téléphone', 'Bienvenue', null);
+            $vue -> display('default', 'Ma compagnie de téléphone', 'Bienvenue', null);
         }
     }
     catch (Exception $e) {
