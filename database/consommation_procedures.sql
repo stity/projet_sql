@@ -1,4 +1,4 @@
-DELIMITER |
+    DELIMITER |
 
 /* Consommation */
 DROP PROCEDURE IF EXISTS addConso|

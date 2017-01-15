@@ -1,5 +1,9 @@
 <?php
     session_start();
+    if(!array_key_exists('log_in', $_SESSION)){
+        $_SESSION['log_in'] = false;
+        $_SESSION['login_level'] = '';
+    }
 ?>
 
 <?php
@@ -40,7 +44,7 @@
             }
         }
         else {
-            $vue -> display('default', 'Ma comagnie de téléphone', 'Bienvenue');
+            $vue -> display('default', 'Ma comagnie de téléphone', 'Bienvenue', null);
         }
     }
     catch (Exception $e) {

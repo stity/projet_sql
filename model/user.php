@@ -33,6 +33,7 @@ class User {
     }
 
     function deleteFromDB () {
+
     }
 }
 
