@@ -309,13 +309,6 @@ input::-webkit-inner-spin-button {
 	margin-left: 5%;
 }
 
-.fa-beer{
-	color: black;
-	margin-right: 10px;
-	float: left;
-	color: rgb(0,82,148);
-}
-
 #all-recycling-methods,
 #all-ressources{
 	margin-left: 5%;
@@ -483,4 +476,8 @@ th {
     width: auto;
     vertical-align: middle;
     display: inline;
+}
+
+ul {
+    list-style: none;
 }

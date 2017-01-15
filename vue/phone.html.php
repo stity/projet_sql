@@ -26,7 +26,7 @@
 
             <table style="margin-top:10pt;">
                 <tr>
-                    <th>Marque</th> <th>Modèle</th> <th>Prix</th> <th>RAM</th> <th style="text-align:center">Visuel</th> <th></th>
+                    <th>Marque</th> <th>Modèle</th> <th>Prix</th> <th>RAM</th> <th style="text-align:center">Visuel</th> <?php ($_SESSION['login_level'] == 'admin') ? '<th></th>' : '' ?>
                 </tr>
                     <?php
                         $result = $controleur->get_all_phones();
@@ -37,25 +37,38 @@
                         <td><?php echo $row['modele']?></td>
                         <td><?php echo $row['prix'] ?>€</td>
                         <td><?php echo $row['ram']?></td>
-                        <td style="text-align:center"><img class="image-details" style="height:150px" src="<?php echo $row['photo_url']?>"></td>
-                        <td>
-                            <div>
-                                <form style="display:inline" action="<?php $_PHP_SELF ?>" method="post">
-                                    <input type="hidden" name="form_name" value="form_del_phone"/>
-                                    <input type="hidden" name="id" value="<?php echo $row['idtelephone'] ?>"/>
-                                    <i class="icon fa fa-remove icon-remove"></i>
-                                </form>
-                                <i style="margin-left:5px; color:green" class="icon fa fa-edit icon-edit" data-data="<?php echo htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8') ?>"></i>
-                            </div>
-                        </td>
+                        <td style="text-align:center"><img data-data="<?php echo htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8') ?>" class="image-details" style="height:150px" src="<?php echo $row['photo_url']?>"></td>
+                        <?php
+                            if ($_SESSION['login_level'] == 'admin') {
+                        ?>
+                            <td>
+                                <div>
+                                    <form style="display:inline" action="<?php $_PHP_SELF ?>" method="post">
+                                        <input type="hidden" name="form_name" value="form_del_phone"/>
+                                        <input type="hidden" name="id" value="<?php echo $row['idtelephone'] ?>"/>
+                                        <i class="icon fa fa-remove icon-remove"></i>
+                                    </form>
+                                    <i style="margin-left:5px; color:green" class="icon fa fa-edit icon-edit" data-data="<?php echo htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8') ?>"></i>
+                                </div>
+                            </td>
+                        <?php
+                            }
+                        ?>
                     </tr>
                     <?php
                         }
                     ?>
             </table>
-            <div id="new_phone" class="next-button quest-button">
-                Nouvel appareil
-            </div>
+
+            <?php
+                if($_SESSION['login_level'] == 'admin') {
+            ?>
+                <div id="new_phone" class="next-button quest-button">
+                    Nouvel appareil
+                </div>
+            <?php
+                }
+            ?>
         </div>
 
         <script type="text/javascript">
@@ -78,7 +91,22 @@
             }, 'reset');
 
             $('.image-details').on('click', function(){
-                create_more_details_modal("salut", "Détails du xxx", "phone");
+                data = JSON.parse(this.dataset.data);
+                content = "<div style='display:table-cell; vertical-align:middle;'><img style='height:150px' src='" + data.photo_url + "'></div>" +
+                "<div style='display:table-cell;'><ul>"+
+                    "<li>Prix : " + data.prix + "€</li>" +
+                    "<li>Écran : " + data.ecran + "</li>" +
+                    "<li>Appareil photo : " + data.appareil_photo + "</li>" +
+                    "<li>Vidéo numérique : " + data.video_numerique + "</li>" +
+                    "<li>Internet : " + data.capacite_internet + "</li>" +
+                    "<li>RAM : " + data.ram + "</li>" +
+                    "<li>Stockage : " + data.stockage + "</li>" +
+                    "<li>Carte SD : " + (data.carte_sd == 1 ? 'Oui' : 'Non') + "</li>" +
+                    "<li>Double SIM : " + (data.double_sim == 1 ? 'Oui' : 'Non') + "</li>" +
+                    "<li>TV : " + (data.tv == 1 ? 'Oui' : 'Non') + "</li>" +
+                "</ul></div>";
+
+                create_more_details_modal(content, "Détails du " + data.marque + ' ' + data.modele, "phone");
             });
 
             /* Pour la suppression d'un téléphone */
