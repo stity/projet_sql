@@ -52,5 +52,3 @@
         //erreur($e->getMessage());
     }
 ?>
-
-<script src="./assets/scripts/jquery.min.js"></script>

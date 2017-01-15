@@ -7,7 +7,7 @@
 	<body>
         <div id="inner_content">
             <div id="main_header"><?= $title ?></div>
-            <div id="sub_header"><?= $subtitle ?></div>
+            <div id="main_subheader"><?= $subtitle ?></div>
         </div>
     </body>
 </html>

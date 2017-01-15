@@ -8,12 +8,34 @@
 		<link rel="stylesheet" type="text/css" href="assets/styles/layout.css">
 		<link rel="stylesheet" href="assets/styles/font-awesome.min.css">
 		<script src="assets/scripts/jquery.min.js"></script>
+        <script src="./assets/scripts/common_scripts.js"></script>
 	</head>
 	<body>
 		<div id="sidebar">
-			<div class="sidebar-part" data-load="accueil"><div class="text-content">Accueil</div></div>
-			<div class="sidebar-part <?= $vue=="users" ? "selected" : "" ?>" data-load="users"><a href="<?= "index.php?vue=users" ?>" class="text-content">Utilisateur</a></div>
-			<div class="sidebar-part <?= $vue=="bills" ? "selected" : "" ?>" data-load="bills"><a href="<?= "index.php?vue=bills" ?>" class="text-content">Mes factures</a></div>
+			<div class="sidebar-part" data-load="accueil">
+                <div class="text-content">
+                    <a href="index.php" class="text-content">
+                        Accueil
+                    </a>
+                </div>
+            </div>
+            <?php
+                if($_SESSION['log_in']) {
+            ?>
+                <div class="sidebar-part <?= $vue=="users" ? "selected" : "" ?>" data-load="users">
+                    <a href="<?= "index.php?vue=users" ?>" class="text-content">
+                        <?php echo ($_SESSION['login_level'] == 'admin') ? 'Les clients' : 'Mon compte'; ?>
+                    </a>
+                </div>
+
+                <div class="sidebar-part <?= $vue=="bills" ? "selected" : "" ?>" data-load="bills">
+                    <a href="<?= "index.php?vue=bills" ?>" class="text-content">
+                        <?php echo ($_SESSION['login_level'] != 'admin') ? 'Mes' : 'Les' ?> factures
+                    </a>
+                </div>
+            <?php
+                }
+            ?>
 			<div class="sidebar-part sidebar-with-children" data-load="products_all" data-section-name="products_all">
                 <div class="text-content">Abonnements</div>
                 <i class="icon fa fa-chevron-down"></i>
@@ -22,18 +44,26 @@
 				<div class="sidebar-subpart <?= $vue=="my_products" ? "selected" : "" ?>" data-load="my_products"><a href="<?= "index.php?vue=my_products" ?>" class="text-content">Mes abonnements</a></div>
 				<div class="sidebar-subpart <?= $vue=="products" ? "selected" : "" ?>" data-load="products"><a href="<?= "index.php?vue=products" ?>" class="text-content">Nouvel abonnement</a></div>
 		    </div>
-            <div id="inner_content">
-                <div id="main_header"></div>
-                <div id="main_subheader"></div>
-                <div id="main_content">
-                </div>
-            </div>
             <div data-load="login">
                 <a href="<?= "index.php?vue=login" ?>" class="user-login-choice">
                     <i class="icon fa fa-user"></i>
                 </a>
             </div>
         </div>
+
+        <?php
+            if (!isset($_GET['vue'])){
+        ?>
+        <div id="inner_content">
+            <div id="main_header"><?php echo $title ?></div>
+            <div id="main_subheader"><?php echo $subtitle ?></div>
+            <div id="main_content">
+            </div>
+        </div>
+        <?php
+             }
+        ?>
+
 	</body>
 </html>
 <script type="text/javascript">

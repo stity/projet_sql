@@ -13,6 +13,7 @@
                     } else if($_POST['form_name'] == 'form_logout'){
                         $controleur->logout_user();
                     }
+                    header('Location: ./index.php');
                 }
             ?>
             <div id="main_header"><?= $controleur->title ?></div>

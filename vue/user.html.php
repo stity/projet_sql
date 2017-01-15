@@ -7,7 +7,7 @@
 	<body>
         <div id="inner_content">
         <div id="main_header"><?= $title ?></div>
-        <div id="sub_header"><?= $subtitle ?></div>
+        <div id="main_subheader"><?= $subtitle ?></div>
 
         <?php
             $new = false;
@@ -113,7 +113,7 @@
                                 <input type="hidden" name="id" value="<?php echo $row['idutilisateur'] ?>"/>
                                 <i class="icon fa fa-remove icon-remove"></i>
                             </form>
-                            <i style="margin-left:5px; color:green" class="icon fa fa-edit icon-edit" data-name="<?php echo $row['nom']?>" data-mail="<?php echo $row['mail']?>" data-adresse="<?php echo $row['adresse']?>" data-admin="<?php echo $row['admin'] ?>"></i>
+                            <i style="margin-left:5px; color:green" class="icon fa fa-edit icon-edit" data-name="<?php echo $row['nom']?>" data-mail="<?php echo $row['mail']?>" data-adresse="<?php echo $row['adresse']?>" data-admin="<?php echo $row['admin'] ?>" data-mdp="<?php echo $row['mot_de_passe'] ?>"></i>
                         </div>
                     </td>
                 </tr>
@@ -125,57 +125,12 @@
         <div id="new_user" class="next-button quest-button">
             Nouvel utilisateur
         </div>
-        <div class="modal" id="modal_new_user">
-            <div class="modal-content">
-            <h1 class="modal-title">Créer un nouvel utilisateur</h1>
-            <hr class="modal-row"/>
-            <form action="<?php $_PHP_SELF ?>" method="post" id="form_new_user">
-                <div style="display:table-row"><p class="form-label">Nom : </p><input type="text" name="nom" /></div>
-                <div style="display:table-row"><p class="form-label">Mail : </p><input type="text" name="mail" /></div>
-                <div style="display:table-row"><p class="form-label">Adresse : </p><input type="text" name="adresse" /></div>
-                <div style="display:table-row"><p class="form-label">Administrateur : </p>
-                    <div style="display:inline; margin-right:20px"><input class="radio-btn" type="radio" name="is_admin" value="oui">Oui</div>
-                    <div style="display:inline"><input class="radio-btn" type="radio" name="is_admin" value="non" checked>Non</div>
-                </div>
-                <input type="hidden" name="form_name" value="form_new_user"/>
-                <hr class="modal-row"/>
-                <div class="modal-button">
-                    <input id="__ok_new_user" type="submit" value="OK" style="display:none">
-                    <div id="ok_new_user" class="modal-button modal-ok">OK</div>
-                    <div id="cancel_new_user" class="modal-button modal-cancel">Annuler</div>
-                </div>
-            </form>
-            </div>
-        </div>
 
         <script type="text/javascript">
-            /* Modale pour créer un utilisateur */
-            $('#new_user').on('click', function(){
-                $('#modal_new_user').toggle();
-            });
+            create_modal('new_user', 'Créer un nouvel utilisateur', {nom: {label: 'Nom', default: ''}, mail: {label: 'Mail', default: ''}, adresse: {label: 'Adresse', default: ''}}, {is_admin: {label: 'Administrateur', checked: 'non'}}, 'reset');
 
-            $('#cancel_new_user').on('click', function(){
-                $('#form_new_user input').val('');
-                $('#modal_new_user').toggle();
-            });
-
-            $('#ok_new_user').on('click', function(){
-                $('#__ok_new_user').click();
-            });
-
-            /* Modale pour éditer un utilisateur */
             $('.icon-edit').on('click', function(){
-                document.getElementById('update_name').value = this.dataset.name;
-                document.getElementById('update_adresse').value = this.dataset.adresse;
-                document.getElementById('update_mail').value = this.dataset.mail;
-                console.log(this.dataset.admin == 1);
-                if(this.dataset.admin == 1) {
-                    $('#update_no_admin').prop('checked',false);
-                    $('#update_yes_admin').prop('checked',true);
-                } else {
-                    $('#update_no_admin').prop('checked',true);
-                    $('#update_yes_admin').prop('checked',false);
-                }
+                create_modal('edit_user', 'Modifier le profil', {nom: {label: 'Nom', default: this.dataset.name}, mail: {label: 'Mail', default: this.dataset.mail}, adresse: {label: 'Adresse', default: this.dataset.adresse}, mdp: {label: 'Mot de passe', default: this.dataset.mdp}}, {is_admin: {label: 'Administrateur', checked: (this.dataset.admin == 1 ? 'oui' : 'non')}}, 'remove');
                 $('#modal_edit_user').toggle();
             });
 
@@ -199,16 +154,14 @@
             <div>Mail : <?php echo $user['mail']?></div>
             <div>Adresse : <?php echo $user['adresse']?></div>
             <div>Mot de passe : <?php echo preg_replace('/. */', '*', $user['mot_de_passe'])?></div>
-            <div id="edit_user" class="next-button quest-button" data-name="<?php echo $user['nom']?>" data-mail="<?php echo $user['mail']?>" data-adresse="<?php echo $user['adresse']?>">
+            <div id="edit_user" class="next-button quest-button" data-name="<?php echo $user['nom']?>" data-mail="<?php echo $user['mail']?>" data-adresse="<?php echo $user['adresse']?>" data-mdp="<?php echo $user['mot_de_passe']?>">
                 Éditer
             </div>
         </div>
 
         <script type="text/javascript">
             $('#edit_user').on('click', function(){
-                document.getElementById('update_name').value = this.dataset.name;
-                document.getElementById('update_adresse').value = this.dataset.adresse;
-                document.getElementById('update_mail').value = this.dataset.mail;
+                create_modal('edit_user', 'Modifier le profil', {nom: {label: 'Nom', default: this.dataset.name}, mail: {label: 'Mail', default: this.dataset.mail}, adresse: {label: 'Adresse', default: this.dataset.adresse}, mdp: {label: 'Mot de passe', default: this.dataset.mdp}}, {}, 'remove');
                 $('#modal_edit_user').toggle();
             });
         </script>
@@ -217,52 +170,6 @@
             } else if(!$_SESSION['log_in']){
         ?>
             <div id="inner_content">Veuillez vous authentifier ou créer un compte pour accéder à ce contenu.</div>
-        <?php
-            }
-        ?>
-
-        <?php
-            if($_SESSION['log_in']) {
-        ?>
-
-        <div class="modal" id="modal_edit_user">
-            <div class="modal-content">
-            <h1 class="modal-title">Modifier l'utilisateur</h1>
-            <hr class="modal-row"/>
-            <form action="<?php $_PHP_SELF ?>" method="post" id="form_edit_user">
-                <div style="display:table-row"><p class="form-label">Nom : </p><input id="update_name" type="text" name="nom"/></div>
-                <div style="display:table-row"><p class="form-label">Mail : </p><input id="update_mail" type="text" name="mail" /></div>
-                <div style="display:table-row"><p class="form-label">Adresse : </p><input id="update_adresse" type="text" name="adresse" /></div>
-                <div style="display:table-row"><p class="form-label">Mot de passe : </p><input type="text" name="mdp" /></div>
-                <?php
-                    if($_SESSION['login_level']) {
-                ?>
-                <div style="display:table-row"><p class="form-label">Administrateur : </p>
-                    <div style="display:inline; margin-right:20px"><input id="update_yes_admin" class="radio-btn" type="radio" name="is_admin" value="oui">Oui</div>
-                    <div style="display:inline"><input id='update_no_admin' class="radio-btn" type="radio" name="is_admin" value="non" checked>Non</div>
-                </div>
-                <?php } ?>
-                <input type="hidden" name="form_name" value="form_edit_user"/>
-                <hr class="modal-row"/>
-                <div class="modal-button">
-                    <div id="ok_edit_user" class="modal-button modal-ok">OK</div>
-                    <div id="cancel_edit_user" class="modal-button modal-cancel">Annuler</div>
-                </div>
-            </form>
-            </div>
-        </div>
-
-        <script type="text/javascript">
-            $('#cancel_edit_user').on('click', function(){
-                $('#form_edit_user input').val('');
-                $('#modal_edit_user').toggle();
-            });
-
-            $('#ok_edit_user').on('click', function(){
-                $('#form_edit_user').submit();
-            });
-        </script>
-
         <?php
             }
         ?>
