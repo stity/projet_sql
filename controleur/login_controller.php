@@ -36,6 +36,7 @@
                 return $result = 'fatal_error';
             }
             if($auth_success){
+                $_SESSION['usr_mail'] = $email;
                 $this->title = $this->logout_title;
                 $this->subtitle = $this->logout_subtitle;
                 $sql = "SELECT admin FROM utilisateur WHERE mot_de_passe='".$mdp."' AND mail='".$email."' LIMIT 1;";

@@ -1,7 +1,5 @@
 <?php
     class UsersController {
-        var $user;
-
         function __construct($vue, $log_in, $login_level)  {
             if($log_in && $login_level){
                 $vue->display('users', 'Les utilisateurs', 'Liste des utilisateurs', $this);
@@ -10,6 +8,13 @@
             } else {
                 $vue->display('users', '', '', $this);
             }
+        }
+
+        function get_user_from_mail(){
+            $db = new DB();
+            $sql = "SELECT * FROM utilisateur WHERE mail='".$_SESSION['usr_mail']."' LIMIT 1;";
+            $result = $db->execute($sql);
+            return $result;
         }
 
         function get_all_users() {

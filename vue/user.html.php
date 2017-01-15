@@ -7,10 +7,7 @@
 	<body>
         <div id="inner_content">
         <div id="main_header"><?= $title ?></div>
-        <!--<div id="sub_header"><?= $subtitle ?></div>-->
-        <?php
-            if($_SESSION['log_in'] && $_SESSION['login_level']){
-        ?>
+        <div id="sub_header"><?= $subtitle ?></div>
 
         <?php
             $new = false;
@@ -29,11 +26,16 @@
                     $del = true;
                     $del_ok = ($res != 'error');
                 } else if($_POST['form_name'] == 'form_edit_user'){
-                    $res = $controleur->update_user($_POST['nom'], $_POST['mail'], $_POST['adresse'], $_POST['mdp'], $_POST['is_admin']);
+                    $is_admin = array_key_exists('is_admin', $_POST) ? $_POST['is_admin'] : 'non';
+                    $res = $controleur->update_user($_POST['nom'], $_POST['mail'], $_POST['adresse'], $_POST['mdp'], $is_admin);
                     $edit = true;
                     $edit_ok = ($res != 'error');
                 }
             }
+        ?>
+
+        <?php
+            if($_SESSION['log_in'] && $_SESSION['login_level']){
         ?>
 
         <?php
@@ -146,30 +148,6 @@
             </div>
         </div>
 
-        <div class="modal" id="modal_edit_user">
-            <div class="modal-content">
-            <h1 class="modal-title">Modifier l'utilisateur</h1>
-            <hr class="modal-row"/>
-            <form action="<?php $_PHP_SELF ?>" method="post" id="form_edit_user">
-                <div style="display:table-row"><p class="form-label">Nom : </p><input id="update_name" type="text" name="nom"/></div>
-                <div style="display:table-row"><p class="form-label">Mail : </p><input id="update_mail" type="text" name="mail" /></div>
-                <div style="display:table-row"><p class="form-label">Adresse : </p><input id="update_adresse" type="text" name="adresse" /></div>
-                <div style="display:table-row"><p class="form-label">Mot de passe : </p><input type="text" name="mdp" /></div>
-                <div style="display:table-row"><p class="form-label">Administrateur : </p>
-                    <div style="display:inline; margin-right:20px"><input id="update_yes_admin" class="radio-btn" type="radio" name="is_admin" value="oui">Oui</div>
-                    <div style="display:inline"><input id='update_no_admin' class="radio-btn" type="radio" name="is_admin" value="non" checked>Non</div>
-                </div>
-                <input type="hidden" name="form_name" value="form_edit_user"/>
-                <hr class="modal-row"/>
-                <div class="modal-button">
-                    <input id="__ok_edit_user" type="submit" value="OK" style="display:none">
-                    <div id="ok_edit_user" class="modal-button modal-ok">OK</div>
-                    <div id="cancel_edit_user" class="modal-button modal-cancel">Annuler</div>
-                </div>
-            </form>
-            </div>
-        </div>
-
         <script type="text/javascript">
             /* Modale pour créer un utilisateur */
             $('#new_user').on('click', function(){
@@ -201,15 +179,6 @@
                 $('#modal_edit_user').toggle();
             });
 
-            $('#cancel_edit_user').on('click', function(){
-                $('#form_edit_user input').val('');
-                $('#modal_edit_user').toggle();
-            });
-
-            $('#ok_edit_user').on('click', function(){
-                $('#__ok_edit_user').click();
-            });
-
             /* Pour la suppression d'utilisateur */
             $('.icon-remove').on('click', function(){
                 this.parentNode.submit();
@@ -221,13 +190,79 @@
             });
         </script>
         <?php
+            } else if($_SESSION['log_in']) {
+                $user = mysqli_fetch_array($controleur->get_user_from_mail());
+        ?>
+
+        <div style="width:50%">
+            <div>Nom : <?php echo $user['nom']?></div>
+            <div>Mail : <?php echo $user['mail']?></div>
+            <div>Adresse : <?php echo $user['adresse']?></div>
+            <div>Mot de passe : <?php echo preg_replace('/. */', '*', $user['mot_de_passe'])?></div>
+            <div id="edit_user" class="next-button quest-button" data-name="<?php echo $user['nom']?>" data-mail="<?php echo $user['mail']?>" data-adresse="<?php echo $user['adresse']?>">
+                Éditer
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $('#edit_user').on('click', function(){
+                document.getElementById('update_name').value = this.dataset.name;
+                document.getElementById('update_adresse').value = this.dataset.adresse;
+                document.getElementById('update_mail').value = this.dataset.mail;
+                $('#modal_edit_user').toggle();
+            });
+        </script>
+
+        <?php
+            } else if(!$_SESSION['log_in']){
+        ?>
+            <div id="inner_content">Veuillez vous authentifier ou créer un compte pour accéder à ce contenu.</div>
+        <?php
             }
         ?>
 
         <?php
-            if(!$_SESSION['log_in']){
+            if($_SESSION['log_in']) {
         ?>
-            <div id="inner_content">Veuillez vous authentifier pour accéder à ce contenu.</div>
+
+        <div class="modal" id="modal_edit_user">
+            <div class="modal-content">
+            <h1 class="modal-title">Modifier l'utilisateur</h1>
+            <hr class="modal-row"/>
+            <form action="<?php $_PHP_SELF ?>" method="post" id="form_edit_user">
+                <div style="display:table-row"><p class="form-label">Nom : </p><input id="update_name" type="text" name="nom"/></div>
+                <div style="display:table-row"><p class="form-label">Mail : </p><input id="update_mail" type="text" name="mail" /></div>
+                <div style="display:table-row"><p class="form-label">Adresse : </p><input id="update_adresse" type="text" name="adresse" /></div>
+                <div style="display:table-row"><p class="form-label">Mot de passe : </p><input type="text" name="mdp" /></div>
+                <?php
+                    if($_SESSION['login_level']) {
+                ?>
+                <div style="display:table-row"><p class="form-label">Administrateur : </p>
+                    <div style="display:inline; margin-right:20px"><input id="update_yes_admin" class="radio-btn" type="radio" name="is_admin" value="oui">Oui</div>
+                    <div style="display:inline"><input id='update_no_admin' class="radio-btn" type="radio" name="is_admin" value="non" checked>Non</div>
+                </div>
+                <?php } ?>
+                <input type="hidden" name="form_name" value="form_edit_user"/>
+                <hr class="modal-row"/>
+                <div class="modal-button">
+                    <div id="ok_edit_user" class="modal-button modal-ok">OK</div>
+                    <div id="cancel_edit_user" class="modal-button modal-cancel">Annuler</div>
+                </div>
+            </form>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $('#cancel_edit_user').on('click', function(){
+                $('#form_edit_user input').val('');
+                $('#modal_edit_user').toggle();
+            });
+
+            $('#ok_edit_user').on('click', function(){
+                $('#form_edit_user').submit();
+            });
+        </script>
+
         <?php
             }
         ?>
