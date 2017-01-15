@@ -58,11 +58,35 @@ class DB {
         }
         $sql = $sql.") AS result;";
         try {
-            echo $sql."/n";
             $queryresult = $this->execute($sql);
         }
         catch (Exception $e) {
             echo "Error in SQL function call : ".$arg_list[0]." Error message : \n".$e;
+        }
+        $result = $queryresult->fetch_assoc()['result'];
+        return $result;
+    }
+
+    function callSQLProcedure () {
+        $numargs = func_num_args();
+        $arg_list = func_get_args();
+        $sql = 'CALL ';
+        if ($numargs >= 1) {
+            $sql = $sql.$arg_list[0]."(";
+        }
+        for ($i = 1; $i < $numargs; $i++) {
+            $arg = $arg_list[$i];
+            if(is_string($arg)) {
+                $arg = "'".$arg."'";
+            }
+            $sql = $sql.$arg.",";
+        }
+        $sql = $sql."@result); SELECT @result AS result;";
+        try {
+            $queryresult = $this->execute($sql);
+        }
+        catch (Exception $e) {
+            echo "Error in SQL procedure call : ".$arg_list[0]." Error message : \n".$e;
         }
         $result = $queryresult->fetch_assoc()['result'];
         return $result;
