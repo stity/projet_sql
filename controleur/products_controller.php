@@ -9,5 +9,18 @@
                 $vue->display('products', 'Les abonnements', 'Abonnements proposés par Télarnaque', $this);
             }
         }
+
+        function get_abonnements($want_promotion, $want_formules){
+            if($want_promotion && $want_formules){
+                $sql = "SELECT * FROM formule;";
+            } else if($want_promotion){
+                $sql = "SELECT * FROM formule WHERE formule_base <> -1;";
+            } else {
+                $sql = "SELECT * FROM formule WHERE formule_base = -1;";
+            }
+            $db = new DB();
+            $result = $db->execute($sql);
+            return $result;
+        }
     }
 ?>
