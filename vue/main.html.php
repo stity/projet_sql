@@ -12,6 +12,12 @@
 	</head>
 	<body>
 		<div id="sidebar">
+            <div data-load="login" style="text-align: center;margin-top: 12px;font-size: 18pt">
+                <a href="<?= "index.php?vue=login" ?>" class="user-login-choice">
+                    <i class="icon fa fa-user" style="color: <?php echo $_SESSION['log_in'] ? 'greenyellow' : 'crimson' ?>"></i>
+                </a>
+            </div>
+            <hr style="height:3pt; background-color: green; border:green;"/>
 			<div class="sidebar-part" data-load="accueil">
                 <div class="text-content">
                     <a href="index.php" class="text-content">
@@ -36,6 +42,12 @@
             <?php
                 }
             ?>
+
+            <div class="sidebar-part <?= $vue=="phones" ? "selected" : "" ?>" data-load="phones">
+                <a href="<?= "index.php?vue=phones" ?>" class="text-content">
+                    Les téléphones
+                </a>
+            </div>
 			<div class="sidebar-part sidebar-with-children" data-load="products_all" data-section-name="products_all">
                 <div class="text-content">Abonnements</div>
                 <i class="icon fa fa-chevron-down"></i>
@@ -44,11 +56,6 @@
 				<div class="sidebar-subpart <?= $vue=="my_products" ? "selected" : "" ?>" data-load="my_products"><a href="<?= "index.php?vue=my_products" ?>" class="text-content">Mes abonnements</a></div>
 				<div class="sidebar-subpart <?= $vue=="products" ? "selected" : "" ?>" data-load="products"><a href="<?= "index.php?vue=products" ?>" class="text-content">Nouvel abonnement</a></div>
 		    </div>
-            <div data-load="login">
-                <a href="<?= "index.php?vue=login" ?>" class="user-login-choice">
-                    <i class="icon fa fa-user"></i>
-                </a>
-            </div>
         </div>
 
         <?php

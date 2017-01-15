@@ -61,3 +61,24 @@ var create_modal = function (id, title, fields_text, fields_binary, cancel_behav
         });
     }
 };
+
+var create_more_details_modal = function (content, title, id) {
+    $('#modal_details_' + id).remove();
+    $(document.body).append(
+        '<div class="modal" id="modal_details_' + id + '">' +
+            '<div class="modal-content">' +
+            '<h1 class="modal-title">' + title + '</h1>' +
+            '<hr class="modal-row"/>' +
+            content+
+            '<div class="modal-button">' +
+                '<div id="ok_details_' + id + '" class="modal-button modal-ok">OK</div>' +
+            '</div>' +
+            '</div>' +
+        '</div>'
+    );
+    $('#modal_details_'+id).toggle();
+
+    $('#ok_details_'+id).on('click', function(){
+        $('#modal_details_'+id).toggle();
+    });
+};

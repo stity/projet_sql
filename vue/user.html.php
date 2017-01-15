@@ -96,6 +96,7 @@
         <table style="margin-top:10pt;">
             <tr>
                 <th>Nom</th> <th>Mail</th> <th>Adresse</th> <th>Mot de passe</th> <th>Administrateur</th> <th></th>
+            </tr>
                 <?php
                     $result = $controleur->get_all_users();
                     while($row = mysqli_fetch_array($result)) {
@@ -120,7 +121,6 @@
                 <?php
                     }
                 ?>
-            </tr>
         </table>
         <div id="new_user" class="next-button quest-button">
             Nouvel utilisateur
@@ -139,7 +139,7 @@
                 this.parentNode.submit();
             });
 
-            /* Pour ferme les notifications */
+            /* Pour fermer les notifications */
             $('.notif-close').on('click', function(){
                 $(this.parentNode).toggle();
             });

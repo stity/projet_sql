@@ -82,6 +82,7 @@ a.text-content:hover{
 	color: rgb(125,125,125);
 	display: inline-block;
 	margin-left: 5px;
+    margin-bottom: 25px;
 }
 
 #main_content{
