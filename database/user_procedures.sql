@@ -28,6 +28,17 @@ CREATE PROCEDURE addUser (
         COMMIT;
     END|
 
+/* Récupération de l'ID d'un utilisateur */
+DROP PROCEDURE IF EXISTS getUserId |
+
+CREATE PROCEDURE getUserId (
+    IN m VARCHAR(255),
+    INOUT id INT)
+    BEGIN
+        /* get id of existing record with same mail */
+        SET id = (SELECT idutilisateur FROM utilisateur WHERE mail=m ORDER BY idutilisateur DESC LIMIT 1);
+    END|
+
 /* Suppression d'un utilisateur */
 DROP PROCEDURE IF EXISTS deleteUser|
 
@@ -58,3 +69,10 @@ CREATE PROCEDURE checkPassword (
     END|
 
 DELIMITER ;
+
+CALL addUser('Jean Martin', 'jean.martin@banane.fr', '2 rue de la source 54821 NULLPART', 'secret', 0, @id);
+CALL addUser('Jean Ramos', 'jean.ramos@hotmail.fr', '4 impasse des muguets 15541 Champoux', 'ramos69', 0, @id);
+CALL addUser('Roger De La Chance', 'rogerdelachance@free.fr', '4bis rue du trefle 75421 Ferrache', 'chanceux77713', 0, @id);
+CALL addUser('Hervé Boutade', 'rvbtd@free.fr', '452 Hameaux des oliviers 22511 Cabords', 'rvb93', 0, @id);
+CALL addUser('Michelle Jonas', 'jojomiche@orange.fr', '3 rue du tapis rouge 45121 Cannes', 'mimiche', 0, @id);
+CALL addUser('admin', 'admin@admin.fr', '36 avenue guy de collongue 69130 Ecully', 'admin', 1, @id);
