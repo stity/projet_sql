@@ -1,3 +1,4 @@
+
 DELIMITER |
 
 /* Création d'une zone géographique */

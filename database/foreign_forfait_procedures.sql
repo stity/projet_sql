@@ -1,3 +1,4 @@
+
 DELIMITER |
 
 /* Création d'un utilisateur */
@@ -36,4 +37,4 @@ CREATE PROCEDURE addForeignForfait (
 
 DELIMITER ;
 
-CALL addForeignForfait('Europe et DOM-TOM', 1000, 10000, 2000, 0, 'week_all', 0.15, 0.15, 0.15, 'Europe/DOM/COM')
+CALL addForeignForfait('Europe et DOM-TOM', 1000, 10000, 2000, 0, 'week_all', 0.15, 0.15, 0.15, 'Europe/DOM/COM');

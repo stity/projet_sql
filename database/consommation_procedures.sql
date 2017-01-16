@@ -1,4 +1,5 @@
-    DELIMITER |
+
+DELIMITER |
 
 /* Consommation */
 DROP PROCEDURE IF EXISTS addConso|
@@ -93,4 +94,4 @@ CREATE PROCEDURE addAppel (
 		END IF;
     END|
 
-DELIMITER;
+DELIMITER ;

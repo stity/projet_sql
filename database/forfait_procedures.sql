@@ -1,3 +1,4 @@
+
 /* Comprend les procédures pour les forfaits et les promotions */
 
 DELIMITER |

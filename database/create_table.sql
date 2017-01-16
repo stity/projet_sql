@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Ven 13 Janvier 2017 à 08:52
+-- Généré le :  Lun 16 Janvier 2017 à 17:06
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.6.17
 
@@ -19,83 +19,9 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `telephonie`
 --
-
-DELIMITER $$
---
--- Procédures
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addUser`(
-    IN n VARCHAR(255),
-    IN m VARCHAR(255),
-    IN adr VARCHAR(255),
-    IN mdp VARCHAR(255),
-    INOUT id INT)
-BEGIN
-        DECLARE existsAlready BOOLEAN;
-        START TRANSACTION;
-        IF EXISTS (SELECT * FROM utilisateur WHERE mail=m) THEN
-			/* get id of existing record with same mail */
-			SET id = (SELECT idutilisateur FROM utilisateur WHERE mail=m ORDER BY idutilisateur DESC LIMIT 1);
-			/* update record */
-			UPDATE utilisateur SET nom=n, mail=m, adresse=adr, mot_de_passe=mdp WHERE idutilisateur=id;
-		ELSE
-			/* insert new user */
-        	INSERT INTO utilisateur (nom, mail, adresse, mot_de_passe) VALUES (n, m, adr, mdp);
-			/* get generated id */
-        	SET id = (SELECT idutilisateur FROM utilisateur WHERE nom=n AND mail=m AND adresse=adr AND mot_de_passe=mdp ORDER BY idutilisateur DESC LIMIT 1);
-		END IF;
-        COMMIT;
-    END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkPassword`(
-    IN mdp VARCHAR(255),
-    IN email VARCHAR(255),
-    INOUT ok BOOLEAN)
-BEGIN
-        SET ok = (SELECT COUNT(*) FROM utilisateur WHERE mail=email AND mot_de_passe=mdp);
-    END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser`(
-    IN id INT)
-BEGIN
-        DECLARE existsAlready BOOLEAN;
-        START TRANSACTION;
-        IF EXISTS (SELECT * FROM utilisateur WHERE idutilisateur=id) THEN
-			/* get rid of user */
-            DELETE FROM utilisateur WHERE idutilisateur=id;
-		ELSE
-            /* throw error */
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No user found for this id';
-		END IF;
-        COMMIT;
-    END$$
-
---
--- Fonctions
---
-CREATE DEFINER=`root`@`localhost` FUNCTION `addUserF`(
-    n VARCHAR(255),
-    m VARCHAR(255),
-    adr VARCHAR(255),
-    mdp VARCHAR(255)) RETURNS int(11)
-BEGIN
-        DECLARE id INT;
-        DECLARE existsAlready BOOLEAN;
-        IF EXISTS (SELECT * FROM utilisateur WHERE mail=m) THEN
-			/* get id of existing record with same mail */
-			SET id = (SELECT idutilisateur FROM utilisateur WHERE mail=m ORDER BY idutilisateur DESC LIMIT 1);
-			/* update record */
-			UPDATE utilisateur SET nom=n, mail=m, adresse=adr, mot_de_passe=mdp WHERE idutilisateur=id;
-		ELSE
-			/* insert new user */
-        	INSERT INTO utilisateur (nom, mail, adresse, mot_de_passe) VALUES (n, m, adr, mdp);
-			/* get generated id */
-        	SET id = (SELECT idutilisateur FROM utilisateur WHERE nom=n AND mail=m AND adresse=adr AND mot_de_passe=mdp ORDER BY idutilisateur DESC LIMIT 1);
-		END IF;
-        RETURN id;
-    END$$
-
-DELIMITER ;
+DROP DATABASE IF EXISTS telephonie;
+CREATE DATABASE IF NOT EXISTS `telephonie` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `telephonie`;
 
 -- --------------------------------------------------------
 
@@ -103,6 +29,7 @@ DELIMITER ;
 -- Structure de la table `achat`
 --
 
+DROP TABLE IF EXISTS `achat`;
 CREATE TABLE IF NOT EXISTS `achat` (
   `idachat` int(11) NOT NULL AUTO_INCREMENT,
   `date` datetime DEFAULT NULL,
@@ -118,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `achat` (
 -- Structure de la table `appel`
 --
 
+DROP TABLE IF EXISTS `appel`;
 CREATE TABLE IF NOT EXISTS `appel` (
   `idappel` int(11) NOT NULL AUTO_INCREMENT,
   `debut_appel` datetime DEFAULT NULL,
@@ -133,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `appel` (
 -- Structure de la table `consommation`
 --
 
+DROP TABLE IF EXISTS `consommation`;
 CREATE TABLE IF NOT EXISTS `consommation` (
   `idconsommation` int(11) NOT NULL AUTO_INCREMENT,
   `date_debut` datetime DEFAULT NULL,
@@ -147,6 +76,7 @@ CREATE TABLE IF NOT EXISTS `consommation` (
 -- Structure de la table `destination_appel`
 --
 
+DROP TABLE IF EXISTS `destination_appel`;
 CREATE TABLE IF NOT EXISTS `destination_appel` (
   `iddestination_appel` int(11) NOT NULL AUTO_INCREMENT,
   `id_zone_geographique` int(11) DEFAULT NULL,
@@ -160,6 +90,7 @@ CREATE TABLE IF NOT EXISTS `destination_appel` (
 -- Structure de la table `destination_mms`
 --
 
+DROP TABLE IF EXISTS `destination_mms`;
 CREATE TABLE IF NOT EXISTS `destination_mms` (
   `iddestination_mms` int(11) NOT NULL AUTO_INCREMENT,
   `id_zone_geographique` int(11) DEFAULT NULL,
@@ -173,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `destination_mms` (
 -- Structure de la table `destination_sms`
 --
 
+DROP TABLE IF EXISTS `destination_sms`;
 CREATE TABLE IF NOT EXISTS `destination_sms` (
   `iddestination_sms` int(11) NOT NULL AUTO_INCREMENT,
   `id_zone_geographique` int(11) DEFAULT NULL,
@@ -186,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `destination_sms` (
 -- Structure de la table `facture`
 --
 
+DROP TABLE IF EXISTS `facture`;
 CREATE TABLE IF NOT EXISTS `facture` (
   `idfacture` int(11) NOT NULL AUTO_INCREMENT,
   `consommation` int(11) DEFAULT NULL,
@@ -200,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `facture` (
 -- Structure de la table `forfait_etranger`
 --
 
+DROP TABLE IF EXISTS `forfait_etranger`;
 CREATE TABLE IF NOT EXISTS `forfait_etranger` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(45) DEFAULT NULL,
@@ -221,6 +155,7 @@ CREATE TABLE IF NOT EXISTS `forfait_etranger` (
 -- Structure de la table `forfait_etranger_plage_horaire`
 --
 
+DROP TABLE IF EXISTS `forfait_etranger_plage_horaire`;
 CREATE TABLE IF NOT EXISTS `forfait_etranger_plage_horaire` (
   `forfait` int(11) DEFAULT NULL,
   `plage` int(11) DEFAULT NULL,
@@ -230,33 +165,10 @@ CREATE TABLE IF NOT EXISTS `forfait_etranger_plage_horaire` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `forfait_forfait_etranger`
---
-
-CREATE TABLE IF NOT EXISTS `formule_forfait_etranger` (
-  `formule` int(11) DEFAULT NULL,
-  `forfait_etranger` int(11) DEFAULT NULL,
-  KEY `formule_forfait_etranger_idx` (`formule`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `forfait_telephone`
---
-
-CREATE TABLE IF NOT EXISTS `formule_telephone` (
-  `formule` int(11) DEFAULT NULL,
-  `telephone` int(11) DEFAULT NULL,
-  KEY `formule_telephone_idx` (`formule`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `formule`
 --
 
+DROP TABLE IF EXISTS `formule`;
 CREATE TABLE IF NOT EXISTS `formule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(45) NOT NULL,
@@ -281,13 +193,40 @@ CREATE TABLE IF NOT EXISTS `formule` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `formule_forfait_etranger`
+--
+
+DROP TABLE IF EXISTS `formule_forfait_etranger`;
+CREATE TABLE IF NOT EXISTS `formule_forfait_etranger` (
+  `formule` int(11) DEFAULT NULL,
+  `forfait_etranger` int(11) DEFAULT NULL,
+  KEY `formule_forfait_etranger_idx` (`formule`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `formule_plage_horaire`
 --
 
+DROP TABLE IF EXISTS `formule_plage_horaire`;
 CREATE TABLE IF NOT EXISTS `formule_plage_horaire` (
   `formule` int(11) NOT NULL,
-  `plage_horaire` int(11) NOT NULL,
+  `plage_horaire` int(11) NULL,
   KEY `formule_plage_horaire_plage_horaire_idx` (`plage_horaire`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `formule_telephone`
+--
+
+DROP TABLE IF EXISTS `formule_telephone`;
+CREATE TABLE IF NOT EXISTS `formule_telephone` (
+  `formule` int(11) DEFAULT NULL,
+  `telephone` int(11) DEFAULT NULL,
+  KEY `formule_telephone_idx` (`formule`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -296,6 +235,7 @@ CREATE TABLE IF NOT EXISTS `formule_plage_horaire` (
 -- Structure de la table `mms`
 --
 
+DROP TABLE IF EXISTS `mms`;
 CREATE TABLE IF NOT EXISTS `mms` (
   `idmms` int(11) NOT NULL AUTO_INCREMENT,
   `volume` int(11) DEFAULT NULL,
@@ -311,11 +251,12 @@ CREATE TABLE IF NOT EXISTS `mms` (
 -- Structure de la table `pays`
 --
 
+DROP TABLE IF EXISTS `pays`;
 CREATE TABLE IF NOT EXISTS `pays` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
 
 -- --------------------------------------------------------
 
@@ -323,6 +264,7 @@ CREATE TABLE IF NOT EXISTS `pays` (
 -- Structure de la table `plage_horaire`
 --
 
+DROP TABLE IF EXISTS `plage_horaire`;
 CREATE TABLE IF NOT EXISTS `plage_horaire` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(45) DEFAULT NULL,
@@ -338,6 +280,7 @@ CREATE TABLE IF NOT EXISTS `plage_horaire` (
 -- Structure de la table `sms`
 --
 
+DROP TABLE IF EXISTS `sms`;
 CREATE TABLE IF NOT EXISTS `sms` (
   `idsms` int(11) NOT NULL AUTO_INCREMENT,
   `volume` int(11) DEFAULT NULL,
@@ -353,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `sms` (
 -- Structure de la table `telephone`
 --
 
+DROP TABLE IF EXISTS `telephone`;
 CREATE TABLE IF NOT EXISTS `telephone` (
   `idtelephone` int(11) NOT NULL AUTO_INCREMENT,
   `ecran` varchar(255) DEFAULT NULL,
@@ -369,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `telephone` (
   `stockage` varchar(255) DEFAULT NULL,
   `capacite_internet` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idtelephone`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -377,6 +321,7 @@ CREATE TABLE IF NOT EXISTS `telephone` (
 -- Structure de la table `utilisateur`
 --
 
+DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE IF NOT EXISTS `utilisateur` (
   `idutilisateur` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) DEFAULT NULL,
@@ -387,25 +332,18 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   PRIMARY KEY (`idutilisateur`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
---
--- Contenu de la table `utilisateur`
---
-
-INSERT INTO `utilisateur` (`idutilisateur`, `nom`, `mail`, `adresse`, `mot_de_passe`, `admin`) VALUES
-(20, 'test', 'test', 'test', 'test', 0),
-(21, 'joe', 'joe@mail.com', 'joe lives here', 'joe password', 0);
-
 -- --------------------------------------------------------
 
 --
 -- Structure de la table `zone_geographique`
 --
 
+DROP TABLE IF EXISTS `zone_geographique`;
 CREATE TABLE IF NOT EXISTS `zone_geographique` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 -- --------------------------------------------------------
 
@@ -413,6 +351,7 @@ CREATE TABLE IF NOT EXISTS `zone_geographique` (
 -- Structure de la table `zone_geographique_pays`
 --
 
+DROP TABLE IF EXISTS `zone_geographique_pays`;
 CREATE TABLE IF NOT EXISTS `zone_geographique_pays` (
   `zone_geographique` int(11) DEFAULT NULL,
   `pays` int(11) DEFAULT NULL,

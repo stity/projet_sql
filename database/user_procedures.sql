@@ -1,3 +1,4 @@
+
 DELIMITER |
 
 /* Création d'un utilisateur */

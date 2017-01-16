@@ -11,7 +11,7 @@ class DB {
     function __construct()  {
         $this->servername = "localhost";
         $this->username = "root";
-        $this->password = "0000";
+        $this->password = "";
         $this->dbname = "telephonie";
 
         // Create connection
@@ -32,6 +32,23 @@ class DB {
         } else {
             //throw sql error if error in the request
             throw new Exception("SQL Error : ".$this->conn->error );
+        }
+    }
+
+    /* Exécuter des requêtes SQL */
+    function executeMulti ($request) {
+
+        if (mysqli_multi_query($this->conn, $request)) {
+            do {
+                if (!mysqli_more_results($this->conn)) {
+                    break;
+                }
+                if (!mysqli_next_result($this->conn)) {
+                    throw new Exception("SQL Error : ".$this->conn->error );
+                    // report error
+                    break;
+                }
+            } while (true);
         }
     }
 
