@@ -39,12 +39,12 @@ DELIMITER ;
 /* création des achats */
 
 SET @date = '2017-01-01T12:32:00';
-CALL addAchat(ADDDATE(@date, 1), 1, 'jean.martin@banane.fr', 1, @id);
+CALL addAchat(ADDDATE(@date, 1), 1, 1, 1, @id);
 
-CALL addAchat(ADDDATE(@date, 2), 1, 'jean.ramos@hotmail.fr', 1, @id);
+CALL addAchat(ADDDATE(@date, 2), 1, 2, 1, @id);
 
-CALL addAchat(ADDDATE(@date, 3), 1, 'rogerdelachance@free.fr', 1, @id);
+CALL addAchat(ADDDATE(@date, 3), 1, 3, 1, @id);
 
-CALL addAchat(ADDDATE(@date, 4), 1, 'rvbtd@free.fr', 1, @id);
+CALL addAchat(ADDDATE(@date, 4), 1, 4, 1, @id);
 
-CALL addAchat(ADDDATE(@date, 5), 1, 'jojomiche@orange.fr', 1, @id);
+CALL addAchat(ADDDATE(@date, 5), 1, 5, 1, @id);

@@ -23,6 +23,10 @@ DROP DATABASE IF EXISTS telephonie;
 CREATE DATABASE IF NOT EXISTS `telephonie` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `telephonie`;
 
+
+DROP FUNCTION IF EXISTS `random`;
+CREATE DEFINER=`root`@`localhost` FUNCTION `random`(`min` INT, `max` INT) RETURNS INT(11) NOT DETERMINISTIC NO SQL SQL SECURITY DEFINER RETURN FLOOR(min+(max-min)*RAND());
+
 -- --------------------------------------------------------
 
 --
