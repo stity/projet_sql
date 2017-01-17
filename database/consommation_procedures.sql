@@ -10,16 +10,28 @@ CREATE PROCEDURE addConso (
     IN achat INT(11),
     INOUT id INT)
     BEGIN
-        IF EXISTS (SELECT * FROM consommation WHERE idconsommation=id) THEN
-			/* update record */
-			UPDATE consommation SET date_debut=debut, conso_data=conso, id_achat=achat WHERE idconsommation=id;
-		ELSE
+        IF NOT EXISTS (SELECT * FROM consommation WHERE idconsommation=id AND date_debut=debut AND id_achat=achat) THEN
             START TRANSACTION;
 			/* insert new user */
         	INSERT INTO consommation (date_debut, conso_data, id_achat) VALUES (debut, conso, achat);
 			/* get generated id */
         	SET id = (SELECT idconsommation FROM consommation WHERE date_debut=debut AND conso_data=conso AND id_achat=achat ORDER BY idconsommation DESC LIMIT 1);
             COMMIT;
+		END IF;
+    END|
+
+DROP PROCEDURE IF EXISTS updateConsoData|
+
+CREATE PROCEDURE updateConsoData (
+    IN conso INT(11),
+    IN id INT)
+    BEGIN
+        IF EXISTS (SELECT * FROM consommation WHERE idconsommation=id) THEN
+			/* update record */
+			UPDATE consommation SET conso_data=conso WHERE idconsommation=id;
+		ELSE
+            /* throw error */
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No matching consommation found for this id';
 		END IF;
     END|
 
@@ -31,10 +43,12 @@ CREATE PROCEDURE addConsoFromUser (
     IN usermail VARCHAR(255),
     INOUT id INT)
     BEGIN
+        START TRANSACTION;
         CALL getUserId(usermail, @userId);
         CALL getAchatIdFromUser(@userId, @achatId);
         CALL addConso(debut, conso, @achatId, @id);
         SET id = @id;
+        COMMIT;
     END|
 
 /* SMS */
@@ -161,78 +175,41 @@ CREATE PROCEDURE loopRandomAppel (
         END WHILE;
     END|
 
+
+DROP PROCEDURE IF EXISTS generateConso|
+
+CREATE PROCEDURE generateConso (
+    IN numberLoop INT,
+    IN debut DATETIME,
+    IN useremail VARCHAR(255),
+    IN dest INT(11))
+    BEGIN
+        START TRANSACTION;
+        CALL addConsoFromUser(debut, random(0, 3500), useremail, @consoid);
+        CALL loopRandomSMS(numberLoop, ADDTIME(debut, '08:32:00'), dest, @consoid);
+        CALL loopRandomMMS(numberLoop, ADDTIME(debut, '08:32:00'), dest, @consoid);
+        CALL loopRandomAppel(numberLoop, ADDTIME(debut, '08:32:00'), dest, @consoid);
+        COMMIT;
+    END|
+
 DELIMITER ;
 
-CALL addConsoFromUser('20161100', 0, 'jean.martin@banane.fr', @consoid);
-CALL loopRandomSMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161100', 0, 'jean.ramos@hotmail.fr', @consoid);
-CALL loopRandomSMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161100', 0, 'rogerdelachance@free.fr', @consoid);
-CALL loopRandomSMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161100', 0, 'rvbtd@free.fr', @consoid);
-CALL loopRandomSMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161100', 0, 'jojomiche@orange.fr', @consoid);
-CALL loopRandomSMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161100', 0, 'admin@admin.fr', @consoid);
-CALL loopRandomSMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-11-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161200', 0, 'jean.martin@banane.fr', @consoid);
-CALL loopRandomSMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161200', 0, 'jean.ramos@hotmail.fr', @consoid);
-CALL loopRandomSMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161200', 0, 'rogerdelachance@free.fr', @consoid);
-CALL loopRandomSMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161200', 0, 'rvbtd@free.fr', @consoid);
-CALL loopRandomSMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161200', 0, 'jojomiche@orange.fr', @consoid);
-CALL loopRandomSMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20161200', 0, 'admin@admin.fr', @consoid);
-CALL loopRandomSMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2016-12-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20170100', 0, 'jean.martin@banane.fr', @consoid);
-CALL loopRandomSMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20170100', 0, 'jean.ramos@hotmail.fr', @consoid);
-CALL loopRandomSMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20170100', 0, 'rogerdelachance@free.fr', @consoid);
-CALL loopRandomSMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20170100', 0, 'rvbtd@free.fr', @consoid);
-CALL loopRandomSMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20170100', 0, 'jojomiche@orange.fr', @consoid);
-CALL loopRandomSMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL addConsoFromUser('20170100', 0, 'admin@admin.fr', @consoid);
-CALL loopRandomSMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomMMS(20, '2017-01-01T08:32:00', 0, @consoid);
-CALL loopRandomAppel(20, '2017-01-01T08:32:00', 0, @consoid);
 
+CALL generateConso(20, '20161100', 'jean.martin@banane.fr', 1);
+CALL generateConso(20, '20161100', 'jean.ramos@hotmail.fr', 1);
+CALL generateConso(20, '20161100', 'rogerdelachance@free.fr', 1);
+CALL generateConso(20, '20161100', 'rvbtd@free.fr', 1);
+CALL generateConso(20, '20161100', 'jojomiche@orange.fr', 1);
+CALL generateConso(20, '20161100', 'admin@admin.fr', 1);
+CALL generateConso(20, '20161200', 'jean.martin@banane.fr', 1);
+CALL generateConso(20, '20161200', 'jean.ramos@hotmail.fr', 1);
+CALL generateConso(20, '20161200', 'rogerdelachance@free.fr', 1);
+CALL generateConso(20, '20161200', 'rvbtd@free.fr', 1);
+CALL generateConso(20, '20161200', 'jojomiche@orange.fr', 1);
+CALL generateConso(20, '20161200', 'admin@admin.fr', 1);
+CALL generateConso(20, '20170100', 'jean.martin@banane.fr', 1);
+CALL generateConso(20, '20170100', 'jean.ramos@hotmail.fr', 1);
+CALL generateConso(20, '20170100', 'rogerdelachance@free.fr', 1);
+CALL generateConso(20, '20170100', 'rvbtd@free.fr', 1);
+CALL generateConso(20, '20170100', 'jojomiche@orange.fr', 1);
+CALL generateConso(20, '20170100', 'admin@admin.fr', 1);

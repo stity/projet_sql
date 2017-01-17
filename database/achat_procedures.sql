@@ -48,3 +48,5 @@ CALL addAchat(ADDDATE(@date, 3), 1, 3, 1, @id);
 CALL addAchat(ADDDATE(@date, 4), 1, 4, 1, @id);
 
 CALL addAchat(ADDDATE(@date, 5), 1, 5, 1, @id);
+
+CALL addAchat(ADDDATE(@date, 6), 1, 6, 1, @id);
