@@ -8,13 +8,17 @@ header( 'content-type: text/xml; charset=utf-8' );
 echo '<?xml version="1.0" encoding="utf-8"?>';
 echo '<?xml-stylesheet type="text/xsl" href="conso.xsl"?>';
 echo "<conso>\n";
+    echo "<generationdate>";
+        echo date('d/m \à H:i:s' );
+    echo "</generationdate>";
     echo "<smslist>\n";
         $sql = 'SELECT date,volume, nom as destination, zone FROM sms JOIN (SELECT pays.id,pays.nom as nom, zone_geographique.nom as zone FROM pays, zone_geographique, zone_geographique_pays WHERE pays.id=zone_geographique_pays.pays AND zone_geographique.id=zone_geographique_pays.zone_geographique ) pays ON (sms.destination=pays.id) WHERE consommation='.$consoId.' ORDER BY date ASC;';
         $result = $db->execute($sql);
         if ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
+                $date = new DateTime($row['date']);
         echo "<sms>\n";
-            echo "<date>".$row['date']."</date>\n";
+            echo "<date>".$date->format('d/m \à H\hi' )."</date>\n";
             echo "<volume>".$row['volume']."</volume>\n";
             echo "<destination>".$row['destination']."</destination>\n";
             echo "<zone>".$row['zone']."</zone>\n";
@@ -26,8 +30,9 @@ echo "<conso>\n";
         $result = $db->execute($sql);
         if ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
+                $date = new DateTime($row['date']);
         echo "<mms>\n";
-            echo "<date>".$row['date']."</date>\n";
+            echo "<date>".$date->format('d/m \à H\hi' )."</date>\n";
             echo "<volume>".$row['volume']."</volume>\n";
             echo "<destination>".$row['destination']."</destination>\n";
             echo "<zone>".$row['zone']."</zone>\n";
@@ -39,10 +44,12 @@ echo "<conso>\n";
         $result = $db->execute($sql);
         if ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
+                $date = new DateTime($row['debut_appel']);
         echo "<appel>\n";
-            echo "<date>".$row['debut_appel']."</date>\n";
+            echo "<date>".$date->format('d/m \à H\hi' )."</date>\n";
             echo "<duree>".$row['duree']."</duree>\n";
             echo "<destination>".$row['destination']."</destination>\n";
+            echo "<zone>".$row['zone']."</zone>\n";
         echo "</appel>\n";
             } }
     echo "</appellist>\n";

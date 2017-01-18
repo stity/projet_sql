@@ -36,7 +36,7 @@
                                    font-size="10pt">
                     <fo:block space-before="1em">Créé par Valentin Demeusy et Damien Douteaux
                     </fo:block>
-                    <fo:block>Dernière modification le 17/01/2017
+                    <fo:block>Généré le <xsl:value-of select="//generationdate"/>
                     </fo:block>
                 </fo:static-content>
                 <fo:flow flow-name="xsl-region-body"
