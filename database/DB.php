@@ -20,11 +20,16 @@ class DB {
         if ($this->conn->connect_error) {
             die("Connection failed: " . $this->conn->connect_error);
         }
+        if (!mysqli_set_charset($this->conn, "utf8")) {
+            printf("Erreur lors du chargement du jeu de caractères utf8 : %s\n", mysqli_error($this->conn));
+            exit();
+        }
     }
 
     /* Exécuter une requête SQL */
     function execute ($request) {
         //execute request and return true if there was no issue
+        mysqli_set_charset($this->conn, "utf8");
         $result = mysqli_query($this->conn, $request);
 
         if ($result) {
