@@ -22,7 +22,6 @@ class DB {
         }
         if (!mysqli_set_charset($this->conn, "utf8")) {
             printf("Erreur lors du chargement du jeu de caractères utf8 : %s\n", mysqli_error($this->conn));
-            exit();
         }
     }
 

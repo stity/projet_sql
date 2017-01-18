@@ -85,7 +85,7 @@ CREATE PROCEDURE loopRandomSMS (
         DECLARE v_counter INT UNSIGNED DEFAULT 0;
         SET v_counter = 0;
         WHILE v_counter < numberLoop DO
-            CALL addSMS(random(1,10), ADDDATE(d, random(1,20)), dest, conso, @smsid);
+            CALL addSMS(random(1,10), ADDDATE(d, random(1,20)), random(1,dest), conso, @smsid);
             SET v_counter=v_counter+1;
         END WHILE;
     END|
@@ -126,7 +126,7 @@ CREATE PROCEDURE loopRandomMMS (
         DECLARE v_counter INT UNSIGNED DEFAULT 0;
         SET v_counter = 0;
         WHILE v_counter < numberLoop DO
-            CALL addMMS(random(1,10), ADDDATE(d, random(1,20)), dest, conso, @smsid);
+            CALL addMMS(random(1,10), ADDDATE(d, random(1,20)), random(1,dest), conso, @smsid);
             SET v_counter=v_counter+1;
         END WHILE;
     END|
@@ -170,7 +170,7 @@ CREATE PROCEDURE loopRandomAppel (
         WHILE v_counter < numberLoop DO
         /* random duration */
             SET dur = (ADDTIME('00:00:00', CONCAT('00:',CONCAT(CONCAT(random(1,30),':'),random(1,59)))));
-            CALL addAppel(ADDDATE(debut, random(1,20)), dur, dest, conso, @appelid);
+            CALL addAppel(ADDDATE(debut, random(1,20)), dur, random(1,dest), conso, @appelid);
             SET v_counter=v_counter+1;
         END WHILE;
     END|
@@ -194,22 +194,22 @@ CREATE PROCEDURE generateConso (
 
 DELIMITER ;
 
-
-CALL generateConso(20, '20161100', 'jean.martin@banane.fr', 1);
-CALL generateConso(20, '20161100', 'jean.ramos@hotmail.fr', 1);
-CALL generateConso(20, '20161100', 'rogerdelachance@free.fr', 1);
-CALL generateConso(20, '20161100', 'rvbtd@free.fr', 1);
-CALL generateConso(20, '20161100', 'jojomiche@orange.fr', 1);
-CALL generateConso(20, '20161100', 'admin@admin.fr', 1);
-CALL generateConso(20, '20161200', 'jean.martin@banane.fr', 1);
-CALL generateConso(20, '20161200', 'jean.ramos@hotmail.fr', 1);
-CALL generateConso(20, '20161200', 'rogerdelachance@free.fr', 1);
-CALL generateConso(20, '20161200', 'rvbtd@free.fr', 1);
-CALL generateConso(20, '20161200', 'jojomiche@orange.fr', 1);
-CALL generateConso(20, '20161200', 'admin@admin.fr', 1);
-CALL generateConso(20, '20170100', 'jean.martin@banane.fr', 1);
-CALL generateConso(20, '20170100', 'jean.ramos@hotmail.fr', 1);
-CALL generateConso(20, '20170100', 'rogerdelachance@free.fr', 1);
-CALL generateConso(20, '20170100', 'rvbtd@free.fr', 1);
-CALL generateConso(20, '20170100', 'jojomiche@orange.fr', 1);
-CALL generateConso(20, '20170100', 'admin@admin.fr', 1);
+SET @dest_max = (SELECT COUNT(*) FROM pays);
+CALL generateConso(20, '20161100', 'jean.martin@banane.fr', @dest_max);
+CALL generateConso(20, '20161100', 'jean.ramos@hotmail.fr', @dest_max);
+CALL generateConso(20, '20161100', 'rogerdelachance@free.fr', @dest_max);
+CALL generateConso(20, '20161100', 'rvbtd@free.fr', @dest_max);
+CALL generateConso(20, '20161100', 'jojomiche@orange.fr', @dest_max);
+CALL generateConso(20, '20161100', 'admin@admin.fr', @dest_max);
+CALL generateConso(20, '20161200', 'jean.martin@banane.fr', @dest_max);
+CALL generateConso(20, '20161200', 'jean.ramos@hotmail.fr', @dest_max);
+CALL generateConso(20, '20161200', 'rogerdelachance@free.fr', @dest_max);
+CALL generateConso(20, '20161200', 'rvbtd@free.fr', @dest_max);
+CALL generateConso(20, '20161200', 'jojomiche@orange.fr', @dest_max);
+CALL generateConso(20, '20161200', 'admin@admin.fr', @dest_max);
+CALL generateConso(20, '20170100', 'jean.martin@banane.fr', @dest_max);
+CALL generateConso(20, '20170100', 'jean.ramos@hotmail.fr', @dest_max);
+CALL generateConso(20, '20170100', 'rogerdelachance@free.fr', @dest_max);
+CALL generateConso(20, '20170100', 'rvbtd@free.fr', @dest_max);
+CALL generateConso(20, '20170100', 'jojomiche@orange.fr', @dest_max);
+CALL generateConso(20, '20170100', 'admin@admin.fr', @dest_max);
