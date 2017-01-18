@@ -83,9 +83,12 @@ CREATE PROCEDURE loopRandomSMS (
     IN conso INT(11))
     BEGIN
         DECLARE v_counter INT UNSIGNED DEFAULT 0;
+        DECLARE randdate DATETIME;
         SET v_counter = 0;
         WHILE v_counter < numberLoop DO
-            CALL addSMS(random(1,10), ADDDATE(d, random(1,20)), random(1,dest), conso, @smsid);
+            SET randdate = (ADDDATE(d, random(1,20)));
+            SET randdate = (ADDTIME(randdate, CONCAT(CONCAT(random(1,12),':'),CONCAT(CONCAT(random(1,59),':'),random(1,59)))));
+            CALL addSMS(random(1,10), randdate, random(1,dest), conso, @smsid);
             SET v_counter=v_counter+1;
         END WHILE;
     END|
@@ -124,9 +127,12 @@ CREATE PROCEDURE loopRandomMMS (
     IN conso INT(11))
     BEGIN
         DECLARE v_counter INT UNSIGNED DEFAULT 0;
+        DECLARE randdate DATETIME;
         SET v_counter = 0;
         WHILE v_counter < numberLoop DO
-            CALL addMMS(random(1,10), ADDDATE(d, random(1,20)), random(1,dest), conso, @smsid);
+            SET randdate = (ADDDATE(d, random(1,20)));
+            SET randdate = (ADDTIME(randdate, CONCAT(CONCAT(random(1,12),':'),CONCAT(CONCAT(random(1,59),':'),random(1,59)))));
+            CALL addMMS(random(1,10), randdate, random(1,dest), conso, @smsid);
             SET v_counter=v_counter+1;
         END WHILE;
     END|
@@ -166,11 +172,14 @@ CREATE PROCEDURE loopRandomAppel (
     BEGIN
         DECLARE v_counter INT UNSIGNED DEFAULT 0;
         DECLARE dur TIME;
+        DECLARE randdate DATETIME;
         SET v_counter = 0;
         WHILE v_counter < numberLoop DO
         /* random duration */
             SET dur = (ADDTIME('00:00:00', CONCAT('00:',CONCAT(CONCAT(random(1,30),':'),random(1,59)))));
-            CALL addAppel(ADDDATE(debut, random(1,20)), dur, random(1,dest), conso, @appelid);
+            SET randdate = (ADDDATE(debut, random(1,20)));
+            SET randdate = (ADDTIME(randdate, CONCAT(CONCAT(random(1,12),':'),CONCAT(CONCAT(random(1,59),':'),random(1,59)))));
+            CALL addAppel(randdate, dur, random(1,dest), conso, @appelid);
             SET v_counter=v_counter+1;
         END WHILE;
     END|
