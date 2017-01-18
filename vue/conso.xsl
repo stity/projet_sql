@@ -58,6 +58,8 @@
                         </fo:table-column>
                         <fo:table-column column-width="proportional-column-width(1)">
                         </fo:table-column>
+                        <fo:table-column column-width="proportional-column-width(1)">
+                        </fo:table-column>
                         <fo:table-header>
                             <fo:table-row>
                                 <fo:table-cell
@@ -78,6 +80,12 @@
                                                color="#880000">
                                     <fo:block>Destination</fo:block>
                                 </fo:table-cell>
+                                <fo:table-cell
+                                               border="0.5pt solid #CCCCCC"
+                                               padding="2pt"
+                                               color="#880000">
+                                    <fo:block>Zone</fo:block>
+                                </fo:table-cell>
 
                             </fo:table-row>
                         </fo:table-header>
@@ -92,6 +100,9 @@
                                     </fo:table-cell>
                                     <fo:table-cell border="0.5pt solid #CCCCCC" padding="2pt" display-align="center">
                                         <fo:block><xsl:value-of select="destination"/></fo:block>
+                                    </fo:table-cell>
+                                    <fo:table-cell border="0.5pt solid #CCCCCC" padding="2pt" display-align="center">
+                                        <fo:block><xsl:value-of select="zone"/></fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
                             </xsl:for-each>
@@ -113,6 +124,8 @@
                         </fo:table-column>
                         <fo:table-column column-width="proportional-column-width(1)">
                         </fo:table-column>
+                        <fo:table-column column-width="proportional-column-width(1)">
+                        </fo:table-column>
                         <fo:table-header>
                             <fo:table-row>
                                 <fo:table-cell
@@ -133,6 +146,12 @@
                                                color="#880000">
                                     <fo:block>Destination</fo:block>
                                 </fo:table-cell>
+                                <fo:table-cell
+                                               border="0.5pt solid #CCCCCC"
+                                               padding="2pt"
+                                               color="#880000">
+                                    <fo:block>Zone</fo:block>
+                                </fo:table-cell>
 
                             </fo:table-row>
                         </fo:table-header>
@@ -147,6 +166,9 @@
                                     </fo:table-cell>
                                     <fo:table-cell border="0.5pt solid #CCCCCC" padding="2pt" display-align="center">
                                         <fo:block><xsl:value-of select="destination"/></fo:block>
+                                    </fo:table-cell>
+                                    <fo:table-cell border="0.5pt solid #CCCCCC" padding="2pt" display-align="center">
+                                        <fo:block><xsl:value-of select="zone"/></fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
                             </xsl:for-each>
@@ -164,6 +186,8 @@
                               text-align="center"
                               space-before="1em"
                               width="100%">
+                        <fo:table-column column-width="proportional-column-width(1)">
+                        </fo:table-column>
                         <fo:table-column column-width="proportional-column-width(1)">
                         </fo:table-column>
                         <fo:table-column column-width="proportional-column-width(1)">
@@ -190,6 +214,12 @@
                                                color="#880000">
                                     <fo:block>Destination</fo:block>
                                 </fo:table-cell>
+                                <fo:table-cell
+                                               border="0.5pt solid #CCCCCC"
+                                               padding="2pt"
+                                               color="#880000">
+                                    <fo:block>Zone</fo:block>
+                                </fo:table-cell>
 
                             </fo:table-row>
                         </fo:table-header>
@@ -204,6 +234,9 @@
                                     </fo:table-cell>
                                     <fo:table-cell border="0.5pt solid #CCCCCC" padding="2pt" display-align="center">
                                         <fo:block><xsl:value-of select="destination"/></fo:block>
+                                    </fo:table-cell>
+                                    <fo:table-cell border="0.5pt solid #CCCCCC" padding="2pt" display-align="center">
+                                        <fo:block><xsl:value-of select="zone"/></fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
                             </xsl:for-each>
