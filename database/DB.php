@@ -11,7 +11,7 @@ class DB {
     function __construct()  {
         $this->servername = "localhost";
         $this->username = "root";
-        $this->password = "";
+        $this->password = "0000";
         $this->dbname = "telephonie";
 
         // Create connection

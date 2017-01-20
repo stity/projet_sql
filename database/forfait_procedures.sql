@@ -84,4 +84,54 @@ DELIMITER ;
 
 CALL addFormule('Formule Larnaque', 20, 2000, 10000, 2000, 'week_all', 0.2, 0.2, 0.2, 0, 'Europe et DOM-TOM', -1, -1, -1, NULL, NULL);
 CALL addFormule('Formule Larnaque', 20, 2000, 10000, 2000, 'week_end_all', 0.2, 0.2, 0.2, 0, 'Europe et DOM-TOM', -1, -1, -1, NULL, NULL);
+CALL addFormule('Formule Premium', 30, 4000, 20000, 4000, 'week_all', 0.1, 0.1, 0.1, 0, 'Europe et DOM-TOM', -1, -1, -1, NULL, NULL);
+CALL addFormule('Formule Premium', 30, 4000, 20000, 4000, 'week_end_all', 0.1, 0.1, 0.1, 0, 'Europe et DOM-TOM', -1, -1, -1, NULL, NULL);
 /* Pour créer une promotion, il "suffit" de remplir les champs à -1 et NULL dans les appels précédents */
+
+
+DELIMITER |
+
+/* Suppression d'un utilisateur */
+DROP PROCEDURE IF EXISTS deleteFormule|
+
+CREATE PROCEDURE deleteFormule (
+    IN idformule INT)
+    BEGIN
+        START TRANSACTION;
+        IF EXISTS (SELECT * FROM formule WHERE id=idformule) THEN
+			/* get rid of user */
+            DELETE FROM formule WHERE id=idformule;
+            DELETE FROM formule_telephone WHERE formule=idformule;
+            DELETE FROM formule_plage_horaire WHERE formule=idformule;
+            DELETE FROM formule_forfait_etranger WHERE formule=idformule;
+		ELSE
+            /* throw error */
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No product found for this id';
+		END IF;
+        COMMIT;
+    END|
+
+DELIMITER ;
+
+DELIMITER |
+
+DROP PROCEDURE IF EXISTS getFormuleForfaitEtranger|
+
+CREATE PROCEDURE getFormuleForfaitEtranger (
+    IN idformule INT)
+    BEGIN
+        SELECT forfait_etranger FROM formule_forfait_etranger WHERE formule=idformule;
+    END|
+
+DELIMITER ;
+
+DELIMITER |
+
+DROP PROCEDURE IF EXISTS addFormuleForfaitEtranger|
+
+CREATE PROCEDURE addFormuleForfaitEtranger (
+    IN idFormule INT,
+    IN idZone INT)
+    BEGIN
+        INSERT INTO formule_forfait_etranger (formule, forfait_etranger) VALUES (idFormule, idZone);
+    END|

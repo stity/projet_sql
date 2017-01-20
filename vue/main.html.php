@@ -58,7 +58,7 @@
             <div class="sidebar-subpart-container" data-section="products_all">
                 <?php if($_SESSION['login_level'] != 'admin' && $_SESSION['log_in']) { ?> <div class="sidebar-subpart <?= $vue=="my_products" ? "selected" : "" ?>" data-load="my_products"><a href="<?= "index.php?vue=my_products" ?>" class="text-content">Mes abonnements</a></div> <?php } ?>
                 <div class="sidebar-subpart <?= $vue=="foreign_products" ? "selected" : "" ?>" data-load="foreign_products"><a href="<?= "index.php?vue=foreign_products" ?>" class="text-content">Vers l'étranger</a></div>
-                <div class="sidebar-subpart <?= $vue=="products" ? "selected" : "" ?>" data-load="products"><a href="<?= "index.php?vue=products" ?>" class="text-content"><?php echo ($_SESSION['login_level'] == 'admin') ? 'Les' : 'Nouvel' ?> abonnement</a></div>
+                <div class="sidebar-subpart <?= $vue=="products" ? "selected" : "" ?>" data-load="products"><a href="<?= "index.php?vue=products" ?>" class="text-content"><?php echo ($_SESSION['login_level'] == 'admin') ? 'Les abonnements' : 'Nouvel abonnement' ?></a></div>
             </div>
         </div>
 
