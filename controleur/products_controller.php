@@ -1,6 +1,7 @@
 <?php
     /* Pour représenter les formules */
     class ProductsController {
+        var $return_results = null;
 
         function __construct($vue)  {
             if($_SESSION['login_level'] == 'admin'){
@@ -10,17 +11,130 @@
             }
         }
 
-        function get_abonnements($want_promotion, $want_formules){
-            if($want_promotion && $want_formules){
-                $sql = "SELECT * FROM formule;";
-            } else if($want_promotion){
-                $sql = "SELECT * FROM formule WHERE formule_base <> -1;";
-            } else {
-                $sql = "SELECT * FROM formule WHERE formule_base = -1;";
+        function update_product($data_tab){
+            try {
+                $db = new DB();
+                foreach($data_tab as $key => $element) {
+                    $data_tab[$key] = $db->escape_var($element);
+                }
+                if($data_tab['periode_semaine'] == "all_week"){
+                    $periode_semaine = 'all_' . $data_tab['plage_horaire'];
+                } else if($data_tab['periode_semaine'] == "week"){
+                    $periode_semaine = 'week_' . $data_tab['plage_horaire'];
+                } else if($data_tab['periode_semaine'] == "week-end"){
+                    $periode_semaine = 'week_end_' . $data_tab['plage_horaire'];
+                }
+                $data_tab['date_debut'] = ($data_tab['date_debut'] == '' ? 'NULL' : $data_tab['date_debut']);
+                $data_tab['date_fin'] = ($data_tab['date_fin'] == '' ? 'NULL' : $data_tab['date_fin']);
+                $data_tab['bloque'] = ($data_tab['bloque'] == 'oui' ? 1 : 0);
+                $sql = "CALL addFormule('".$data_tab['nom']."', '".$data_tab['prix_mensuel']."', '".$data_tab['limite_appel']."', '".$data_tab['limite_sms']."', '".$data_tab['limite_data']."', '".$periode_semaine."', '".$data_tab['prix_hors_forfait_appel']."', '".$data_tab['prix_hors_forfait_sms']."', '". $data_tab['prix_hors_forfait_data']."', '".$data_tab['bloque']."', NULL, '".$data_tab['prix_base']."', NULL, '".$data_tab['formule_base']."', ".$data_tab['date_debut'].", ".$data_tab['date_fin'].");";
+                $result = $db->execute($sql);
+            } catch (Exception $e) {
+                return $result = 'error';
             }
+        }
+
+        function get_abonnements($want_promotion, $want_formules){
+            if($this->return_results == null){
+                if($want_promotion && $want_formules){
+                    $sql = "SELECT * FROM formule;";
+                } else if($want_promotion){
+                    $sql = "SELECT * FROM formule WHERE formule_base <> -1;";
+                } else {
+                    $sql = "SELECT * FROM formule WHERE formule_base = -1;";
+                }
+                $db = new DB();
+                $result = $db->execute($sql);
+            } else {
+                $result = $this->return_results;
+            }
+            return $result;
+        }
+
+        function get_etrangers($id){
+            try{
+                $db = new DB();
+                $sql = "CALL getFormuleForfaitEtranger(".$id.");";
+                $result = $db->execute($sql);
+                $string_result = '';
+                while($row = mysqli_fetch_assoc($result)){
+                    $string_result = $string_result . ' ' . $row['forfait_etranger'];
+                }
+                return $string_result;
+            } catch(Exception $e) {
+                return '';
+            }
+        }
+
+        function filter_result($data){
+            if($data['promotions'] == 'on' && $data['abonnements'] == 'on'){
+                $sql_chunck = '';
+            } else if(!empty($data['promotions']) && $data['abonnements'] == 'on'){
+                $sql_chunck = 'formule_base = -1';
+            } else if($data['promotions'] == 'on' && !empty($data['abonnements'])){
+                $sql_chunck = 'formule_base <> -1';
+            } else {
+                $sql_chunck = 'formule_base = -2';
+            }
+            $data['max_price'] = ($data['max_price'] == '' ? 10000 : $data['max_price']);
+            $data['min_price'] = ($data['min_price'] == '' ? 0 : $data['min_price']);
+            $sql = 'SELECT * FROM formule WHERE prix_mensuel >= ' . $data['min_price'] . ' AND prix_mensuel <= ' .             $data['max_price'] . ($sql_chunck == '' ? '' : 'AND ') . $sql_chunck . ';';
             $db = new DB();
             $result = $db->execute($sql);
+            $this->return_results = $result;
+        }
+
+        function assoc_foreign_product($data){
+            try{
+                $id = $data['id'];
+                $sql = 'DELETE FROM formule_forfait_etranger WHERE formule=' . $id . ';';
+                foreach($data as $key => $element){
+                    if(preg_match('/zone_geo_[1-9]+/', $key)){
+                        $zone_id = preg_replace('/zone_geo_/', '', $key);
+                        $sql = $sql . ' CALL addFormuleForfaitEtranger(' . $id . ', ' . $zone_id . ');';
+                    }
+                }
+                $db = new DB();
+                $db->executeMulti($sql);
+            } catch(Exception $e){
+                var_dump('Une erreur est survenue');
+            }
+        }
+
+        function get_basics_abonnements(){
+            $db = new DB();
+            $sql = "SELECT id, nom, prix_mensuel FROM formule WHERE formule_base = -1";
+            $result = $db->execute($sql);
             return $result;
+        }
+
+        function delete_abonnement($id){
+            try {
+                $db = new DB();
+                $id = $db->escape_var($id);
+                $sql = "CALL deleteFormule(".$id.");";
+                $result = $db->execute($sql);
+            } catch (Exception $e) {
+                return $result = 'error';
+            }
+        }
+
+        function get_forfaits_etrangers(){
+            $db = new DB();
+            $sql = "SELECT id, nom FROM forfait_etranger;";
+            $result = $db->execute($sql);
+            return $result;
+        }
+
+        function getSubscription($mail){
+            try{
+                $sql = 'SELECT id_formule FROM achat WHERE id_utilisateur IN (SELECT idutilisateur FROM utilisateur WHERE mail = "'.$mail.'");';
+                $db = new DB();
+                $result = $db->execute($sql);
+                return $result;
+            } catch(Exception $e) {
+                var_dump($e);
+            }
         }
     }
 ?>
