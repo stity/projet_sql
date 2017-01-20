@@ -201,6 +201,64 @@ CREATE PROCEDURE generateConso (
         COMMIT;
     END|
 
+DROP PROCEDURE IF EXISTS getTotalPriceConso|
+
+CREATE PROCEDURE getTotalPriceConso (
+    IN consoId INT,
+    INOUT cost FLOAT)
+    BEGIN
+        DECLARE numberFrenchSMS INT;
+        DECLARE numberFrenchMMS INT;
+        START TRANSACTION;
+            /* initiate cost */
+            SET cost = 0;
+            /* get formule parameters */
+            SELECT formule.id, prix_mensuel, limite_appel, limite_sms, limite_data, prix_hors_forfait_appel, prix_hors_forfait_sms, prix_hors_forfait_data, plage_horaire
+                INTO @formule_id, @prix_mensuel, @limite_appel, @limite_sms, @limite_data, @prix_appel, @prix_sms, @prix_data, @plage_horaire
+                FROM consommation, achat, formule
+                WHERE (consommation.id_achat=achat.idachat
+                       AND achat.id_formule = formule.id
+                       AND consommation.idconsommation=consoId);
+            SET cost = cost + @prix_mensuel;
+
+            /* french sms and mms */
+            SET numberFrenchSMS = (SELECT SUM(volume) FROM (SELECT idmms as id, volume, destination FROM mms WHERE consommation=1 UNION ALL SELECT idsms as id, volume, destination FROM sms WHERE consommation=1) u);
+            IF numberFrenchSMS > @limite_sms THEN
+                SET cost = cost+(numberFrenchSMS-@limit_sms)*@prix_sms;
+            END IF;
+
+            /* other sms and mms */
+            BEGIN
+            DECLARE done INT DEFAULT FALSE;
+            DECLARE enumber_sms INT;
+            DECLARE elimite_sms INT;
+            DECLARE eprix_hors_forfait_sms FLOAT;
+            DECLARE smscursor CURSOR FOR (SELECT SUM(sms.volume), limite_sms, prix_hors_forfait_sms
+                FROM formule_forfait_etranger, forfait_etranger, (SELECT SUM(volume) as volume, destination FROM (SELECT idmms as id, volume, destination FROM mms WHERE consommation=consoId UNION ALL SELECT idsms as id, volume, destination FROM sms WHERE consommation=consoId) u GROUP BY destination) sms, zone_geographique_pays
+                WHERE (formule_forfait_etranger.formule = @formule_id
+                       AND formule_forfait_etranger.forfait_etranger = forfait_etranger.id
+                       AND zone_geographique_pays.pays = sms.destination
+                       AND forfait_etranger.zone = zone_geographique_pays.zone_geographique)
+                GROUP BY forfait_etranger.id);
+            DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+            OPEN smscursor;
+            smsLoop : LOOP
+                FETCH smscursor into enumber_sms, elimite_sms, eprix_hors_forfait_sms;
+                IF done THEN
+                    LEAVE smsLoop;
+                END IF;
+                IF enumber_sms > elimite_sms THEN
+                    SET cost = cost + (enumber_sms - elimite_sms)*eprix_hors_forfait_sms;
+                END IF;
+            END LOOP;
+
+            CLOSE smscursor;
+            END;
+        COMMIT;
+    END|
+
+
 DELIMITER ;
 
 SET @dest_max = (SELECT COUNT(*) FROM pays);
