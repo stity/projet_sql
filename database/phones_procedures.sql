@@ -52,3 +52,5 @@ CREATE PROCEDURE deletePhone (
 DELIMITER ;
 
 CALL addPhone('4,5" soit 11,4cm - Gorilla Glass3', true, '8 mégapixels, Zoom digital x6, Flash LED', '2 mégapixels, 1280x720 pixels', '2Go', true, true, 'http://boulanger.scene7.com/is/image/Boulanger/bfr_overlay?layer=comp&$t1=&$product_id=Boulanger/3700764702628_h_f_l_0&$i1=Boulanger/new_default&wid=350&hei=350', 'Trekker M1 Core', 'Crosscall', 279.00, '16.0 Go (mémoire interner), 128 Go (capacité max cartes mémoires)', 'Bluetooth, Wi-Fi 802.11 b/g/n', @id);
+CALL addPhone('5,5"', true, '16 mégapixels, Zoom digital x6, Flash LED', '1280x720 pixels', '3Go', true, false, 'http://img1.lesnumeriques.com/produits/35/24929/lg-g4_aafb49967f246ae1_450x400.jpg', 'G4', 'LG', 275.00, '32.0 Go (mémoire interner), 128 Go (capacité max cartes mémoires)', 'Bluetooth, Wi-Fi 802.11 b/g/n', @id);
+

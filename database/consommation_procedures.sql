@@ -209,27 +209,33 @@ CREATE PROCEDURE getTotalPriceConso (
     BEGIN
         DECLARE numberFrenchSMS INT;
         DECLARE numberFrenchMMS INT;
+        DECLARE frenchCalls INT;
         START TRANSACTION;
             /* initiate cost */
             SET cost = 0;
             /* get formule parameters */
-            SELECT formule.id, prix_mensuel, limite_appel, limite_sms, limite_data, prix_hors_forfait_appel, prix_hors_forfait_sms, prix_hors_forfait_data, plage_horaire
-                INTO @formule_id, @prix_mensuel, @limite_appel, @limite_sms, @limite_data, @prix_appel, @prix_sms, @prix_data, @plage_horaire
+            SELECT formule.id, prix_mensuel, limite_appel, limite_sms, limite_data, prix_hors_forfait_appel, prix_hors_forfait_sms, prix_hors_forfait_data, plage_horaire, consommation.conso_data
+                INTO @formule_id, @prix_mensuel, @limite_appel, @limite_sms, @limite_data, @prix_appel, @prix_sms, @prix_data, @plage_horaire, @data_conso
                 FROM consommation, achat, formule
                 WHERE (consommation.id_achat=achat.idachat
                        AND achat.id_formule = formule.id
                        AND consommation.idconsommation=consoId);
             SET cost = cost + @prix_mensuel;
 
+            /* data use */
+            IF @data_conso > @limite_data THEN
+                SET cost = cost + (@data_conso-@limite_data)*@prix_data;
+            END IF;
+
             /* french sms and mms */
             /* get the number of sms and mms sent outside every unlimited period to a french phone for the right month*/
             SET numberFrenchSMS = (SELECT SUM(volume) FROM  /*get sum of the remaining volume of sms and mms */
                                    (SELECT volume,isInPlageHoraire(date, formule_plage_horaire.plage_horaire) as appartient_plage
-                                        FROM (SELECT CONCAT('m',idmms) as id, volume, date, destination
-                                              FROM mms WHERE consommation=consoId
+                                        FROM (SELECT CONCAT('m',idmms) as id, volume, date
+                                              FROM mms WHERE consommation=consoId AND destination=1
                                               UNION ALL /* union des sms (dont l'id est préfixé par s) et des mms (dont l'id est préfixé par m) */
-                                              SELECT CONCAT('s',idsms) as id, volume, date , destination
-                                              FROM sms WHERE consommation=consoId) u,
+                                              SELECT CONCAT('s',idsms) as id, volume, date
+                                              FROM sms WHERE consommation=consoId AND destination=1) u,
                                         formule_plage_horaire
                                     WHERE formule_plage_horaire.formule=@formule_id /*récupération des plages horaires correspondant à la formule */
                                     GROUP BY u.id /* pour chaque sms/mms...*/
@@ -279,6 +285,68 @@ CREATE PROCEDURE getTotalPriceConso (
 
             CLOSE smscursor;
             END;
+
+            /* french calls */
+            SET frenchCalls = (SELECT IFNULL(SUM(duree_sec),0) FROM  /*get sum of the remaining volume of sms and mms */
+                                   (SELECT TIME_TO_SEC(duree) AS duree_sec,isInPlageHoraire(debut_appel, formule_plage_horaire.plage_horaire) as appartient_plage
+                                        FROM appel,
+                                        formule_plage_horaire
+                                    WHERE formule_plage_horaire.formule=@formule_id /*récupération des plages horaires correspondant à la formule */
+                                            AND appel.consommation = consoId
+                                            AND appel.destination = 1
+                                    GROUP BY appel.idappel /* pour chaque appel ...*/
+                                    HAVING SUM(appartient_plage)=0)  /* ... on regarde si la date d'envoi est compris dans au moins une plage */
+                                   temp);
+            SET frenchCalls = frenchCalls - MOD(frenchCalls,60);
+            SET frenchCalls = frenchCalls/60; /* passage en minutes */
+
+            IF frenchCalls > @limite_appel THEN
+                SET cost = cost + (frenchCalls - @limite_appel)*@prix_appel;
+            END IF;
+
+            /* other calls */
+            BEGIN
+            DECLARE done INT DEFAULT FALSE;
+            DECLARE eduree_appel INT;
+            DECLARE elimite_appel INT;
+            DECLARE eprix_hors_forfait_appel FLOAT;
+            DECLARE appelcursor CURSOR FOR (SELECT SUM(duree_sec),limite_appel, prix_hors_forfait_appel FROM
+                (SELECT TIME_TO_SEC(appel.duree) AS duree_sec, limite_appel, prix_hors_forfait_appel, isInPlageHoraire(appel.debut_appel, forfait_etranger_plage_horaire.plage) AS appartient_plage, forfait_etranger.id as id_forfait
+                FROM formule_forfait_etranger,
+                     forfait_etranger,
+                     appel,
+                     zone_geographique_pays,
+                     forfait_etranger_plage_horaire
+                WHERE (formule_forfait_etranger.formule = @formule_id
+                       AND formule_forfait_etranger.forfait_etranger = forfait_etranger.id
+                       AND zone_geographique_pays.pays = appel.destination
+                       AND forfait_etranger.zone = zone_geographique_pays.zone_geographique
+                       AND forfait_etranger_plage_horaire.forfait= forfait_etranger.id
+                       AND appel.consommation = consoId)
+                GROUP BY appel.idappel
+                HAVING SUM(appartient_plage)=0)
+                limited_appel
+                GROUP BY id_forfait);
+            DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+            OPEN appelcursor;
+            appelLoop : LOOP
+                FETCH appelcursor into eduree_appel, elimite_appel, eprix_hors_forfait_appel;
+                IF done THEN
+                    LEAVE appelLoop;
+                END IF;
+                SET eduree_appel = (eduree_appel-MOD(eduree_appel,60))/60; /* passage en minutes*/
+                IF eduree_appel > elimite_appel THEN
+                    SET cost = cost + (eduree_appel - elimite_appel)*eprix_hors_forfait_appel;
+                END IF;
+            END LOOP;
+
+            CLOSE appelcursor;
+            END;
+
+            SET cost = TRUNCATE(cost, 2);
+
+
         COMMIT;
     END|
 
