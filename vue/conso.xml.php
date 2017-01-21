@@ -1,6 +1,6 @@
 <?php
     require "../database/DB.php";
-    $consoId = 1;
+    $consoId = intval($_GET['consoId']);
 echo 'test';
     $db = new DB();
 ob_start();
