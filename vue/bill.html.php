@@ -23,7 +23,7 @@
                         <td><?php echo $date->format('M Y' );?></td>
                         <td><?php echo $row['prix'];?>€</td>
                         <td><?php echo $row['paye']? 'Oui' : 'Non'; ?></td>
-                        <td><a href="conso.xml.php?consoId=<?php echo $row['id'];?>"><i class="fa fa-file-pdf-o"></i></a></td>
+                        <td><a href="vue/conso.xml.php?consoId=<?php echo $row['id'];?>"><i class="fa fa-file-pdf-o"></i></a></td>
                     </tr>
                     <?php
                         }
