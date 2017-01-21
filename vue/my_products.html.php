@@ -17,12 +17,17 @@
                 <?php
                     $result = $controleur->get_abonnements();
                     while($row = mysqli_fetch_array($result)){
+
+                        $assoc_phones = $controleur->get_assoc_phones($row['id']);
+                        $assoc_phones_array = array();
+                        while($row_ = mysqli_fetch_array($assoc_phones))
+                        { $assoc_phones_array[] = $row_['telephone']; }
                 ?>
                     <tr>
                         <td class="product_name" data-data="<?php echo htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8') ?>"><?php echo $row['nom']?></td>
                         <td style="text-align:center;"><?php echo $row['prix_mensuel']?></td>
                         <td style="text-align:center;"><?php echo ($row['formule_base'] == -1) ? 'Non' : 'Oui' ?></td>
-                        <td style="text-align:center;"><?php echo ($row['telephone'] == NULL) ? '-' : 'Oui' ?></td>
+                        <td style="text-align:center;"><i class="icon fa fa-mobile-phone icon-phone" data-nom="<?php echo $row['nom']; ?>" data-id="<?php echo $row['id'] ?>" data-phones="<?php echo htmlentities(json_encode($assoc_phones_array)); ?>" style="float: inherit; color:<?php echo $assoc_phones->num_rows == 0 ? 'crimson' : 'green'; ?>"></i></td>
                         <td style="text-align:center;"><i class="icon fa fa-globe icon-etranger" data-nom="<?php echo $row['nom']; ?>" data-id="<?php echo $row['id'] ?>" data-forfaits="<?php echo $controleur->get_etrangers($row['id']); ?>" style="float: inherit; color:<?php echo $controleur->get_etrangers($row['id']) == '  ' ? 'crimson' : 'green'; ?>"></i></td>
                         <td>
                             <form class="unsubscribe" style="display:inline" action="<?php $_PHP_SELF ?>" method="post">Désinscrire
@@ -33,6 +38,8 @@
                 </tr>
                 <?php } ?>
             </table>
+            <br/>
+            Et ici la liste de tous les téléphones achetés auprès de nos services :
 
             <table style="margin-top:10pt;">
                 <tr>
@@ -54,27 +61,50 @@
                     ?>
             </table>
 
-
             <div display="none" id="foreign_products" data-foreign-products="<?php $foreigns = array(); $result = $controleur->get_forfaits_etrangers(); while($row = mysqli_fetch_assoc($result)){ $foreigns[] = $row; } echo htmlentities(json_encode($foreigns)); ?>"></div>
+            <div display="none" id="phones" data-phones="<?php $foreigns = array(); $result = $controleur->get_phones(); while($row = mysqli_fetch_assoc($result)){ $phones[] = $row; } echo htmlentities(json_encode($phones)); ?>"></div>
         </div>
-
-        <script type="text/javascript">
-            $('.icon-etranger').on('click', function(){
-                data = this.dataset.forfaits;
-                zone_geographiques = JSON.parse($('#foreign_products')[0].dataset.foreignProducts);
-                $.each(zone_geographiques, function(key, val){
-                   if(data.indexOf(val.id) != -1){
-                       zone_geographiques[key].checked = true;
-                   } else {
-                       zone_geographiques[key].checked = false;
-                   }
-                });
-                create_modal('assoc_foreign_product', 'Forfaits étrangers associés à ' + this.dataset.nom,
-                     {}, {}, 'remove', {}, {}, zone_geographiques);
-                $('#form_assoc_foreign_product').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
-                $('#modal_assoc_foreign_product input').remove();
-                $('#modal_assoc_foreign_product').toggle();
-            });
-        </script>
     </body>
+    <script type="text/javascript">
+        $('.icon-etranger').on('click', function(){
+            data = this.dataset.forfaits;
+            zone_geographiques = JSON.parse($('#foreign_products')[0].dataset.foreignProducts);
+            $.each(zone_geographiques, function(key, val){
+               if(data.indexOf(val.id) != -1){
+                   zone_geographiques[key].checked = true;
+               } else {
+                   zone_geographiques[key].checked = false;
+               }
+            });
+            create_modal('assoc_foreign_product', 'Forfaits étrangers associés à ' + this.dataset.nom,
+                 {}, {}, 'remove', {}, {}, zone_geographiques);
+            $('#form_assoc_foreign_product').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
+            $('#modal_assoc_foreign_product input').remove();
+            $('#modal_assoc_foreign_product .modal-ok').remove();
+            $('#modal_assoc_foreign_product .modal-cancel').html('OK');
+            $('#modal_assoc_foreign_product .modal-cancel').css('background-color', 'green');
+            $('#modal_assoc_foreign_product .modal-cancel').css('margin-right', '0px');
+            $('#modal_assoc_foreign_product').toggle();
+        });
+
+        $('.icon-phone').on('click', function(){
+            phones_ = JSON.parse($('#phones')[0].dataset.phones);
+            phones = {};
+            data = this.dataset.phones;
+            $.each(phones_, function(key, val){
+               if(data.indexOf(val.id) != -1){
+                   phones[key] = val;
+               }
+            });
+            create_modal('assoc_telephone', 'Téléphone associé à ' + this.dataset.nom,
+                 {}, {}, 'remove', {}, {}, phones);
+            $('#form_assoc_telephone').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
+            $('#modal_assoc_telephone .modal-ok').remove();
+            $('#modal_assoc_telephone .modal-cancel').html('OK');
+            $('#modal_assoc_telephone .modal-cancel').css('background-color', 'green');
+            $('#modal_assoc_telephone .modal-cancel').css('margin-right', '0px');
+            $('#form_assoc_telephone input').remove();
+            $('#modal_assoc_telephone').toggle();
+        });
+    </script>
 </html>

@@ -35,6 +35,18 @@
             }
         }
 
+        function get_assoc_phones($id){
+            try{
+                $db = new DB();
+                $sql = "CALL getFormuleTelephone(".$id.");";
+                $result = $db->execute($sql);
+                return $result;
+            } catch(Exception $e) {
+                var_dump($e);
+                return '';
+            }
+        }
+
         function get_forfaits_etrangers(){
             $db = new DB();
             $sql = "SELECT id, nom FROM forfait_etranger;";

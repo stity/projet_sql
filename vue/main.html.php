@@ -69,6 +69,14 @@
             <div id="main_header"><?php echo $title ?></div>
             <div id="main_subheader"><?php echo $subtitle ?></div>
             <div id="main_content">
+                <br>
+                Bienvenu sur le site de Télarnaque, première compagnie téléphonique auprès des Centraliens de Lyon.
+                <br><br>
+                Si vous n'êtes pas encore client, vous pourrez trouver les détails de tous nos téléphones et abonnements dans les rubriques associées dans le menu déroulant de gauche.
+                <br><br>
+                Si vous êtes déjà client chez nous, retrouvez nos différents produits, mais également vos consommations, vos achats, et souscrivez à de nouveaux produits si vous le désirez! Pour vous authentifier, cliquez sur l'icône de personnage (<div style="display:inline-block; margin-left:5px"><i class="icon fa fa-user" style="color:black"></i></div>) en haut à gauche de cette fenêtre.
+                <br><br>
+                Bonne navigation, et à bientôt chez Télarnaque.
             </div>
         </div>
         <?php

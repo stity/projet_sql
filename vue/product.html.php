@@ -133,7 +133,6 @@
                     $('.icon-etranger').on('click', function(){
                         data = this.dataset.forfaits;
                         zone_geographiques_ = JSON.parse($('#foreign_products')[0].dataset.foreignProducts);
-                        console.log(zone_geographiques_);
                         zone_geographiques = {};
                         $.each(zone_geographiques_, function(key, val){
                            if(data.indexOf(val.id) != -1){
@@ -144,6 +143,10 @@
                              {}, {}, 'remove', {}, {}, zone_geographiques);
                         $('#form_assoc_foreign_product').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
                         $('#modal_assoc_foreign_product input').remove();
+                        $('#modal_assoc_foreign_product .modal-ok').remove();
+                        $('#modal_assoc_foreign_product .modal-cancel').html('OK');
+                        $('#modal_assoc_foreign_product .modal-cancel').css('background-color', 'green');
+                        $('#modal_assoc_foreign_product .modal-cancel').css('margin-right', '0px');
                         $('#modal_assoc_foreign_product').toggle();
                     });
                 <?php } else { ?>
@@ -252,21 +255,43 @@
                     $('#modal_edit_product').toggle();
                 });
 
-                $('.icon-phone').on('click', function(){
-                    phones = JSON.parse($('#phones')[0].dataset.phones);
-                    data = this.dataset.phones;
-                    $.each(phones, function(key, val){
-                       if(data.indexOf(val.id) != -1){
-                           phones[key].checked = true;
-                       } else {
-                           phones[key].checked = false;
-                       }
-                    });
-                    create_modal('assoc_telephone', 'Téléphone associé à ' + this.dataset.nom,
-                         {}, {}, 'remove', {}, {}, phones);
-                    $('#form_assoc_telephone').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
-                    $('#modal_assoc_telephone').toggle();
-                })
+                <?php if($_SESSION['login_level'] == 'admin'){ ?>
+                    $('.icon-phone').on('click', function(){
+                        phones = JSON.parse($('#phones')[0].dataset.phones);
+                        data = this.dataset.phones;
+                        $.each(phones, function(key, val){
+                           if(data.indexOf(val.id) != -1){
+                               phones[key].checked = true;
+                           } else {
+                               phones[key].checked = false;
+                           }
+                        });
+                        create_modal('assoc_telephone', 'Téléphone associé à ' + this.dataset.nom,
+                             {}, {}, 'remove', {}, {}, phones);
+                        $('#form_assoc_telephone').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
+                        $('#modal_assoc_telephone').toggle();
+                    })
+                <?php } else { ?>
+                    $('.icon-phone').on('click', function(){
+                        phones_ = JSON.parse($('#phones')[0].dataset.phones);
+                        phones = {};
+                        data = this.dataset.phones;
+                        $.each(phones_, function(key, val){
+                           if(data.indexOf(val.id) != -1){
+                               phones[key] = val;
+                           }
+                        });
+                        create_modal('assoc_telephone', 'Téléphone associé à ' + this.dataset.nom,
+                             {}, {}, 'remove', {}, {}, phones);
+                        $('#form_assoc_telephone').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
+                        $('#modal_assoc_telephone .modal-ok').remove();
+                        $('#modal_assoc_telephone .modal-cancel').html('OK');
+                        $('#modal_assoc_telephone .modal-cancel').css('background-color', 'green');
+                        $('#modal_assoc_telephone .modal-cancel').css('margin-right', '0px');
+                        $('#form_assoc_telephone input').remove();
+                        $('#modal_assoc_telephone').toggle();
+                    })
+                <?php } ?>
 
                 $('#search').on('click', function(){
                     $('#form_search').submit();
