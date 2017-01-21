@@ -222,7 +222,19 @@ CREATE PROCEDURE getTotalPriceConso (
             SET cost = cost + @prix_mensuel;
 
             /* french sms and mms */
-            SET numberFrenchSMS = (SELECT SUM(volume) FROM (SELECT idmms as id, volume, destination FROM mms WHERE consommation=1 UNION ALL SELECT idsms as id, volume, destination FROM sms WHERE consommation=1) u);
+            /* get the number of sms and mms sent outside every unlimited period to a french phone for the right month*/
+            SET numberFrenchSMS = (SELECT SUM(volume) FROM  /*get sum of the remaining volume of sms and mms */
+                                   (SELECT volume,isInPlageHoraire(date, formule_plage_horaire.plage_horaire) as appartient_plage
+                                        FROM (SELECT CONCAT('m',idmms) as id, volume, date, destination
+                                              FROM mms WHERE consommation=consoId
+                                              UNION ALL /* union des sms (dont l'id est préfixé par s) et des mms (dont l'id est préfixé par m) */
+                                              SELECT CONCAT('s',idsms) as id, volume, date , destination
+                                              FROM sms WHERE consommation=consoId) u,
+                                        formule_plage_horaire
+                                    WHERE formule_plage_horaire.formule=@formule_id /*récupération des plages horaires correspondant à la formule */
+                                    GROUP BY u.id /* pour chaque sms/mms...*/
+                                    HAVING SUM(appartient_plage)=0)  /* ... on regarde si la date d'envoi est compris dans au moins une plage */
+                                   temp);
             IF numberFrenchSMS > @limite_sms THEN
                 SET cost = cost+(numberFrenchSMS-@limit_sms)*@prix_sms;
             END IF;
@@ -233,13 +245,25 @@ CREATE PROCEDURE getTotalPriceConso (
             DECLARE enumber_sms INT;
             DECLARE elimite_sms INT;
             DECLARE eprix_hors_forfait_sms FLOAT;
-            DECLARE smscursor CURSOR FOR (SELECT SUM(sms.volume), limite_sms, prix_hors_forfait_sms
-                FROM formule_forfait_etranger, forfait_etranger, (SELECT SUM(volume) as volume, destination FROM (SELECT idmms as id, volume, destination FROM mms WHERE consommation=consoId UNION ALL SELECT idsms as id, volume, destination FROM sms WHERE consommation=consoId) u GROUP BY destination) sms, zone_geographique_pays
+            DECLARE smscursor CURSOR FOR (SELECT SUM(volume),limite_sms, prix_hors_forfait_sms FROM
+                (SELECT sms.volume, limite_sms, prix_hors_forfait_sms, isInPlageHoraire(sms.date, forfait_etranger_plage_horaire.plage) AS appartient_plage, forfait_etranger.id as id_forfait
+                FROM formule_forfait_etranger,
+                     forfait_etranger,
+                     (SELECT CONCAT('m',idmms) as id, volume, date, destination FROM mms WHERE consommation=consoId
+                      UNION ALL
+                      SELECT CONCAT('s',idsms) as id, volume, date, destination FROM sms WHERE consommation=consoId)
+                     sms,
+                     zone_geographique_pays,
+                     forfait_etranger_plage_horaire
                 WHERE (formule_forfait_etranger.formule = @formule_id
                        AND formule_forfait_etranger.forfait_etranger = forfait_etranger.id
                        AND zone_geographique_pays.pays = sms.destination
-                       AND forfait_etranger.zone = zone_geographique_pays.zone_geographique)
-                GROUP BY forfait_etranger.id);
+                       AND forfait_etranger.zone = zone_geographique_pays.zone_geographique
+                       AND forfait_etranger_plage_horaire.forfait= forfait_etranger.id)
+                GROUP BY sms.id
+                HAVING SUM(appartient_plage)=0)
+                limited_sms
+                GROUP BY id_forfait);
             DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
             OPEN smscursor;
