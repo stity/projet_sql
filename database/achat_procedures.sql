@@ -41,12 +41,12 @@ DELIMITER ;
 SET @date = '2017-01-01T12:32:00';
 CALL addAchat(ADDDATE(@date, 1), 1, 1, 1, @id);
 
-CALL addAchat(ADDDATE(@date, 2), 1, 2, 1, @id);
+CALL addAchat(ADDDATE(@date, 2), 1, 2, 2, @id);
 
 CALL addAchat(ADDDATE(@date, 3), 1, 3, 1, @id);
 
-CALL addAchat(ADDDATE(@date, 4), 1, 4, 1, @id);
+CALL addAchat(ADDDATE(@date, 4), 1, 4, 2, @id);
 
 CALL addAchat(ADDDATE(@date, 5), 1, 5, 1, @id);
 
-CALL addAchat(ADDDATE(@date, 6), 1, 6, 1, @id);
+CALL addAchat(ADDDATE(@date, 6), 1, 6, 2, @id);

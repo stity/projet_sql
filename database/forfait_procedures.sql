@@ -123,9 +123,6 @@ CREATE PROCEDURE getFormuleForfaitEtranger (
         SELECT forfait_etranger FROM formule_forfait_etranger WHERE formule=idformule;
     END|
 
-DELIMITER ;
-
-DELIMITER |
 
 DROP PROCEDURE IF EXISTS addFormuleForfaitEtranger|
 
@@ -135,6 +132,23 @@ CREATE PROCEDURE addFormuleForfaitEtranger (
     BEGIN
         INSERT INTO formule_forfait_etranger (formule, forfait_etranger) VALUES (idFormule, idZone);
     END|
+
+DELIMITER ;
+CALL addFormuleForfaitEtranger(1,2);
+CALL addFormuleForfaitEtranger(1,3);
+CALL addFormuleForfaitEtranger(1,4);
+CALL addFormuleForfaitEtranger(1,5);
+CALL addFormuleForfaitEtranger(1,6);
+CALL addFormuleForfaitEtranger(1,7);
+CALL addFormuleForfaitEtranger(1,8);
+CALL addFormuleForfaitEtranger(2,2);
+CALL addFormuleForfaitEtranger(2,3);
+CALL addFormuleForfaitEtranger(2,4);
+CALL addFormuleForfaitEtranger(2,5);
+CALL addFormuleForfaitEtranger(2,6);
+CALL addFormuleForfaitEtranger(2,7);
+CALL addFormuleForfaitEtranger(2,8);
+DELIMITER |
 
 DROP PROCEDURE IF EXISTS getFormuleTelephone|
 

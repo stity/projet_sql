@@ -19,7 +19,7 @@ CREATE PROCEDURE generateFacture ()
                     LEAVE consoLoop;
                 END IF;
                 CALL getTotalPriceConso(id_conso, @cost);
-                INSERT INTO facture (consommation, prix, paye) VALUES (id_conso,@cost,FALSE);
+                INSERT INTO facture (consommation, prix, paye) VALUES (id_conso,@cost,random(1,3)=1);
             END LOOP;
 
             CLOSE consocursor;

@@ -52,3 +52,5 @@ CALL addPlageHoraire('all_all', '00:00:00', '23:59:59', 3);
 CALL addPlageHoraire('all_day', '06:00:00', '21:00:00', 3);
 CALL addPlageHoraire('all_morning', '00:00:00', '06:00:00', 3);
 CALL addPlageHoraire('all_evening', '21:00:00', '23:59:59', 3);
+
+CALL addPlageHoraire('never', '00:00:00' , '00:00:00', 0);

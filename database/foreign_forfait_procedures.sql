@@ -35,8 +35,15 @@ CREATE PROCEDURE addForeignForfait (
 
 DELIMITER ;
 
-CALL addForeignForfait('Europe et DOM-TOM', 1000, 10000, 2000, 0, 'week_all', 0.15, 0.15, 0.15, 1);
-CALL addForeignForfait('US et Canada', 500, 5000, 1000, 0, 'week_all', 0.1, 0.1, 0.1, 4);
+CALL addForeignForfait('Europe et DOM-TOM', 300, 100, 200, 0, 'week_all', 0.15, 0.15, 0.15, 2);
+CALL addForeignForfait('Europe élargie', 200, 100, 100, 0, 'week_evening', 0.1, 0.1, 0.1, 3);
+CALL addForeignForfait('Maghreb', 500, 5000, 1000, 0, 'week_morning', 0.1, 0.1, 0.1, 4);
+CALL addForeignForfait('Amérique du Nord', 500, 5000, 1000, 0, 'week_end_day', 0.1, 0.1, 0.1, 5);
+CALL addForeignForfait('Amérique du Sud', 500, 5000, 1000, 0, 'week_end_evening', 0.1, 0.1, 0.1, 6);
+CALL addForeignForfait('Asie', 500, 5000, 1000, 0, 'all_morning', 0.1, 0.1, 0.1, 7);
+CALL addForeignForfait('Reste du monde', 500, 5000, 1000, 0, 'week_all', 0.1, 0.1, 0.1, 8);
+CALL addForeignForfait('Réseaux satellitaires', 3, 3, 5, 0, 'never', 1.5, 0.8, 1.1, 9);
+
 
 DELIMITER |
 
