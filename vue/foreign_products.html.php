@@ -59,13 +59,13 @@
                     </tr>
                 <?php } ?>
             </table>
+            <div display="none" id="zones_geographiques" data-zones="<?php $zones = array(); $result = $controleur->get_zones(); while($row = mysqli_fetch_assoc($result)){ $zones[] = $row; } echo htmlentities(json_encode($zones)); ?>"></div>
             <?php
                 if($_SESSION['login_level'] == 'admin') {
             ?>
                 <div id="new_foreign_product" class="next-button quest-button"  >
                     Nouvel abonnement vers l'étranger
                 </div>
-                <div display="none" id="zones_geographiques" data-zones="<?php $zones = array(); $result = $controleur->get_zones(); while($row = mysqli_fetch_assoc($result)){ $zones[] = $row; } echo htmlentities(json_encode($zones)); ?>"></div>
             <?php
 
                 }

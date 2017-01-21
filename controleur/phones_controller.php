@@ -39,5 +39,16 @@
                 return $result = 'error';
             }
         }
+
+        function buy_phone($id){
+            try {
+                $db = new DB();
+                $usrid = $db->execute('SELECT idutilisateur FROM utilisateur WHERE mail="'.$_SESSION['usr_mail'].'";');
+                $sql = 'CALL addAchat("'.date('Y-m-d H:i:s').'", "'.$id.'" , "'.mysqli_fetch_array($usrid)[0].'", NULL, @id);';
+                $db->execute($sql);
+            } catch(Exception $e) {
+                var_dump($e);
+            }
+        }
     }
 ?>

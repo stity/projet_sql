@@ -14,10 +14,14 @@
         }
 
         function get_telephones(){
-            $sql = 'SELECT * FROM telephone WHERE idtelephone IN (SELECT telephone FROM achat WHERE id_utilisateur IN (SELECT id FROM utilisateur WHERE mail="'.$_SESSION['usr_mail'].'"));';
-            $db = new DB();
-            $result = $db->execute($sql);
-            return $result;
+            try{
+                $sql = 'SELECT * FROM telephone WHERE idtelephone IN (SELECT telephone FROM achat WHERE id_utilisateur IN (SELECT idutilisateur FROM utilisateur WHERE mail="'.$_SESSION['usr_mail'].'"));';
+                $db = new DB();
+                $result = $db->execute($sql);
+                return $result;
+            } catch(Exception $e) {
+                var_dump($e);
+            }
         }
 
         function get_etrangers($id){
@@ -52,6 +56,17 @@
             $sql = "SELECT id, nom FROM forfait_etranger;";
             $result = $db->execute($sql);
             return $result;
+        }
+
+        function get_phones(){
+            try{
+                $db = new DB();
+                $sql = "SELECT idtelephone AS id, modele AS nom FROM telephone;";
+                $result = $db->execute($sql);
+                return $result;
+            } catch(Exception $e){
+                var_dump($e);
+            }
         }
     }
 ?>

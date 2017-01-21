@@ -12,7 +12,7 @@
             Vous pourrez trouver dans la table ci-dessous la liste de vos forfaits.
             <table style="margin-top:10pt; width:80%">
                 <tr>
-                    <th>Nom</th> <th style="text-align:center;">Tarif (€/mois)</th> <th style="text-align:center;">Promotion</th> <th style="text-align:center;">Téléphone associé</th> <th style="text-align:center;">Forfaits étrangers</th> <th></th>
+                    <th>Nom</th> <th style="text-align:center;">Tarif (€/mois)</th> <th style="text-align:center;">Promotion</th> <th style="text-align:center;">Téléphone associé</th> <th style="text-align:center;">Forfaits étrangers</th>
                 </tr>
                 <?php
                     $result = $controleur->get_abonnements();
@@ -29,13 +29,7 @@
                         <td style="text-align:center;"><?php echo ($row['formule_base'] == -1) ? 'Non' : 'Oui' ?></td>
                         <td style="text-align:center;"><i class="icon fa fa-mobile-phone icon-phone" data-nom="<?php echo $row['nom']; ?>" data-id="<?php echo $row['id'] ?>" data-phones="<?php echo htmlentities(json_encode($assoc_phones_array)); ?>" style="float: inherit; color:<?php echo $assoc_phones->num_rows == 0 ? 'crimson' : 'green'; ?>"></i></td>
                         <td style="text-align:center;"><i class="icon fa fa-globe icon-etranger" data-nom="<?php echo $row['nom']; ?>" data-id="<?php echo $row['id'] ?>" data-forfaits="<?php echo $controleur->get_etrangers($row['id']); ?>" style="float: inherit; color:<?php echo $controleur->get_etrangers($row['id']) == '  ' ? 'crimson' : 'green'; ?>"></i></td>
-                        <td>
-                            <form class="unsubscribe" style="display:inline" action="<?php $_PHP_SELF ?>" method="post">Désinscrire
-                                <input type="hidden" name="form_name" value="form_unsubscribe"/>
-                                <input type="hidden" name="id" value="<?php echo $row['id']?>"/>
-                            </form>
-                        </td>
-                </tr>
+                    </tr>
                 <?php } ?>
             </table>
             <br/>
@@ -105,6 +99,25 @@
             $('#modal_assoc_telephone .modal-cancel').css('margin-right', '0px');
             $('#form_assoc_telephone input').remove();
             $('#modal_assoc_telephone').toggle();
+        });
+
+        $('.image-details').on('click', function(){
+            data = JSON.parse(this.dataset.data);
+            content = "<div style='display:table-cell; vertical-align:middle;'><img style='height:150px' src='" + data.photo_url + "'></div>" +
+            "<div style='display:table-cell;'><ul>"+
+                "<li>Prix : " + data.prix + "€</li>" +
+                "<li>Écran : " + data.ecran + "</li>" +
+                "<li>Appareil photo : " + data.appareil_photo + "</li>" +
+                "<li>Vidéo numérique : " + data.video_numerique + "</li>" +
+                "<li>Internet : " + data.capacite_internet + "</li>" +
+                "<li>RAM : " + data.ram + "</li>" +
+                "<li>Stockage : " + data.stockage + "</li>" +
+                "<li>Carte SD : " + (data.carte_sd == 1 ? 'Oui' : 'Non') + "</li>" +
+                "<li>Double SIM : " + (data.double_sim == 1 ? 'Oui' : 'Non') + "</li>" +
+                "<li>TV : " + (data.tv == 1 ? 'Oui' : 'Non') + "</li>" +
+            "</ul></div>";
+
+            create_more_details_modal(content, "Détails du " + data.marque + ' ' + data.modele, "phone");
         });
     </script>
 </html>

@@ -9,11 +9,13 @@
             <?php
                 if(!empty($_POST['form_name'])){
                     if($_POST['form_name'] == 'form_edit_phone'){
-                        $res = $controleur->update_phone($_POST);
+                        $controleur->update_phone($_POST);
                     } else if($_POST['form_name'] == 'form_new_phone'){
-                        $res = $controleur->update_phone($_POST);
+                        $controleur->update_phone($_POST);
                     } else if($_POST['form_name'] == 'form_del_phone'){
-                        $res = $controleur->delete_phone($_POST['id']);
+                        $controleur->delete_phone($_POST['id']);
+                    } else if($_POST['form_name'] == 'form_buy_phone'){
+                        $controleur->buy_phone($_POST['id']);
                     }
                 }
             ?>
@@ -26,7 +28,7 @@
 
             <table style="margin-top:10pt;">
                 <tr>
-                    <th>Marque</th> <th>Modèle</th> <th>Prix</th> <th>RAM</th> <th style="text-align:center">Visuel</th> <?php echo ($_SESSION['login_level'] == 'admin') ? '<th></th>' : '' ?>
+                    <th>Marque</th> <th>Modèle</th> <th>Prix</th> <th>RAM</th> <th style="text-align:center">Visuel</th> <th></th>
                 </tr>
                     <?php
                         $result = $controleur->get_all_phones();
@@ -52,8 +54,10 @@
                                 </div>
                             </td>
                         <?php
-                            }
+                            } else {
                         ?>
+                            <td data-id="<?php echo $row['idtelephone'] ?>" data-nom="<? php echo $row['marque'].' '.$row['modele'] ?>" class="buy_phone">Acheter</td>
+                        <?php } ?>
                     </tr>
                     <?php
                         }
@@ -72,6 +76,34 @@
         </div>
 
         <script type="text/javascript">
+            $('.buy_phone').on('click', function(){
+                $(document.body).append(
+                    '<div class="modal" id="modal_buy_phone">' +
+                        '<div class="modal-content">' +
+                        '<h1 class="modal-title">Acheter le ' + this.dataset.nom + '</h1>' +
+                        '<hr class="modal-row"/>' +
+                        '<form action="" method="post" id="form_buy_phone">' +
+                            'Voulez-vous acheter ce téléphone?' +
+                            '<input type="hidden" name="form_name" value="form_buy_phone"/>' +
+                            '<input type="hidden" name="id" value="' + this.dataset.id + '"/>' +
+                            '<hr class="modal-row"/>' +
+                            '<div class="modal-button">' +
+                                '<div id="ok_form_buy_phone" class="modal-button modal-ok">OK</div>' +
+                                '<div id="cancel_form_buy_phone" class="modal-button modal-cancel">Annuler</div>' +
+                            '</div>' +
+                        '</form>' +
+                        '</div>' +
+                    '</div>'
+                );
+                $('#cancel_form_buy_phone').on('click', function(){
+                    $('#modal_buy_phone').remove();
+                })
+                $('#ok_form_buy_phone').on('click', function(){
+                    $('#form_buy_phone').submit();
+                })
+                $('#modal_buy_phone').toggle();
+            });
+
             create_modal('new_phone', 'Créer un téléphone',
              {
                 marque: {label: 'Marque', default: ""},
