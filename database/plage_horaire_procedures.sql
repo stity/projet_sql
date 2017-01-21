@@ -16,6 +16,25 @@ CREATE PROCEDURE addPlageHoraire (
         COMMIT;
     END|
 
+DROP FUNCTION IF EXISTS isInPlageHoraire|
+
+CREATE FUNCTION isInPlageHoraire (
+    date_ DATETIME,
+    plageId INT(11)) RETURNS BOOLEAN
+    BEGIN
+        DECLARE day INT;
+        DECLARE rightDay BOOLEAN DEFAULT FALSE;
+        DECLARE result BOOLEAN;
+        SELECT heure_debut, heure_fin, jour INTO @debut, @fin, @jour FROM plage_horaire WHERE id=plageId;
+        SET day = WEEKDAY(date_);
+        SET result = false;
+        SET rightDay = (CASE @jour WHEN 3 THEN TRUE WHEN 2 THEN day > 4 WHEN 1 THEN day < 5 ELSE FALSE END);
+        IF rightDay AND (TIME(date_) BETWEEN @debut AND @fin) THEN
+            SET result = TRUE;
+        END IF;
+        RETURN result;
+    END|
+
 DELIMITER ;
 
 /* Les plages horaires sont celles sur lesquelles les consommation ne sont pas facturées */
