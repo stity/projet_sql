@@ -126,7 +126,7 @@ DROP TABLE IF EXISTS `facture`;
 CREATE TABLE IF NOT EXISTS `facture` (
   `idfacture` int(11) NOT NULL AUTO_INCREMENT,
   `consommation` int(11) DEFAULT NULL,
-  `prix` int(11) DEFAULT NULL,
+  `prix` float DEFAULT NULL,
   `paye` tinyint(2) DEFAULT NULL,
   PRIMARY KEY (`idfacture`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
