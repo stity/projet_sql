@@ -45,7 +45,7 @@ var parse_field_date = function(obj) {
 var parse_field_checkbox = function(obj) {
     str = '';
     $.each(obj, function(key, val){
-        str += '<div style="display:table-row;">' + '<input name="zone_geo_' + val.id + '" style="width:20pt; vertical-align:baseline;" type="checkbox" ' + (val.checked ? 'checked ' : '') + 'value=' + val.id + '><p class="form-label">' + val.nom + '</p></div>';
+        str += '<div style="display:table-row;">' + '<input name="field_' + val.id + '" style="width:20pt; vertical-align:baseline;" type="checkbox" ' + (val.checked ? 'checked ' : '') + 'value=' + val.id + '><p class="form-label">' + val.nom + '</p></div>';
     });
     return str;
 }

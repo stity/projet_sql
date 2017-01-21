@@ -135,3 +135,20 @@ CREATE PROCEDURE addFormuleForfaitEtranger (
     BEGIN
         INSERT INTO formule_forfait_etranger (formule, forfait_etranger) VALUES (idFormule, idZone);
     END|
+
+DROP PROCEDURE IF EXISTS getFormuleTelephone|
+
+CREATE PROCEDURE getFormuleTelephone (
+    IN idformule INT)
+    BEGIN
+        SELECT telephone FROM formule_telephone WHERE formule=idformule;
+    END|
+
+DROP PROCEDURE IF EXISTS addFormuleTelephone|
+
+CREATE PROCEDURE addFormuleTelephone (
+    IN idFormule INT,
+    IN idPhone INT)
+    BEGIN
+        INSERT INTO formule_telephone (formule, telephone) VALUES (idFormule, idPhone);
+    END|

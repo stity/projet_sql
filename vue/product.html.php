@@ -21,6 +21,12 @@
                         $controleur->assoc_foreign_product($_POST);
                     } else if($_POST['form_name'] == 'form_filter'){
                         $controleur->filter_result($_POST);
+                    } else if($_POST['form_name'] == 'form_subscribe'){
+                        $controleur->subscribe($_POST['id']);
+                    } else if($_POST['form_name'] == 'form_unsubscribe'){
+                        $controleur->unsubscribe($_POST['id']);
+                    } else if($_POST['form_name'] == 'form_assoc_telephone'){
+                        $controleur->assoc_telephone($_POST);
                     }
                 }
             ?>
@@ -57,22 +63,30 @@
                     $subscribed = null;
                     if($_SESSION['log_in'] && !$_SESSION['login_level']){
                         $subscribed_ = $controleur->getSubscription($_SESSION['usr_mail']);
-                        var_dump($subscribed_);
                         if($subscribed_ != null){
                             $subscribed = array();
                             while($row = mysqli_fetch_array($subscribed_))
-                            { $subscribed[] = $row; }
+                            { $subscribed[] = $row['id_formule']; }
                         }
                     }
                     $result = $controleur->get_abonnements(true, true);
                     while($row = mysqli_fetch_array($result)){
+                        $assoc_foreign_products = $controleur->get_etrangers($row['id']);
+                        $assoc_foreign_array = array();
+                        while($row_ = mysqli_fetch_array($assoc_foreign_products))
+                        { $assoc_foreign_array[] = $row_['forfait_etranger']; }
+
+                        $assoc_phones = $controleur->get_assoc_phones($row['id']);
+                        $assoc_phones_array = array();
+                        while($row_ = mysqli_fetch_array($assoc_phones))
+                        { $assoc_phones_array[] = $row_['telephone']; }
                 ?>
                     <tr>
                         <td class="product_name" data-data="<?php echo htmlentities(json_encode($row), ENT_QUOTES, 'UTF-8') ?>"><?php echo $row['nom']?></td>
                         <td style="text-align:center;"><?php echo $row['prix_mensuel']?></td>
                         <td style="text-align:center;"><?php echo ($row['formule_base'] == -1) ? 'Non' : 'Oui' ?></td>
-                        <td style="text-align:center;"><?php echo ($row['telephone'] == NULL) ? '-' : 'Oui' ?></td>
-                        <td style="text-align:center;"><i class="icon fa fa-globe icon-etranger" data-nom="<?php echo $row['nom']; ?>" data-id="<?php echo $row['id'] ?>" data-forfaits="<?php echo $controleur->get_etrangers($row['id']); ?>" style="float: inherit; color:<?php echo $controleur->get_etrangers($row['id']) == '  ' ? 'crimson' : 'green'; ?>"></i></td>
+                        <td style="text-align:center;"><i class="icon fa fa-mobile-phone icon-phone" data-nom="<?php echo $row['nom']; ?>" data-id="<?php echo $row['id'] ?>" data-phones="<?php echo htmlentities(json_encode($assoc_phones_array)); ?>" style="float: inherit; color:<?php echo $assoc_phones->num_rows == 0 ? 'crimson' : 'green'; ?>"></i></td>
+                        <td style="text-align:center;"><i class="icon fa fa-globe icon-etranger" data-nom="<?php echo $row['nom']; ?>" data-id="<?php echo $row['id'] ?>" data-forfaits="<?php echo htmlentities(json_encode($assoc_foreign_array)); ?>" style="float: inherit; color:<?php echo $assoc_foreign_products->num_rows == 0 ? 'crimson' : 'green'; ?>"></i></td>
                         <?php if ($_SESSION['login_level'] == 'admin') { ?>
                             <td>
                                 <div>
@@ -86,7 +100,16 @@
                             </td>
                         <?php } else if($_SESSION['log_in'] && !$_SESSION['login_level']){ ?>
                             <td>
-                                <?php echo $subscribed == null ? 'Souscrire' : (array_search($row['id'], $subscribed) ? '-' : 'Souscrire'); ?>
+                                <?php if($subscribed == null || (!is_numeric(array_search($row['id'], $subscribed)))){ ?>
+                                    <form class="subscribe" style="display:inline" action="<?php $_PHP_SELF ?>" method="post">
+                                        Souscrire
+                                <?php } else {?>
+                                    <form class="unsubscribe" style="display:inline" action="<?php $_PHP_SELF ?>" method="post">
+                                        Désinscrire
+                                <?php } ?>
+                                <input type="hidden" name="form_name" value="form_unsubscribe"/>
+                                <input type="hidden" name="id" value="<?php echo $row['id']?>"/>
+                                </form>
                             </td>
                         <?php } ?>
                     </tr>
@@ -94,6 +117,7 @@
             </table>
             <div display="none" id="basic_products" data-basic-products="<?php $products = array(); $products[]=array("id" => "-1", "nom" => "Aucune"); $result = $controleur->get_basics_abonnements(); while($row = mysqli_fetch_assoc($result)){ $products[] = $row; } echo htmlentities(json_encode($products)); ?>"></div>
             <div display="none" id="foreign_products" data-foreign-products="<?php $foreigns = array(); $result = $controleur->get_forfaits_etrangers(); while($row = mysqli_fetch_assoc($result)){ $foreigns[] = $row; } echo htmlentities(json_encode($foreigns)); ?>"></div>
+            <div display="none" id="phones" data-phones="<?php $foreigns = array(); $result = $controleur->get_phones(); while($row = mysqli_fetch_assoc($result)){ $phones[] = $row; } echo htmlentities(json_encode($phones)); ?>"></div>
             <?php
                 if($_SESSION['login_level'] == 'admin') {
             ?>
@@ -119,6 +143,10 @@
                              {}, {}, 'remove', {}, {}, zone_geographiques);
                         $('#form_assoc_foreign_product').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
                         $('#modal_assoc_foreign_product input').remove();
+                        $('#modal_assoc_foreign_product .modal-ok').remove();
+                        $('#modal_assoc_foreign_product .modal-cancel').html('OK');
+                        $('#modal_assoc_foreign_product .modal-cancel').css('background-color', 'green');
+                        $('#modal_assoc_foreign_product .modal-cancel').css('margin-right', '0px');
                         $('#modal_assoc_foreign_product').toggle();
                     });
                 <?php } else { ?>
@@ -181,8 +209,8 @@
                             nom: {label: 'Nom', default: ""},
                             prix_mensuel: {label: 'Prix mensuel', default: "10"},
                             limite_appel: {label: 'Nb heures d\'appel', default: "100"},
-                            limite_sms: {label: 'Nb SMS', default: ""},
-                            limite_data: {label: 'Nb Mo Internet', default: ""},
+                            limite_sms: {label: 'Nb SMS', default: "100"},
+                            limite_data: {label: 'Nb Mo Internet', default: "0"},
                             prix_hors_forfait_appel: {label: 'Appels hors forfait (€/min)', default: "0.15"},
                             prix_hors_forfait_sms: {label: 'SMS hors forfait (€/SMS)', default: "0.15"},
                             prix_hors_forfait_data: {label: 'Internet hors forfait (€/Mo)', default: "0.15"},
@@ -227,12 +255,58 @@
                     $('#modal_edit_product').toggle();
                 });
 
+                <?php if($_SESSION['login_level'] == 'admin'){ ?>
+                    $('.icon-phone').on('click', function(){
+                        phones = JSON.parse($('#phones')[0].dataset.phones);
+                        data = this.dataset.phones;
+                        $.each(phones, function(key, val){
+                           if(data.indexOf(val.id) != -1){
+                               phones[key].checked = true;
+                           } else {
+                               phones[key].checked = false;
+                           }
+                        });
+                        create_modal('assoc_telephone', 'Téléphone associé à ' + this.dataset.nom,
+                             {}, {}, 'remove', {}, {}, phones);
+                        $('#form_assoc_telephone').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
+                        $('#modal_assoc_telephone').toggle();
+                    })
+                <?php } else { ?>
+                    $('.icon-phone').on('click', function(){
+                        phones_ = JSON.parse($('#phones')[0].dataset.phones);
+                        phones = {};
+                        data = this.dataset.phones;
+                        $.each(phones_, function(key, val){
+                           if(data.indexOf(val.id) != -1){
+                               phones[key] = val;
+                           }
+                        });
+                        create_modal('assoc_telephone', 'Téléphone associé à ' + this.dataset.nom,
+                             {}, {}, 'remove', {}, {}, phones);
+                        $('#form_assoc_telephone').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
+                        $('#modal_assoc_telephone .modal-ok').remove();
+                        $('#modal_assoc_telephone .modal-cancel').html('OK');
+                        $('#modal_assoc_telephone .modal-cancel').css('background-color', 'green');
+                        $('#modal_assoc_telephone .modal-cancel').css('margin-right', '0px');
+                        $('#form_assoc_telephone input').remove();
+                        $('#modal_assoc_telephone').toggle();
+                    })
+                <?php } ?>
+
                 $('#search').on('click', function(){
                     $('#form_search').submit();
                 })
 
                 $('.icon-remove').on('click', function(){
                     this.parentNode.submit();
+                })
+
+                $('.subscribe').on('click', function(){
+                    this.submit();
+                })
+
+                $('.unsubscribe').on('click', function(){
+                    this.submit();
                 })
             </script>
         </div>
