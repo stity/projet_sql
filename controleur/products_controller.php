@@ -27,7 +27,7 @@
                 $data_tab['date_debut'] = ($data_tab['date_debut'] == '' ? 'NULL' : $data_tab['date_debut']);
                 $data_tab['date_fin'] = ($data_tab['date_fin'] == '' ? 'NULL' : $data_tab['date_fin']);
                 $data_tab['bloque'] = ($data_tab['bloque'] == 'oui' ? 1 : 0);
-                $sql = "CALL addFormule('".$data_tab['nom']."', '".$data_tab['prix_mensuel']."', '".$data_tab['limite_appel']."', '".$data_tab['limite_sms']."', '".$data_tab['limite_data']."', '".$periode_semaine."', '".$data_tab['prix_hors_forfait_appel']."', '".$data_tab['prix_hors_forfait_sms']."', '". $data_tab['prix_hors_forfait_data']."', '".$data_tab['bloque']."', NULL, '".$data_tab['prix_base']."', NULL, '".$data_tab['formule_base']."', ".$data_tab['date_debut'].", ".$data_tab['date_fin'].");";
+                $sql = "CALL addFormule('".$data_tab['nom']."', '".$data_tab['prix_mensuel']."', '".$data_tab['limite_appel']."', '".$data_tab['limite_sms']."', '".$data_tab['limite_data']."', '".$periode_semaine."', '".$data_tab['prix_hors_forfait_appel']."', '".$data_tab['prix_hors_forfait_sms']."', '". $data_tab['prix_hors_forfait_data']."', '".$data_tab['bloque']."', NULL, '".$data_tab['prix_base']."','".$data_tab['telephone']."', '".$data_tab['formule_base']."', ".$data_tab['date_debut'].", ".$data_tab['date_fin'].");";
                 $result = $db->execute($sql);
             } catch (Exception $e) {
                 return $result = 'error';
@@ -56,12 +56,20 @@
                 $db = new DB();
                 $sql = "CALL getFormuleForfaitEtranger(".$id.");";
                 $result = $db->execute($sql);
-                $string_result = '';
-                while($row = mysqli_fetch_assoc($result)){
-                    $string_result = $string_result . ' ' . $row['forfait_etranger'];
-                }
-                return $string_result;
+                return $result;
             } catch(Exception $e) {
+                return '';
+            }
+        }
+
+        function get_assoc_phones($id){
+            try{
+                $db = new DB();
+                $sql = "CALL getFormuleTelephone(".$id.");";
+                $result = $db->execute($sql);
+                return $result;
+            } catch(Exception $e) {
+                var_dump($e);
                 return '';
             }
         }
@@ -89,8 +97,8 @@
                 $id = $data['id'];
                 $sql = 'DELETE FROM formule_forfait_etranger WHERE formule=' . $id . ';';
                 foreach($data as $key => $element){
-                    if(preg_match('/zone_geo_[1-9]+/', $key)){
-                        $zone_id = preg_replace('/zone_geo_/', '', $key);
+                    if(preg_match('/field_[1-9]+/', $key)){
+                        $zone_id = preg_replace('/field_/', '', $key);
                         $sql = $sql . ' CALL addFormuleForfaitEtranger(' . $id . ', ' . $zone_id . ');';
                     }
                 }
@@ -101,11 +109,40 @@
             }
         }
 
+        function assoc_telephone($data){
+            try{
+                $id = $data['id'];
+                $sql = 'DELETE FROM formule_telephone WHERE formule=' . $id . ';';
+                foreach($data as $key => $element){
+                    if(preg_match('/field_[1-9]+/', $key)){
+                        $phone_id = preg_replace('/field_/', '', $key);
+                        $sql = $sql . ' CALL addFormuleTelephone(' . $id . ', ' . $phone_id . ');';
+                    }
+                }
+                $db = new DB();
+                $db->executeMulti($sql);
+            } catch(Exception $e){
+                var_dump($e);
+                var_dump('Une erreur est survenue');
+            }
+        }
+
         function get_basics_abonnements(){
             $db = new DB();
             $sql = "SELECT id, nom, prix_mensuel FROM formule WHERE formule_base = -1";
             $result = $db->execute($sql);
             return $result;
+        }
+
+        function get_phones(){
+            try{
+                $db = new DB();
+                $sql = "SELECT idtelephone AS id, modele AS nom FROM telephone;";
+                $result = $db->execute($sql);
+                return $result;
+            } catch(Exception $e){
+                var_dump($e);
+            }
         }
 
         function delete_abonnement($id){
@@ -133,6 +170,28 @@
                 $result = $db->execute($sql);
                 return $result;
             } catch(Exception $e) {
+                var_dump($e);
+            }
+        }
+
+        function subscribe($id){
+            try{
+                $db = new DB();
+                $usrid = $db->execute('SELECT idutilisateur FROM utilisateur WHERE mail="'.$_SESSION['usr_mail'].'";');
+                $sql = 'CALL addAchat("'.date('Y-m-d H:i:s').'", NULL, "'.mysqli_fetch_array($usrid)[0].'", '.$id.', @id);';
+                $result = $db->execute($sql);
+            } catch(Exception $e){
+                var_dump($e);
+            }
+        }
+
+        function unsubscribe($id){
+            try{
+                $db = new DB();
+                $usrid = $db->execute('SELECT idutilisateur FROM utilisateur WHERE mail="'.$_SESSION['usr_mail'].'";');
+                $sql = 'DELETE FROM achat WHERE id_utilisateur="'.mysqli_fetch_array($usrid)[0].'" AND id_formule="'.$id.'";';
+                $result = $db->execute($sql);
+            } catch(Exception $e){
                 var_dump($e);
             }
         }
