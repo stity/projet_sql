@@ -19,7 +19,7 @@
 
         function get_all_users() {
             $db = new DB();
-            $sql = "SELECT * FROM utilisateur;";
+            $sql = "SELECT * FROM utilisateur WHERE mail <> '".$_SESSION['usr_mail']."';";
             $result = $db->execute($sql);
             return $result;
         }
@@ -39,7 +39,7 @@
             }
         }
 
-        function update_user($nom, $mail, $adresse, $mdp, $is_admin){
+        function update_user($nom, $mail, $adresse, $mdp, $is_admin, $id){
             try {
                 $db = new DB();
                 $nom = $db->escape_var($nom);
@@ -48,7 +48,8 @@
                 $mdp = $db->escape_var($mdp);
                 $is_admin = $db->escape_var($is_admin);
                 $is_admin = ($is_admin == 'oui' ? 1 : 0);
-                $sql = "CALL addUser('".$nom."', '".$mail."', '".$adresse."', '".$mdp."', '".$is_admin."', @id);";
+                $id = $db->escape_var($id);
+                $sql = "CALL editUser('".$nom."', '".$mail."', '".$adresse."', '".$mdp."', '".$is_admin."', '".$id."');";
                 $result = $db->execute($sql);
             } catch (Exception $e) {
                 return $result = 'error';

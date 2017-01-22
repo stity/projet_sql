@@ -2,3 +2,8 @@ database/temp.sql
 test.php
 vue/conso.pdf
 vue/conso.xml
+*.aux
+*.log
+*.out
+*.tex~
+*.toc

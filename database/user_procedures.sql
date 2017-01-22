@@ -28,6 +28,23 @@ CREATE PROCEDURE addUser (
         COMMIT;
     END|
 
+DROP PROCEDURE IF EXISTS editUser|
+
+CREATE PROCEDURE editUser (
+    IN n VARCHAR(255),
+    IN m VARCHAR(255),
+    IN adr VARCHAR(255),
+    IN mdp VARCHAR(255),
+    IN isAdmin TINYINT(1),
+    IN id_ INT(11))
+    BEGIN
+        START TRANSACTION;
+        IF EXISTS (SELECT * FROM utilisateur WHERE idutilisateur=id_) THEN
+        	UPDATE utilisateur SET nom=n, mail=m, adresse=adr, mot_de_passe=mdp, admin=isAdmin WHERE idutilisateur=id_;
+        END IF;
+        COMMIT;
+    END|
+
 /* Récupération de l'ID d'un utilisateur */
 DROP PROCEDURE IF EXISTS getUserId |
 

@@ -27,7 +27,7 @@
                     $del_ok = ($res != 'error');
                 } else if($_POST['form_name'] == 'form_edit_user'){
                     $is_admin = array_key_exists('is_admin', $_POST) ? $_POST['is_admin'] : 'non';
-                    $res = $controleur->update_user($_POST['nom'], $_POST['mail'], $_POST['adresse'], $_POST['mdp'], $is_admin);
+                    $res = $controleur->update_user($_POST['nom'], $_POST['mail'], $_POST['adresse'], $_POST['mdp'], $is_admin, $_POST['id']);
                     $edit = true;
                     $edit_ok = ($res != 'error');
                 }
@@ -114,7 +114,7 @@
                                 <input type="hidden" name="id" value="<?php echo $row['idutilisateur'] ?>"/>
                                 <i class="icon fa fa-remove icon-remove"></i>
                             </form>
-                            <i style="margin-left:5px; color:green" class="icon fa fa-edit icon-edit" data-name="<?php echo $row['nom']?>" data-mail="<?php echo $row['mail']?>" data-adresse="<?php echo $row['adresse']?>" data-admin="<?php echo $row['admin'] ?>" data-mdp="<?php echo $row['mot_de_passe'] ?>"></i>
+                            <i style="margin-left:5px; color:green" class="icon fa fa-edit icon-edit" data-name="<?php echo $row['nom']?>" data-mail="<?php echo $row['mail']?>" data-adresse="<?php echo $row['adresse']?>" data-admin="<?php echo $row['admin'] ?>" data-mdp="<?php echo $row['mot_de_passe'] ?>" data-id="<?php echo $row['idutilisateur'] ?>"></i>
                         </div>
                     </td>
                 </tr>
@@ -131,6 +131,7 @@
 
             $('.icon-edit').on('click', function(){
                 create_modal('edit_user', 'Modifier le profil', {nom: {label: 'Nom', default: this.dataset.name}, mail: {label: 'Mail', default: this.dataset.mail}, adresse: {label: 'Adresse', default: this.dataset.adresse}, mdp: {label: 'Mot de passe', default: this.dataset.mdp}}, {is_admin: {label: 'Administrateur', checked: (this.dataset.admin == 1 ? 'oui' : 'non')}}, 'remove');
+                $('#form_edit_user').append('<input type="hidden" name="id" value="' + this.dataset.id + '"/>');
                 $('#modal_edit_user').toggle();
             });
 

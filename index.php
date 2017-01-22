@@ -48,7 +48,7 @@
             }
         }
         else {
-            $vue -> display('default', 'Ma compagnie de téléphone', 'Bienvenue', null);
+            $vue -> display('default', 'Centrale-Télécom', 'Bienvenue', null);
         }
     }
     catch (Exception $e) {

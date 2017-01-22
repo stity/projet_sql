@@ -1,0 +1,42 @@
+\subsection{Gestion des utilisateurs}
+\subsubsection{Les différents types d'utilisateurs}
+L'application est structurée autours de trois niveaux hiérarchiques pour les utilisateurs :
+\begin{itemize}
+  \itemperso{Visiteur}Il s'agit du niveau avec le moins d'accréditations possibles. Cet utilisateur correspond à une personne lambda naviguant sur le site, sans être client de Centrale-Télécom.
+  \itemperso{Client}Ce niveau permet de représenter les clients qui viennent consulter leurs factures, leurs abonnements ou encore les nouvelles offres disponibles.
+  \itemperso{Administrateur}Ce grade est celui avec le plus de droit. Il représente les employés de Centrale-Télécom qui ont donc le droit d'éditer les profils, créer des abonnements, des téléphones,...
+\end{itemize}
+Les clients et les administrateurs sont des profils qui sont détectés après une connexion à la plateforme. Ils sont différenciés au niveau de la base de données via la colonne \texttt{admin} de la table \texttt{utilisateur}, qui est mise à \texttt{TRUE} si l'utilisateur est un administrateur. Une fois la connexion effectuée, on stocke les informations dans la variable globale \texttt{\$\_SESSION}. Le cas des visiteurs correspond alors aux valeurs par défaut pour \texttt{\$\_SESSION}. On retrouve alors les caractéristiques de la Table~\ref{tab:utilisation_session}.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{ccc}
+    \toprule
+    \textbf{Type d'utilisateur} & \textbf{Champ \texttt{log\_in}} & \textbf{Champ \texttt{login\_level}} \\
+    \midrule
+    Visiteur & \texttt{False} & Sans importance (\texttt{False}) \\
+    Client   & \texttt{True} & \texttt{False} \\
+    Administrateur & \texttt{True} & \texttt{True} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Valeurs stockées dans \texttt{\$\_SESSION} pour les différents profils d'utilisateurs}
+  \label{tab:utilisation_session}
+\end{table}
+
+Ces grandeurs nous permettent d'adapter les affichages en fonction du type d'utilisateur.
+
+\subsubsection{Connexion et déconnexion}
+Ces deux actions sont réalisées à partir d'un vue accesible en cliquant sur l'icône \thColor{\faUser}.
+
+Une première vue permet aux utilisateurs de se déconnecter. Le principe est usuel, où l'utilisateur va fournir son adresse mail (qui fait office d'identifiant ici) ainsi que son mot de passe. Si les deux concordent, l'utilisateur est connecté, sinon il devra ré-essayer.
+
+Pour la déconnexion, il suffit de se rendre aussi sur cette page, qui propose alors un bouton pour se déconnecter.
+
+\subsubsection{\'Edition du profil en tant que client}
+
+\subsubsection{\'Edition des profils en tant qu'administrateur}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Rapport_BDD"
+%%% End:

@@ -4,10 +4,11 @@
         var $return_results = null;
 
         function __construct($vue)  {
+            var_dump($_SESSION);
             if($_SESSION['login_level'] == 'admin'){
                 $vue->display('products', 'Les abonnements', 'Édition des abonnements', $this);
             } else {
-                $vue->display('products', 'Les abonnements', 'Abonnements proposés par Télarnaque', $this);
+                $vue->display('products', 'Les abonnements', 'Abonnements proposés par Centrale-Télécom', $this);
             }
         }
 
