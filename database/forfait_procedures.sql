@@ -100,10 +100,7 @@ CREATE PROCEDURE deleteFormule (
         START TRANSACTION;
         IF EXISTS (SELECT * FROM formule WHERE id=idformule) THEN
 			/* get rid of user */
-            DELETE FROM formule WHERE id=idformule;
-            DELETE FROM formule_telephone WHERE formule=idformule;
-            DELETE FROM formule_plage_horaire WHERE formule=idformule;
-            DELETE FROM formule_forfait_etranger WHERE formule=idformule;
+            UPDATE formule SET is_deleted = true WHERE id=idformule;
 		ELSE
             /* throw error */
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No product found for this id';

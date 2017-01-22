@@ -95,7 +95,7 @@
 
         <table style="margin-top:10pt;">
             <tr>
-                <th>Nom</th> <th>Mail</th> <th>Adresse</th> <th>Mot de passe</th> <th>Administrateur</th> <th></th>
+                <th>Nom</th> <th>Mail</th> <th>Adresse</th> <th>Mot de passe</th> <th>Administrateur</th> <th style="width:10%"></th>
             </tr>
                 <?php
                     $result = $controleur->get_all_users();

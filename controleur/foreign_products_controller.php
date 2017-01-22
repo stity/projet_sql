@@ -39,7 +39,7 @@
         }
 
         function get_abonnements_etranger(){
-            $sql = "SELECT * FROM forfait_etranger";
+            $sql = "SELECT * FROM forfait_etranger WHERE is_deleted = FALSE";
             $db = new DB();
             $result = $db->execute($sql);
             return $result;

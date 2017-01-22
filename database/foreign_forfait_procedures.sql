@@ -55,8 +55,7 @@ CREATE PROCEDURE deleteFormuleEtranger (
         START TRANSACTION;
         IF EXISTS (SELECT * FROM forfait_etranger WHERE id=idformule) THEN
 			/* get rid of user */
-            DELETE FROM forfait_etranger WHERE id=idformule;
-            DELETE FROM formule_forfait_etranger WHERE forfait_etranger=idformule;
+            UPDATE forfait_etranger SET is_deleted = true WHERE id=idformule;
 		ELSE
             /* throw error */
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No product found for this id';

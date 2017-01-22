@@ -67,6 +67,7 @@ CREATE PROCEDURE deleteUser (
         IF EXISTS (SELECT * FROM utilisateur WHERE idutilisateur=id) THEN
 			/* get rid of user */
             DELETE FROM utilisateur WHERE idutilisateur=id;
+            DELETE FROM achat WHERE id_utilisateur=id;
 		ELSE
             /* throw error */
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No user found for this id';

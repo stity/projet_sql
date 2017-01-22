@@ -23,7 +23,7 @@
                 if($_SESSION['log_in']) {
             ?>
                 <form action="<?php $_PHP_SELF ?>" method="post" id="form_log_out" style="width:50%; margin:auto;">
-                    <div id="ok_logout" class="login-button">Déconnecter</div>
+                    <div id="ok_logout" style="background-color: darkred; width:auto; max-width:-moz-fit-content;" class="login-button">Déconnecter</div>
                     <input type="hidden" name="form_name" value="form_logout"/>
                 </form>
 

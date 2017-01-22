@@ -4,7 +4,6 @@
         var $return_results = null;
 
         function __construct($vue)  {
-            var_dump($_SESSION);
             if($_SESSION['login_level'] == 'admin'){
                 $vue->display('products', 'Les abonnements', 'Édition des abonnements', $this);
             } else {
@@ -38,11 +37,11 @@
         function get_abonnements($want_promotion, $want_formules){
             if($this->return_results == null){
                 if($want_promotion && $want_formules){
-                    $sql = "SELECT * FROM formule;";
+                    $sql = "SELECT * FROM formule WHERE is_deleted = FALSE;";
                 } else if($want_promotion){
-                    $sql = "SELECT * FROM formule WHERE formule_base <> -1;";
+                    $sql = "SELECT * FROM formule WHERE formule_base <> -1 AND is_deleted = FALSE;";
                 } else {
-                    $sql = "SELECT * FROM formule WHERE formule_base = -1;";
+                    $sql = "SELECT * FROM formule WHERE formule_base = -1 AND is_deleted = FALSE;";
                 }
                 $db = new DB();
                 $result = $db->execute($sql);
@@ -87,7 +86,7 @@
             }
             $data['max_price'] = ($data['max_price'] == '' ? 10000 : $data['max_price']);
             $data['min_price'] = ($data['min_price'] == '' ? 0 : $data['min_price']);
-            $sql = 'SELECT * FROM formule WHERE prix_mensuel >= ' . $data['min_price'] . ' AND prix_mensuel <= ' .             $data['max_price'] . ($sql_chunck == '' ? '' : 'AND ') . $sql_chunck . ';';
+            $sql = 'SELECT * FROM formule WHERE prix_mensuel >= ' . $data['min_price'] . ' AND prix_mensuel <= ' .             $data['max_price'] . ($sql_chunck == '' ? '' : 'AND ') . $sql_chunck . ' AND is_deleted = FALSE;';
             $db = new DB();
             $result = $db->execute($sql);
             $this->return_results = $result;
@@ -130,7 +129,7 @@
 
         function get_basics_abonnements(){
             $db = new DB();
-            $sql = "SELECT id, nom, prix_mensuel FROM formule WHERE formule_base = -1";
+            $sql = "SELECT id, nom, prix_mensuel FROM formule WHERE formule_base = -1 AND is_deleted = FALSE";
             $result = $db->execute($sql);
             return $result;
         }

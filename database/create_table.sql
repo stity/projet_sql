@@ -150,6 +150,7 @@ CREATE TABLE IF NOT EXISTS `forfait_etranger` (
   `prix_hors_forfait_sms` float DEFAULT NULL,
   `prix_hors_forfait_data` float DEFAULT NULL,
   `zone` int(11) DEFAULT NULL,
+  `is_deleted` tinyint(2) DEFAULT FALSE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -191,6 +192,7 @@ CREATE TABLE IF NOT EXISTS `formule` (
   `formule_base` int(11) DEFAULT NULL,
   `date_debut` date DEFAULT NULL,
   `date_fin` date DEFAULT NULL,
+  `is_deleted` tinyint(2) DEFAULT FALSE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
