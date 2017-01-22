@@ -16,7 +16,7 @@ Ainsi, pour installer la base de données, seule deux étapes sont nécessaires 
 \begin{lstlisting}
   mysql --default-character-set=utf8 -h localhost -u root --password='' telephonie < temp.sql
 \end{lstlisting}
-  \itemperso{Seconde étape}Lancer ce même script (\texttt{update\_DB.sh}) une fois que les informations remplies correspondent à votre configuration. Normalement, la base de données devrait se remplir automatiquement, en créant la structure des tables, en enregistrant les procédures qui doivent l'être et en se remplissant avec un ensemble de données test.
+  \itemperso{Seconde étape}Lancer ce même script (\texttt{update\_DB.sh}) une fois que les informations remplies correspondent à votre configuration. Normalement, la base de données devrait se remplir automatiquement, en créant la structure des tables, en enregistrant les procédures qui doivent l'être et en se remplissant avec un ensemble de données test. Si toute fois l'installation a échoué, veuillez importer directement dans votre base de données le fichier \texttt{temp.sql} qui vient d'être généré et qui contient toutes les commandes nécessaires à l'import de la base.
 \end{itemize}
 
 \subsubsection{Installation du code source}

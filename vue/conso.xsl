@@ -112,7 +112,7 @@
                     <fo:block color="#008800"
                               font-size="14pt"
                               font-style="normal"
-                              text-align="center">Fiches de notes</fo:block>
+                              text-align="center">Liste des MMS</fo:block>
 
                     <fo:table table-layout="fixed"
                               text-align="center"
