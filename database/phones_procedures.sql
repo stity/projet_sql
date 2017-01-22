@@ -43,6 +43,7 @@ CREATE PROCEDURE deletePhone (
         START TRANSACTION;
         IF EXISTS (SELECT * FROM telephone WHERE idtelephone=id) THEN
             DELETE FROM telephone WHERE idtelephone=id;
+            DELETE FROM formule_telephone WHERE telephone=id;
 		ELSE
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No phone found for this id';
 		END IF;

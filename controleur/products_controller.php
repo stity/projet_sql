@@ -75,6 +75,12 @@
         }
 
         function filter_result($data){
+            if(!array_key_exists('promotion', $data)){
+                $data['promotions'] = 'off';
+            }
+            if(!array_key_exists('abonnements', $data)){
+                $data['abonnements'] = 'off';
+            }
             if($data['promotions'] == 'on' && $data['abonnements'] == 'on'){
                 $sql_chunck = '';
             } else if(!empty($data['promotions']) && $data['abonnements'] == 'on'){
@@ -86,7 +92,7 @@
             }
             $data['max_price'] = ($data['max_price'] == '' ? 10000 : $data['max_price']);
             $data['min_price'] = ($data['min_price'] == '' ? 0 : $data['min_price']);
-            $sql = 'SELECT * FROM formule WHERE prix_mensuel >= ' . $data['min_price'] . ' AND prix_mensuel <= ' .             $data['max_price'] . ($sql_chunck == '' ? '' : 'AND ') . $sql_chunck . ' AND is_deleted = FALSE;';
+            $sql = 'SELECT * FROM formule WHERE prix_mensuel >= ' . $data['min_price'] . ' AND prix_mensuel <= ' .             $data['max_price'] . ($sql_chunck == '' ? '' : ' AND ') . $sql_chunck . ' AND is_deleted = FALSE;';
             $db = new DB();
             $result = $db->execute($sql);
             $this->return_results = $result;
