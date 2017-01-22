@@ -51,6 +51,13 @@
             }
         }
 
+        function get_basics_abonnements(){
+            $db = new DB();
+            $sql = "SELECT id, nom, prix_mensuel FROM formule WHERE formule_base = -1 AND is_deleted = FALSE";
+            $result = $db->execute($sql);
+            return $result;
+        }
+
         function get_forfaits_etrangers(){
             $db = new DB();
             $sql = "SELECT id, nom FROM forfait_etranger;";

@@ -56,7 +56,7 @@
                         <?php
                             } else {
                         ?>
-                            <td data-id="<?php echo $row['idtelephone'] ?>" data-nom="<? php echo $row['marque'].' '.$row['modele'] ?>" class="buy_phone">Acheter</td>
+                            <td data-id="<?php echo $row['idtelephone'] ?>" data-nom="<?php echo $row['marque'].' '.$row['modele'] ?>" class="buy_phone">Acheter</td>
                         <?php } ?>
                     </tr>
                     <?php
@@ -77,6 +77,7 @@
 
         <script type="text/javascript">
             $('.buy_phone').on('click', function(){
+                console.log(this.dataset);
                 $(document.body).append(
                     '<div class="modal" id="modal_buy_phone">' +
                         '<div class="modal-content">' +

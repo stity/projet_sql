@@ -14,7 +14,7 @@ Ces différents éléments peuvent être observés à la Figure~\ref{fig:liste-f
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.7\textwidth]{images/Plateforme/liste_formule}
+  \includegraphics[width=.6\textwidth]{images/Plateforme/liste_formule}
   \caption{Vue présentant la liste des formules de Centrale-Télécom}
   \label{fig:liste-formule}
 \end{figure}
@@ -26,7 +26,7 @@ Dans la suite, nous allons détailler les différentes actions possibles dans ce
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.5\textwidth]{images/Plateforme/detail_formule}
+  \includegraphics[width=.45\textwidth]{images/Plateforme/detail_formule}
   \caption{Détails d'une formule}
   \label{fig:details-formule}
 \end{figure}
@@ -37,22 +37,24 @@ Cette fonctionnalité est accessible à tous les utilisateurs.
 
 \subParagraphe{Téléphones associés à la formule}En cliquant sur l'icône \faMobilePhone{}, on peut consulter la liste des téléphones qui sont associés à la formule. Ces téléphones peuvent par exemple bénéficier de tarifs préférentiels si on achète cette formule (ceci n'a pas été matérialisé dans la base de données cependant). Un exemple vous est proposé à la Figure~\ref{fig:telephones-associes}, où on peut visualiser que la \og Formule Larnaque\fg{} est associée à un téléphone.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=.5\textwidth]{images/Plateforme/telephones_associes}
-  \caption{Téléphone(s) associé(s) à la \og Formule Larnaque\fg}
-  \label{fig:telephones-associes}
-\end{figure}
-
 On remarquera que cette vue est uniquement consultative, et que pour plus de détails, il est nécessaire de se rendre à la page de description des téléphones.
 
 \subParagraphe{Forfaits étrangers associés à la formule}Pour obtenir la liste des forfaits étrangers associés à une formule, il suffit (de manière similaire aux téléphones associés), de cliquer sur l'icône \faGlobe{} qui va alors ouvrir une modale avec la liste des forfaits étrangers compris dans la formule. Un exemple vous est proposé à la Figure~\ref{fig:foreign-associes}.
 
 \begin{figure}[ht]
-  \centering
-  \includegraphics[width=.5\textwidth]{images/Plateforme/foreign_associes}
-  \caption{Forfait(s) étranger(s) associé(s) à la \og Formule Deluxe\fg}
-  \label{fig:foreign-associes}
+  \begin{subfigure}{.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/Plateforme/telephones_associes}
+    \caption{Téléphone(s) associé(s)}
+    \label{fig:telephones-associes}
+  \end{subfigure}\hfill%
+  \begin{subfigure}{.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/Plateforme/foreign_associes}
+    \caption{Forfait(s) étranger(s) associé(s)}
+    \label{fig:foreign-associes}
+  \end{subfigure}
+  \caption{Consultation d'éléments associés à une formule}
 \end{figure}
 
 \subParagraphe{Recherche avancée}Afin de pouvoir plus facilement cibler une formule, nous avons mis en place quelques éléments de recherche pour les principaux critères. Il est ainsi possible de lancer une recherche en spécifiant un prix minimum et un prix maximum. Il est également possible de filtrer les résultats selon qu'il s'agisse d'offres promotionnelles, ou d'offres non-promotionnelles ou des deux.
@@ -61,7 +63,7 @@ Sur la base de tests qui vous a été fournis, on peut par exemple demander les 
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.7\textwidth]{images/Plateforme/filtrage-resultats}
+  \includegraphics[width=.6\textwidth]{images/Plateforme/filtrage-resultats}
   \caption{Filtrage des formules avec l'outil de recherche}
   \label{fig:filtrage-resultats}
 \end{figure}
@@ -95,7 +97,7 @@ Ces fonctionnalités ne sont accessibles qu'aux administrateurs. Pour cela, ces 
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.7\textwidth]{images/Plateforme/nouvel-abonnement}
+  \includegraphics[width=.6\textwidth]{images/Plateforme/nouvel-abonnement}
   \caption{Modale de création d'un nouvel abonnement}
   \label{fig:nouvel-abonnement}
 \end{figure}
@@ -123,7 +125,35 @@ Outre les champs classiques comme les prix ou les limites de consommation, on re
   \caption{Modale pour associer des éléments à une formule}
 \end{figure}
 
-\subParagraphe{\'Edition d'un forfait}Pour éditer les champs remplis à la création du forfait (voir Figure~\ref{fig:nouvel-abonnement})
+\subParagraphe{\'Edition d'une formule}Pour éditer les champs remplis à la création du forfait (voir Figure~\ref{fig:nouvel-abonnement}), l'administrateur peut cliquer sur un icône \vColor{\faEdit}. Une modale avec les même champs (mais configurés en accord avec les caractéristiques de la formule) s'ouvre et lui permet de modifier s'il le souhaite les différentes valeurs.
+
+\subParagraphe{Suppression d'une formule}Pour cela, l'administrateur doit cliquer sur l'icône \thColor{\faRemove} associée à la formule. À noter que la suppression n'est pas \òg réelle\fg, au sens où la formule n'est pas supprimée de la base de données. En effet, des clients pouvant avoir des consommations en lien avec cette formule, nous mettons en fait à jour un champs booléen \texttt{is\_deleted} qui permet de savoir si une formule est supprimée, tout en conservant ses caractéristiques pour l'établissement des factures des clients. Le processus est le même pour les forfaits étrangers.
+
+\subsubsection{Souscription à un forfait et consultation des forfaits}
+Ces fonctionnalités ne sont actives que pour les clients, nous allons les détailler dans cette sous-section.
+
+\subParagraphe{Souscrire à un forfait}La souscription se fait de manière similaire à celle de l'achat d'un téléphone. Ainsi, pour souscrire à un abonnement, un client doit se rendre dans la liste qui détaille tous les abonnements. Il dispose alors d'une colonne avec deux valeurs possibles :
+\begin{itemize}
+  \itemperso{Souscrire}En cliquant sur ce mot, le client souscrit alors automatiquement à la formule.
+  \itemperso{Désinscrire}En cliquant sur ce mot, le client se désinscrit automatiquement de la formule.
+\end{itemize}
+Si ce processus est (bien trop) simplifié par rapport à la réalité, il nous permet de représenter de manière fonctionnelle le mécanisme de souscription-désinscription et d'effectuer les actions associées en base de données. Les souscriptions étant considérées comme des achats, les modifications sont réalisées sur la table \texttt{achat} (tout comme les téléphones).
+
+Une fonctionnalité non prise en compte ici est de pouvoir associer un téléphone à cette souscription, ce qui n'a pas été prévu dans l'application finale, bien que cela soit possible en base de données (voir la procédure \texttt{addAchat}).
+
+\subParagraphe{Consultation des forfaits}Cette consultation peut s'effectuer de deux manières. Tout d'abord, dans la liste des forfaits, ceux où il est marquer \og Désinscrire\fg{} sont en fait les forfaits auxquels le client a déjà souscrit. Cependant, pour plus de lisibilité, une interface spécifique est prposée au client, nommée \og Mes abonnements\fg.
+
+Cette interface présente alors deux informations : la liste des formules auxquelles le client à souscrit et la liste des téléphones qu'il a acheté. Comme pour les vues avec la liste des formules et des téléphones, le client peut également consulter les détails de ces achats de manières similaires (clic sur l'image du téléphone, le nom de la formule, les icône \faGlobe{} et \faMobilePhone). L'interface générale vous est proposée à la Figure~\ref{fig:liste-achats}.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.7\textwidth]{images/Plateforme/liste_achats}
+  \caption{Vue résumant tous les achats (formules et téléphones) d'un client}
+  \label{fig:liste-achats}
+\end{figure}
+
+Ceci permet donc au client d'avoir une vision synthétique de ses achats.
+
 
 %%% Local Variables:
 %%% mode: latex

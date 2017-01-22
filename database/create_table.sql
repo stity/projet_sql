@@ -318,6 +318,7 @@ CREATE TABLE IF NOT EXISTS `telephone` (
   `prix` float DEFAULT NULL,
   `stockage` varchar(255) DEFAULT NULL,
   `capacite_internet` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(2) DEFAULT FALSE,
   PRIMARY KEY (`idtelephone`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

@@ -32,6 +32,7 @@
     "text/Plateforme/phones"
     "text/Plateforme/bills"
     "text/Plateforme/abonnements"
+    "text/Ameliorations/plateforme"
     "article"
     "art11")
    (TeX-add-symbols

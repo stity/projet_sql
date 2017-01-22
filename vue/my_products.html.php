@@ -54,7 +54,7 @@
                         }
                     ?>
             </table>
-
+            <div display="none" id="basic_products" data-basic-products="<?php $products = array(); $products[]=array("id" => "-1", "nom" => "Aucune"); $result = $controleur->get_basics_abonnements(); while($row = mysqli_fetch_assoc($result)){ $products[] = $row; } echo htmlentities(json_encode($products)); ?>"></div>
             <div display="none" id="foreign_products" data-foreign-products="<?php $foreigns = array(); $result = $controleur->get_forfaits_etrangers(); while($row = mysqli_fetch_assoc($result)){ $foreigns[] = $row; } echo htmlentities(json_encode($foreigns)); ?>"></div>
             <div display="none" id="phones" data-phones="<?php $foreigns = array(); $result = $controleur->get_phones(); while($row = mysqli_fetch_assoc($result)){ $phones[] = $row; } echo htmlentities(json_encode($phones)); ?>"></div>
         </div>
@@ -118,6 +118,21 @@
             "</ul></div>";
 
             create_more_details_modal(content, "Détails du " + data.marque + ' ' + data.modele, "phone");
+        });
+
+        $('.product_name').on('click', function(){
+            data = JSON.parse(this.dataset.data);
+            data_basic = JSON.parse($('#basic_products')[0].dataset.basicProducts);
+            content = "<div style='display:table-row; font-weight:bold;'>Généralités sur la formule</div>" +
+                        "<div style='display:table-row;'><div style='display:table-cell; width:50%'>Prix : " + data.prix_mensuel + "€/mois</div><div style='display:table-cell'>Nombre d'heures d'appel : " + data.limite_appel + " h/mois</div></div>" +
+                        "<div style='display:table-row;'><div style='display:table-cell'>Nombre de SMS : " + data.limite_sms + " SMS/mois</div><div style='display:table-cell'>Forfait Internet : " + data.limite_data + " Mo/mois</div></div>" +
+                        "<div style='display:table-row;'><div style='display:table-cell'>Appels hors forfait : " + data.prix_hors_forfait_appel + " €/min</div><div style='display:table-cell'>SMS hors forfait : " + data.prix_hors_forfait_sms + " €/SMS</div></div>" +
+                        "<div style='display:table-row;'><div style='display:table-cell'>Internet hors forfait : " + data.prix_hors_forfait_data + " €/Mo</div><div style='display:table-cell'>Forfait bloqué : " + data.bloque + "</div></div>" +
+                        "<hr style='width:50%'><div style='display:table-row; margin-top:60px; font-weight:bold;'>Caractéristiques promotionnelles</div>" +
+                        "<div style='display:table-row;'><div style='display:table-cell; width:50%;'>Prix de base : " + (data.prix_base == -1 ? (data.formule_base == -1 ? '-' : get_prix_from_formule_base(data.formule_base, data_basic) + " €/mois") : data.prix_base + ' €/mois') + "</div><div style='display:table-cell'>Formule de base : " + (data.formule_base == -1 ? '-' : get_nom_from_formule_base(data.formule_base, data_basic)) + "</div></div>" +
+                        "<div style='display:table-row;'><div style='display:table-cell'>Début promotion : " + (data.date_debut == null ? '-' : data.date_debut) + "</div><div style='display:table-cell'>Fin promotion : " + (data.date_fin == null ? '-' : data.date_fin) + "</div></div>";
+
+            create_more_details_modal(content, "Formule " + data.nom, "product");
         });
     </script>
 </html>

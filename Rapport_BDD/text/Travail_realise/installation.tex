@@ -5,7 +5,7 @@ Avant de présenter cette application, nous allons détailler la manière d'inst
 Tous les codes relatifs à la base de données sont présents dans le fichier \texttt{telephonie/database} de l'archive qui vous a été remise. Ce répertoire contient alors plusieurs types de fichiers :
 \begin{itemize}
   \itemperso{\texttt{DB.php}}Ce fichier correspond à la classe PHP développée pour réaliser la connexion à la base de données et l'exécution des requêtes/procédures vers cette base de données. Cette classe sera détaillée dans la Section~\ref{sec:elaboration-bdd}.
-  \itemperso{\texttt{create\_table.sql}}Ce fichier contient des requêtes SQL permettant de recréer la structure des tables SQL.
+  \itemperso{\texttt{create\_table.sql}}Les requêtes SQL permettant de recréer la structure des tables SQL.
   \itemperso{\texttt{.*\_procedures.sql}}Ces fichiers contiennent pas groupes thématiques (utilisateurs, téléphones, achats,...) les procédures à stocker dans la base de données, ainsi que des instruction pour remplir les différentes tables de la base de données.
   \itemperso{\texttt{update\_DB.sh}}Ce script permet de lancer \og automatiquement\fg{} l'installation de la base de données à partir des procédures stockées et de l'extraction de la structure de la base de données proposée dans le fichier \texttt{create\_table.sql}.
 \end{itemize}
@@ -33,7 +33,7 @@ Si vous voyez l'écran de la Figure~\ref{fig:hello-world} s'afficher, c'est que 
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=.55\textwidth]{images/Travail_realise/hello-world}
+  \includegraphics[width=.5\textwidth]{images/Travail_realise/hello-world}
   \caption{\'Ecran d'accueil de l'application}
   \label{fig:hello-world}
 \end{figure}
