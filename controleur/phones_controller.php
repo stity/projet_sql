@@ -8,7 +8,7 @@
 
         function get_all_phones() {
             $db = new DB();
-            $sql = "SELECT * FROM telephone;";
+            $sql = "SELECT * FROM telephone WHERE is_deleted=true;";
             $result = $db->execute($sql);
             return $result;
         }

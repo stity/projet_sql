@@ -10,6 +10,7 @@
     "fig:liste-etrangers"
     "fig:nouvel-abonnement"
     "fig:assoc-telephone"
-    "fig:assoc-foreign"))
+    "fig:assoc-foreign"
+    "fig:liste-achats"))
  :latex)
 
