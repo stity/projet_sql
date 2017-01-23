@@ -1,114 +1,119 @@
-\subsection{Réalisation de l'analyste Entité-Relation}
+\subsection{RÃ©alisation de l'analyse EntitÃ©-Relation}
 
-\subsubsection{Entités}
+\subsubsection{EntitÃ©s}
 
-Nous avons pu identifier les entités suivantes :
+Nous avons pu identifier les entitÃ©s suivantes :
 \begin{itemize}
-  \itemperso{Utilisateur}Chaque client doit être enregistré dans la base de données et dispose des champs suivants :
-		\begin{itemize}
-			\itemperso{Nom}Son nom.
-			\itemperso{Mail}Une adresse mail.
-			\itemperso{Adresse}Une adresse pour la facturation.
-			\itemperso{Mot de passe} Un mot de passe pour l'identification lors de la connexion.
-		\end{itemize}
-  \itemperso{Achat}Achat d'un téléphone, d'une formule ou les deux. Ils ont chacun :
-		\begin{itemize}
-			\itemperso{Date} Une date d'achat
-			\itemperso{Téléphone} Le téléphone acheté
-			\itemperso{Formule} La formule achetée
-			\itemperso{Utilisateur} L'utilisateur qui a fait l'achat
-		\end{itemize}
-	\itemperso{Consommation} Identifie l'ensemble des consommations effectuées par un utilisateur avec un forfait sur une période donnée.
-		\begin{itemize}
-			\itemperso{Date début}Date de début de la période d'enregistrement (période de 1 mois)
-			\itemperso{Consommation Données}Le montant de données consommées sur le mobile
-			\itemperso{Achat}L'achat avec lequel a été réalisé cette consommation
-		\end{itemize}
-	\itemperso{SMS et MMS} Les SMS et MMS envoyés ont les propriétés suivantes : 
-		\begin{itemize}
-			\itemperso{Date} La date et l'heure d'envoi
-			\itemperso{Volume} Le nombre de SMS/MMS correspondant au message envoyé
-			\itemperso{Destination} Le pays de destination du SMS/MMS
-			\itemperso{Consommation} La consommation à laquelle ce message est rattaché
-		\end{itemize}
-	\itemperso{Appel} Les appels émis ont les propriétés suivantes : 
-		\begin{itemize}
-			\itemperso{Date} La date et l'heure du début de l'appel
-			\itemperso{Durée} La durée de l'appel
-			\itemperso{Destination} Le pays de destination de l'appel
-			\itemperso{Consommation} La consommation à laquelle cet appel est rattaché
-		\end{itemize}
-	\itemperso{Facture} Les factures des clients ont les propriétés suivantes : 
-		\begin{itemize}
-			\itemperso{Prix} Le montant de la facture
-			\itemperso{Payé} Si le client a payé ou non cette facture
-			\itemperso{Consommation} La consommation à laquelle cette facture est rattaché
-		\end{itemize}
-	\itemperso{Téléphone} Tous les modèles de téléphones en vente et leurs caractéristiques : 
-		\begin{itemize}
-			\itemperso{Ecran}
-			\itemperso{Technologie Internet}
-			\itemperso{TV}
-			\itemperso{Appareil Photo}
-			\itemperso{RAM}
-			\itemperso{Stockage}
-			\itemperso{Carte SD}
-			\itemperso{Double SIM}
-			\itemperso{Photo}
-			\itemperso{Modele}
-			\itemperso{Marque}
-			\itemperso{Prix}
-		\end{itemize}
-	\itemperso{Formule} Tous les forfaits en vente disposent de : 
-		\begin{itemize}
-			\itemperso{Nom} Le nom du forfait
-			\itemperso{Prix} Le prix du forfait
-			\itemperso{Limite d'appel, SMS et data} Une limite pour les sms, les appels (en durée) et les données internet (en Mo).
-			\itemperso{Plage Horaire} Plage dans laquelle les communications sont gratuites
-			\itemperso{Prix hors forfait} Différent pour les appels, les SMS et les données.
-			\itemperso{Bloqué} Si le forfait est bloqué ou non
-		\end{itemize}
-	\itemperso{Forfait étranger} Conditions tarifaires pour la communication vers un pays ce qui comprend les même conditions qu'une formule plus :
-		\begin{itemize}
-			\itemperso{Destination} La zone géographique correspondant à ce forfait étranger
-		\end{itemize}
-	\itemperso{Promotion} Une promotion sur une formule
-		\begin{itemize}
-			\itemperso{Prix de base}
-			\itemperso{Nouveau prix}
-			\itemperso{Téléphone} Eventuellement un autre téléphone
-			\itemperso{Date de début} Début de la promotion
-			\itemperso{Durée} Durée de la promotion
-		\end{itemize}
-	\itemperso{Plage Horaire} Définit une période dans la semaine
-		\begin{itemize}
-			\itemperso{Nom} Nom associé à la plage horaire pour plus de clarté
-			\itemperso{Heure de début}
-			\itemperso{Heure de fin}
-			\itemperso{Jour} Les jours de la semaine concernés
-		\end{itemize}
-	\itemperso{Zone géographique} Définit une partie du monde
-		\begin{itemize}
-			\itemperso{Nom}
-		\end{itemize}
-	\itemperso{Pays} Les pays du monde
-		\begin{itemize}
-			\itemperso{Nom}
-		\end{itemize}
+  \itemperso{Utilisateur}Chaque client doit Ãªtre enregistrÃ© dans la base de donnÃ©es et dispose des champs suivants :
+  \begin{itemize}
+    \subitemperso{Nom}Son nom.
+    \subitemperso{Mail}Une adresse mail.
+    \subitemperso{Adresse}Une adresse pour la facturation.
+    \subitemperso{Mot de passe} Un mot de passe pour l'identification lors de la connexion.
+  \end{itemize}
+  \itemperso{Achat}Achat d'un tÃ©lÃ©phone, d'une formule ou les deux. Ils ont chacun :
+  \begin{itemize}
+    \subitemperso{Date} Une date d'achat
+    \subitemperso{TÃ©lÃ©phone} Le tÃ©lÃ©phone achetÃ©
+    \subitemperso{Formule} La formule achetÃ©e
+    \subitemperso{Utilisateur} L'utilisateur qui a fait l'achat
+  \end{itemize}
+  \itemperso{Consommation} Identifie l'ensemble des consommations effectuÃ©es par un utilisateur avec un forfait sur une pÃ©riode donnÃ©e.
+  \begin{itemize}
+    \subitemperso{Date dÃ©but}Date de dÃ©but de la pÃ©riode d'enregistrement (pÃ©riode de 1 mois)
+    \subitemperso{Consommation DonnÃ©es}Le montant de donnÃ©es consommÃ©es sur le mobile
+    \subitemperso{Achat}L'achat avec lequel a Ã©tÃ© rÃ©alisÃ© cette consommation
+  \end{itemize}
+  \itemperso{SMS et MMS} Les SMS et MMS envoyÃ©s ont les propriÃ©tÃ©s suivantes :
+  \begin{itemize}
+    \subitemperso{Date} La date et l'heure d'envoi
+    \subitemperso{Volume} Le nombre de SMS/MMS correspondant au message envoyÃ©
+    \subitemperso{Destination} Le pays de destination du SMS/MMS
+    \subitemperso{Consommation} La consommation Ã  laquelle ce message est rattachÃ©
+  \end{itemize}
+  \itemperso{Appel} Les appels Ã©mis ont les propriÃ©tÃ©s suivantes :
+  \begin{itemize}
+    \subitemperso{Date} La date et l'heure du dÃ©but de l'appel
+    \subitemperso{DurÃ©e} La durÃ©e de l'appel
+    \subitemperso{Destination} Le pays de destination de l'appel
+    \subitemperso{Consommation} La consommation Ã  laquelle cet appel est rattachÃ©
+  \end{itemize}
+  \itemperso{Facture} Les factures des clients ont les propriÃ©tÃ©s suivantes :
+  \begin{itemize}
+    \subitemperso{Prix} Le montant de la facture
+    \subitemperso{PayÃ©} Si le client a payÃ© ou non cette facture
+    \subitemperso{Consommation} La consommation Ã  laquelle cette facture est rattachÃ©
+  \end{itemize}
+  \itemperso{TÃ©lÃ©phone} Tous les modÃ¨les de tÃ©lÃ©phones en vente et leurs caractÃ©ristiques :
+  \begin{itemize}
+    \subitemperso{Ecran}
+    \subitemperso{Technologie Internet}
+    \subitemperso{TV}
+    \subitemperso{Appareil Photo}
+    \subitemperso{RAM}
+    \subitemperso{Stockage}
+    \subitemperso{Carte SD}
+    \subitemperso{Double SIM}
+    \subitemperso{Photo}
+    \subitemperso{Modele}
+    \subitemperso{Marque}
+    \subitemperso{Prix}
+  \end{itemize}
+  \itemperso{Formule} Tous les forfaits en vente disposent de :
+  \begin{itemize}
+    \subitemperso{Nom} Le nom du forfait
+    \subitemperso{Prix} Le prix du forfait
+    \subitemperso{Limite d'appel, SMS et data} Une limite pour les sms, les appels (en durÃ©e) et les donnÃ©es internet (en Mo).
+    \subitemperso{Plage Horaire} Plage dans laquelle les communications sont gratuites
+    \subitemperso{Prix hors forfait} DiffÃ©rent pour les appels, les SMS et les donnÃ©es.
+    \subitemperso{BloquÃ©} Si le forfait est bloquÃ© ou non
+  \end{itemize}
+  \itemperso{Forfait Ã©tranger} Conditions tarifaires pour la communication vers un pays ce qui comprend les mÃªme conditions qu'une formule plus :
+  \begin{itemize}
+    \subitemperso{Destination} La zone gÃ©ographique correspondant Ã  ce forfait Ã©tranger
+  \end{itemize}
+  \itemperso{Promotion} Une promotion sur une formule
+  \begin{itemize}
+    \subitemperso{Prix de base}
+    \subitemperso{Nouveau prix}
+    \subitemperso{TÃ©lÃ©phone} Eventuellement un autre tÃ©lÃ©phone
+    \subitemperso{Date de dÃ©but} DÃ©but de la promotion
+    \subitemperso{DurÃ©e} DurÃ©e de la promotion
+  \end{itemize}
+  \itemperso{Plage Horaire} DÃ©finit une pÃ©riode dans la semaine
+  \begin{itemize}
+    \subitemperso{Nom} Nom associÃ© Ã  la plage horaire pour plus de clartÃ©
+    \subitemperso{Heure de dÃ©but}
+    \subitemperso{Heure de fin}
+    \subitemperso{Jour} Les jours de la semaine concernÃ©s
+  \end{itemize}
+  \itemperso{Zone gÃ©ographique} DÃ©finit une partie du monde
+  \begin{itemize}
+    \subitemperso{Nom}
+  \end{itemize}
+  \itemperso{Pays} Les pays du monde
+  \begin{itemize}
+    \subitemperso{Nom}
+  \end{itemize}
 \end{itemize}
 
 \subsubsection{Les Relations}
-Certaines relations 1..n ont déjà été mentionnées ci-dessus.
+Certaines relations 1..n ont dÃ©jÃ  Ã©tÃ© mentionnÃ©es ci-dessus.
 Les relations n..n sont les suivantes :
 \begin {itemize}
-	\itemperso{Formule - Plage Horaire}
-	\itemperso{Forfait Etrangers - Plage Horaire}
-	\itemperso{Formule - Forfait Etrangers}
-	\itemperso{Formule - Téléphone}
-	\itemperso{Zone Géographique - Pays}
+  \itemperso{Formule - Plage Horaire}
+  \itemperso{Forfait Etrangers - Plage Horaire}
+  \itemperso{Formule - Forfait Etrangers}
+  \itemperso{Formule - TÃ©lÃ©phone}
+  \itemperso{Zone GÃ©ographique - Pays}
 \end {itemize}
 
-\subsubsection{Implémentation}
-Toutes les entités donneront lieu à des tables à l'exception de Promotion qui est une spécialisation de Formule. On ajoute alors les champs spécifiques à Promotion dans Formule sans toujours les utiliser.
-Toutes les relations n..n donnent également lieu à des tables d'associations.
+\subsubsection{ImplÃ©mentation}
+Toutes les entitÃ©s donneront lieu Ã  des tables Ã  l'exception de Promotion qui est une spÃ©cialisation de Formule. On ajoute alors les champs spÃ©cifiques Ã  Promotion dans Formule sans toujours les utiliser.
+Toutes les relations n..n donnent Ã©galement lieu Ã  des tables d'associations.
 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Rapport_BDD"
+%%% End:

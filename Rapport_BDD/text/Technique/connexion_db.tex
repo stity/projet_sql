@@ -1,0 +1,27 @@
+\subsection{Connexion à la base de données}
+La connexion à la base de données est réalisée par la classe \texttt{DB}. Cette classe offre les fonctionnalités discutées dans cette section.
+
+\subsubsection{Connexion et déconnexion}
+La connexion est réalisée dans le constructeur, en utilisant \texttt{mysqli}. En particulier, ce fichier est à configurer pour réussir à vous connecter à votre base de données. En cas d'erreur, cette classe renvoie une erreur pour avertir l'utilisateur que la connexion a échouée.
+
+La déconnexion est assurée via la méthode \texttt{close}.
+
+\subsubsection{Exécution de requête}
+Pour exécuter des requêtes, deux méthodes sont mises à disposition :
+\begin{itemize}
+  \itemperso{\texttt{execute}}Cette méthode permet d'exécuter les requêtes une à une.
+  \itemperso{\texttt{executeMulti}}Cette méthode permet d'exécuter plusieurs requêtes à la fois.
+\end{itemize}
+L'idée est ici de répondre au besoin, et de permettre d'appeler \texttt{mysqli} pour exécuter des requêtes et procédures partout dans l'application sans se poser des questions sur l'appel. En particulier, une erreur est renvoyée si des problèmes sont rencontrés. Cette erreur peut donc être récupérée dans les classes qui en ont besoin.
+
+\subsubsection{Traitement des chaînes de caractères}
+Pour permettre de filtrer les champs rentrés par les utilisateurs et échapper les caractères spéciaux, nous avons réalisé une fonction qui permet de faire cela de manière transparente, il s'agit de \texttt{escape\_var}. Cette méthode appelle juste \texttt{mysqli\_real\_escape\_string}, mais avec un nom plus court, et sans devoir repréciser systématiquement quelle connexion utiliser.
+
+\subsubsection{Utilisation de fonctions}
+Initiallement, nous avions hésité entre utilisation de fonctions ou de procédures dans notre application. Si à terme nous avons plus penchés pour des procédures, nous fournissons également dans la classe \texttt{DB} une méthode permettant l'exécution de fonctions, il s'agit de \texttt{callSQLFunction}.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Rapport_BDD"
+%%% End:

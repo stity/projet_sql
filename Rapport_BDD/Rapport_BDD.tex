@@ -54,7 +54,7 @@
 %
 % 4 - Importation des fichiers de bibliographie
 %
-\input{bib/all_bibs}
+%\input{bib/all_bibs}
 
 %% -------------------------------------------------------------- %%
 %								   %
@@ -102,8 +102,7 @@
 
 \section{\'Elaboration de la base de données}
 \label{sec:elaboration-bdd}
-\input{text/Elaboration/ER}
-\wiColor{a}
+\input{text/Elaboration/ER.tex}
 
 \section{Plateforme réalisée}
 \textit{Nous détaillerons dans cette partie les différents visuels de la plateforme. Nous préciserons également le fonctionnement administratif de la plateforme (clients, administrateurs, visiteurs).}
@@ -114,6 +113,8 @@
 \input{text/Plateforme/abonnements.tex}
 
 \section{Aspects techniques de la plateforme}
+\input{text/Technique/mvc.tex}
+\input{text/Technique/connexion_db.tex}
 
 \section{Améliorations possibles}
 \input{text/Ameliorations/plateforme.tex}
@@ -129,7 +130,7 @@
 %
 
 %\setcounter{page}{1}
-\renewcommand*{\thepage}{\Roman{page}}
+%\renewcommand*{\thepage}{\Roman{page}}
 
 \makeatletter
 \ifnum\pdf@strcmp{\whereTOC}{end}=0
