@@ -97,9 +97,17 @@ Nous avons pu identifier les entités suivantes :
   \end{itemize}
 \end{itemize}
 
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=.9\textwidth]{images/Elaboration/diagramme}
+    \caption{Le diagramme Entité-Relation de notre base de données}
+    \label{fig:diagrammeER}
+\end{figure}
+
+
 \subsubsection{Les Relations}
-Certaines relations 1..n ont déjà été mentionnées ci-dessus.
-Les relations n..n sont les suivantes :
+Certaines relations \texttt{1..N} ont déjà été mentionnées ci-dessus.
+Les relations \texttt{N..N} sont les suivantes :
 \begin {itemize}
   \itemperso{Formule - Plage Horaire}
   \itemperso{Forfait Etrangers - Plage Horaire}
@@ -108,9 +116,12 @@ Les relations n..n sont les suivantes :
   \itemperso{Zone Géographique - Pays}
 \end {itemize}
 
+
 \subsubsection{Implémentation}
 Toutes les entités donneront lieu à des tables à l'exception de Promotion qui est une spécialisation de Formule. On ajoute alors les champs spécifiques à Promotion dans Formule sans toujours les utiliser.
-Toutes les relations n..n donnent également lieu à des tables d'associations.
+Toutes les relations \texttt{N..N} donnent également lieu à des tables d'associations.
+
+Cette vision est résumée par le diagramme Entité-Relations présentés en Figure~\ref{fig:diagrammeER}.
 
 
 %%% Local Variables:
