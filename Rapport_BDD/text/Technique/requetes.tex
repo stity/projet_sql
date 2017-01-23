@@ -1,0 +1,134 @@
+\subsection{Les requêtes SQL}
+Notre stratégie a été de créer un maximum de procédures SQL de manière à simplifier les appels ultérieurs. Ainsi les insertions comme les opérations plus délicates utilisent des procédures.
+Dans le cas où les transactions ne sont pas nécessaires et où une seule valeur de retour est requise, on peut également utiliser une fonction.
+
+Cette section n'a pas pour vocation de présenter toutes les procédures mises en place mais plutôt de présenter la démarche entreprise et quelques requêtes caractéristiques.
+\subsubsection{Insertion dans la base}
+Prenons ici l'exemple de l'insertion d'une nouvelle consommation dans la base de données. On crée alors la procédure \texttt{addConso} qui permet de réaliser le travail voulu. Grâce à cette procédure nous pouvons également récupérer l'ID de la consommation nouvellement insérée.
+Il est donc nécessaire de recourrir à une transaction afin que l'ID de ligne ajoutée corresponde au dernier ID de la table. Le code SQL pour enregistrer cette procédure est donné ci-dessous :
+
+\begin{lstlisting}[language=sql]
+
+DROP PROCEDURE IF EXISTS addConso|
+
+CREATE PROCEDURE addConso (
+    IN debut DATETIME,
+    IN conso INT(11),
+    IN achat INT(11),
+    INOUT id INT)
+    BEGIN
+        IF NOT EXISTS (SELECT * FROM consommation WHERE idconsommation=id AND date_debut=debut AND id_achat=achat) THEN
+            START TRANSACTION;
+			/* insert new user */
+        	INSERT INTO consommation (date_debut, conso_data, id_achat) VALUES (debut, conso, achat);
+			/* get generated id */
+        	SET id = (SELECT idconsommation FROM consommation WHERE date_debut=debut AND conso_data=conso AND id_achat=achat ORDER BY idconsommation DESC LIMIT 1);
+            COMMIT;
+		END IF;
+    END|
+		
+\end{lstlisting}
+
+L'appel de cette procédure se fait de la manière suivante :
+
+\begin{lstlisting}[language=sql]
+CALL addConso('20161100', 10, 1, @id); /*consommation de novembre 2016 pour l'achat dont l'ID est 1*/
+\end{lstlisting}
+
+Il suffit ensuite de récupérer l'ID de la consommation générer de la manière suivante :
+
+\begin{lstlisting}[language=sql]
+SELECT @id;
+\end{lstlisting}
+
+\subsubsection{Une requête plus évoluée}
+La procédure \texttt{getTotalPriceConso} est l'une des plus compliquée car elle permet de calculer le prix total d'une consommation et donc tenir compte de tous les SMS et MMS envoyés, de tous les appels passés, de la consommation de données, de l'endroit vers lequel ont été fait ces opérations et l'heure à laquelle elles ont été faites.
+On considère ici que si un appel commence pendant une période illimitée alors il est gratuit même s'il se conclut après la fin de la période de gratuité.
+
+Attachons nous déjà à calculer le prix des SMS et MMS émis vers la France et qui dépende donc uniquement du forfait principal. Les opérations à réaliser sont les suivantes :
+\begin{enumerate}
+	\item Récupérer uniquement les SMS et MMS correspondant à la consommation en question et ceux émis vers la France
+	\item Garder uniquement ceux envoyés en dehors des périodes de gratuités
+	\item Sommer le volume des messages restants
+	\item Comparer ce volume à la limite de SMS autorisés
+	\item Si ce nombre est plus grand, multiplier la différence par le coût d'un SMS hors forfait et l'ajouter au coût total.
+\end{enumerate}
+
+Ce qui nous donne la portion de procédure suivante (la France a l'ID 1 dans la liste des pays) :
+
+\begin{lstlisting}[language=sql]
+/* get the number of sms and mms sent outside every unlimited period to a french phone for the right month*/
+            SET numberFrenchSMS = (SELECT SUM(volume) FROM  /*get sum of the remaining volume of sms and mms */
+                                   (SELECT volume,isInPlageHoraire(date, formule_plage_horaire.plage_horaire) as appartient_plage
+                                        FROM (SELECT CONCAT('m',idmms) as id, volume, date
+                                              FROM mms WHERE consommation=consoId AND destination=1
+                                              UNION ALL /* union des sms (dont l'id est préfixé par s) et des mms (dont l'id est préfixé par m) */
+                                              SELECT CONCAT('s',idsms) as id, volume, date
+                                              FROM sms WHERE consommation=consoId AND destination=1) u,
+                                        formule_plage_horaire
+                                    WHERE formule_plage_horaire.formule=@formule_id /*récupération des plages horaires correspondant à la formule */
+                                    GROUP BY u.id /* pour chaque sms/mms...*/
+                                    HAVING SUM(appartient_plage)=0)  /* ... on regarde si la date d'envoi est compris dans au moins une plage */
+                                   temp);
+            IF numberFrenchSMS > @limite_sms THEN
+                SET cost = cost+(numberFrenchSMS-@limit_sms)*@prix_sms;
+            END IF;
+\end{lstlisting}
+
+
+Calculons maintenant le coût des SMS et MMS émis vers l'étranger. Les étapes sont plus nombreuses :
+\begin{enumerate}
+	\item Récupérer uniquement les SMS et MMS correspondant à la consommation en question
+	\item Associer les messages à leur forfait étranger parmis ceux associés au forfait principal en fonction de leur destination
+	\item Garder uniquement ceux qui, pour chaque forfait, ne correspondent pas à une période de gratuité
+	\item Sommer le volume des messages restants
+	\item Comparer ce volume à la limite de SMS autorisés (ce qui dépend du forfait étranger considéré)
+	\item Si ce nombre est plus grand, multiplier la différence par le coût d'un SMS hors forfait et l'ajouter au coût total.
+\end{enumerate}
+
+Pour réaliser cette opération, nous effectuons une première requête semblable à la précendante. Puis, à l'aide d'un \texttt{CURSOR} nous parcourons les résultats afin de comparer la somme de message de chaque forfait à sa limite et le cas échéant ajouter le prix au prix total :
+
+
+\begin{lstlisting}[language=sql]
+ BEGIN
+            DECLARE done INT DEFAULT FALSE;
+            DECLARE enumber_sms INT;
+            DECLARE elimite_sms INT;
+            DECLARE eprix_hors_forfait_sms FLOAT;
+            DECLARE smscursor CURSOR FOR (SELECT SUM(volume),limite_sms, prix_hors_forfait_sms FROM
+                (SELECT sms.volume, limite_sms, prix_hors_forfait_sms, isInPlageHoraire(sms.date, forfait_etranger_plage_horaire.plage) AS appartient_plage, forfait_etranger.id as id_forfait
+                FROM formule_forfait_etranger,
+                     forfait_etranger,
+                     (SELECT CONCAT('m',idmms) as id, volume, date, destination FROM mms WHERE consommation=consoId
+                      UNION ALL
+                      SELECT CONCAT('s',idsms) as id, volume, date, destination FROM sms WHERE consommation=consoId)
+                     sms,
+                     zone_geographique_pays,
+                     forfait_etranger_plage_horaire
+                WHERE (formule_forfait_etranger.formule = @formule_id
+                       AND formule_forfait_etranger.forfait_etranger = forfait_etranger.id
+                       AND zone_geographique_pays.pays = sms.destination
+                       AND forfait_etranger.zone = zone_geographique_pays.zone_geographique
+                       AND forfait_etranger_plage_horaire.forfait= forfait_etranger.id)
+                GROUP BY sms.id
+                HAVING SUM(appartient_plage)=0)
+                limited_sms
+                GROUP BY id_forfait);
+            DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+            OPEN smscursor;
+            smsLoop : LOOP
+                FETCH smscursor into enumber_sms, elimite_sms, eprix_hors_forfait_sms;
+                IF done THEN
+                    LEAVE smsLoop;
+                END IF;
+                IF enumber_sms > elimite_sms THEN
+                    SET cost = cost + (enumber_sms - elimite_sms)*eprix_hors_forfait_sms;
+                END IF;
+            END LOOP;
+
+            CLOSE smscursor;
+            END;
+\end{lstlisting}
+
+La totalité de la procédure est consultable dans le fichier \texttt{consommation_procedures.sql}.
