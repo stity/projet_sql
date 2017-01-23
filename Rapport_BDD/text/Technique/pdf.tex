@@ -1,0 +1,93 @@
+\subsection{La génération du PDF de consommation détaillée}
+Pour pouvoir générer le PDF nous avons besoins de plusieurs choses :
+\begin{enumerate}
+	\item Récupérer les informations dans la base de données
+	\item Générer un fichier XML avec ces informations
+	\item Associer ce fichier XML à une feuille de style XSLT qui permet de transformer le document XML en document XSL:FO.
+	\item Générer le fichier avec FOP
+	\item Rediriger l'utilisateur vers le PDF.
+\end{enumerate}
+
+\subsubsection{Récupérer la consommation dans la base de données}
+Les données doivent être triées selon l'ordre chronologique.
+Cette opération est réalisée au moyen de la requête SQL suivante :
+
+
+\begin{lstlisting}[language=sql]
+SELECT date,volume, nom as destination, zone FROM sms JOIN (
+	SELECT pays.id,pays.nom as nom, zone_geographique.nom as zone FROM pays, zone_geographique, zone_geographique_pays 
+	WHERE pays.id=zone_geographique_pays.pays AND zone_geographique.id=zone_geographique_pays.zone_geographique
+	)
+pays ON (sms.destination=pays.id) WHERE consommation=consoId ORDER BY date ASC;
+\end{lstlisting}
+
+\subsubsection{Génération du fichier XML}
+
+A partir des informations précédemment récupérée, on vient remplir un fichier XML avec le script PHP partiel suivant :
+
+\begin{lstlisting}[language=php]
+$result = $db->execute($sql);
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $date = new DateTime($row['date']);
+        echo "<sms>\n";
+            echo "<date>".$date->format('d/m \à H\hi' )."</date>\n";
+            echo "<volume>".$row['volume']."</volume>\n";
+            echo "<destination>".$row['destination']."</destination>\n";
+            echo "<zone>".$row['zone']."</zone>\n";
+        echo "</sms>\n";
+\end{lstlisting}
+
+Ce qui donne le fichier XML suivant :
+
+\begin{lstlisting}[language=xml]
+	<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="conso.xsl"?><conso>
+<generationdate>22/01 à 21:06:09</generationdate><smslist>
+<sms>
+<date>02/11 à 12h42</date>
+<volume>6</volume>
+<destination>Rwanda</destination>
+<zone>Reste du monde</zone>
+</sms>
+...
+</smslist>
+<mmslist>
+<mms>
+<date>01/11 à 18h38</date>
+<volume>3</volume>
+<destination>Argentine</destination>
+<zone>Amérique du Sud</zone>
+</mms>
+...
+</mmslist>
+<appellist>
+<appel>
+<date>01/11 à 12h49</date>
+<duree>00:28:57</duree>
+<destination>Arabie Saoudite</destination>
+<zone>Reste du monde</zone>
+</appel>
+...
+</appellist>
+</conso>
+\end{lstlisting}
+
+
+\subsubsection{La transformation en PDF}
+La feuille de style XSLT ne sera pas expliquée ici car ce n'est pas le sujet principal. Néanmoins, le lecteur curieux pourra la trouver dans le fichier \texttt{conso.xsl}. Il s'agit de venir peupler trois tableaux XSL:FO avec les données XML.
+
+On transforme ensuite cette combinaison XML et XSLT en PDF grâce à l'utilitaire Apache FOP qui est écrit en JAVA.
+La génération est lancée par le script suivant (lequel est appelé par PHP).
+
+\begin{lstlisting}[language=bash]
+cd fop/build
+java -jar fop.jar -xml ../../conso.xml -xsl ../../conso.xsl -pdf ../../conso.pdf
+cd ../..
+\end{lstlisting}
+
+Il suffit ensuite de rediriger la page vers le fichier PDF.
+
+\begin{lstlisting}[language=php]
+header('Location: conso.pdf');
+\end{lstlisting}
+
