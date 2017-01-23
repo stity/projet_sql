@@ -108,6 +108,14 @@ Les relations n..n sont les suivantes :
 	\itemperso{Zone Géographique - Pays}
 \end {itemize}
 
+Cette vision est résumée par le diagramme Entité-Relations présentés en Figure~ref(fig:diagrammeER).
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=.95\textwidth]{images/Elaboration/diagramme}
+    \caption{Le diagramme Entité-Relation de notre base de données}
+    \label{fig:diagrammeER}
+\end{figure}
+
 \subsubsection{Implémentation}
 Toutes les entités donneront lieu à des tables à l'exception de Promotion qui est une spécialisation de Formule. On ajoute alors les champs spécifiques à Promotion dans Formule sans toujours les utiliser.
 Toutes les relations n..n donnent également lieu à des tables d'associations.
