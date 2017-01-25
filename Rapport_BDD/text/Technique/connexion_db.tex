@@ -2,7 +2,16 @@
 La connexion à la base de données est réalisée par la classe \texttt{DB}. Cette classe offre les fonctionnalités discutées dans cette section.
 
 \subsubsection{Connexion et déconnexion}
-La connexion est réalisée dans le constructeur, en utilisant \texttt{mysqli}. En particulier, ce fichier est à configurer pour réussir à vous connecter à votre base de données. En cas d'erreur, cette classe renvoie une erreur pour avertir l'utilisateur que la connexion a échouée.
+La connexion est réalisée dans le constructeur, en utilisant \texttt{mysqli}. En particulier, les lignes suivantes permettent de configurer la connexion à la base de données et sont à adapter à votre propre cas :
+
+\begin{lstlisting}[language=php]
+  $this->servername = "localhost";
+  $this->username = "root";
+  $this->password = "0000";
+  $this->dbname = "telephonie";
+\end{lstlisting}
+
+En cas d'erreur, cette classe renvoie une erreur pour avertir l'utilisateur que la connexion a échouée.
 
 La déconnexion est assurée via la méthode \texttt{close}.
 
@@ -12,10 +21,41 @@ Pour exécuter des requêtes, deux méthodes sont mises à disposition :
   \itemperso{\texttt{execute}}Cette méthode permet d'exécuter les requêtes une à une.
   \itemperso{\texttt{executeMulti}}Cette méthode permet d'exécuter plusieurs requêtes à la fois.
 \end{itemize}
-L'idée est ici de répondre au besoin, et de permettre d'appeler \texttt{mysqli} pour exécuter des requêtes et procédures partout dans l'application sans se poser des questions sur l'appel. En particulier, une erreur est renvoyée si des problèmes sont rencontrés. Cette erreur peut donc être récupérée dans les classes qui en ont besoin.
+Des exemples d'appels vous sont fournis ci-dessous:
+
+\begin{lstlisting}[language=php]
+  // La requête à exécuter
+  $sql = "SELECT * FROM forfait_etranger WHERE is_deleted = FALSE;";
+  // Création de la connexion
+  $db = new DB();
+  // Exécution de la requête
+  $result = $db->execute($sql);
+\end{lstlisting}
+% $
+
+Et avec l'utilisation de \texttt{executeMulti} :
+\begin{lstlisting}[language=php]
+  $sql = "DELETE FROM forfait_etranger WHERE id=2;"
+  $sql = $sql . " SELECT * FROM forfait_etranger WHERE is_deleted = FALSE;";
+  // $sql contient alors deux requêtes d'affilée.
+  $db = new DB();
+  // Ces requêtes seront correctement traitées par executeMulti.
+  $db->executeMulti($sql);
+\end{lstlisting}
+% $
+
+L'idée est ici de répondre au besoin, et de permettre d'appeler \texttt{mysqli} pour exécuter des requêtes et procédures partout dans l'application sans se poser des questions sur l'appel (encodage, filtrage de l'erreur,...). En particulier, une erreur est renvoyée si des problèmes sont rencontrés. Cette erreur peut donc être récupérée dans les classes qui en ont besoin.
 
 \subsubsection{Traitement des chaînes de caractères}
 Pour permettre de filtrer les champs rentrés par les utilisateurs et échapper les caractères spéciaux, nous avons réalisé une fonction qui permet de faire cela de manière transparente, il s'agit de \texttt{escape\_var}. Cette méthode appelle juste \texttt{mysqli\_real\_escape\_string}, mais avec un nom plus court, et sans devoir repréciser systématiquement quelle connexion utiliser.
+
+Un exemple d'appel vous est proposé ci-dessous :
+\begin{lstlisting}[language=php]
+  $sql = "DELETE FROM forfait_etranger WHERE nom='". $db->escape_var($el) ."';";
+\end{lstlisting}
+% $
+
+On s'assure ainsi d'éviter des intrusions SQL dans notre base de données. Nous avons mis ceci en place sur un certain nombre de requêtes, mais il aurait été judicieux de le déployer à toutes les requêtes prenant des paramètres en provenance de la partie client.
 
 \subsubsection{Utilisation de fonctions}
 Initiallement, nous avions hésité entre utilisation de fonctions ou de procédures dans notre application. Si à terme nous avons plus penchés pour des procédures, nous fournissons également dans la classe \texttt{DB} une méthode permettant l'exécution de fonctions, il s'agit de \texttt{callSQLFunction}.

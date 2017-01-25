@@ -1,0 +1,218 @@
+\begin{tikzpicture}[
+  every matrix/.style= {minimum width=3cm, inner sep=0cm},
+  every node/.style=   {inner sep=.15cm, minimum width=3cm},
+  auto,
+  title/.style=         {inner sep=.25cm, fill=bluenight!25},
+  >=Stealth
+  ]
+
+  \matrix [minimum width=4.35cm, draw] (formule) at (0,0) [row sep=1mm,column sep=2mm]{
+    \node [minimum width=4.35cm, title] (formule_name) {\textbf{Formule}};\\
+    \node {\bddkey id};\\
+    \node {nom};\\
+    \node {prix\_mensuel};\\
+    \node {limite\_appel};\\
+    \node {limite\_sms};\\
+    \node {limite\_data};\\
+    \node {prix\_hors\_forfait\_appel};\\
+    \node {prix\_hors\_forfait\_sms};\\
+    \node {prix\_hors\_forfait\_data};\\
+    \node {bloque};\\
+    \node {prix\_base};\\
+    \node {\bddfkey formule\_base};\\
+    \node {date\_debut};\\
+    \node {date\_fin};\\
+    \node {is\_deleted};\\
+  };
+
+  \matrix [minimum width=4.35cm, below=of formule, draw] (formule_foreign) at ([yshift=-3.5cm]formule.south) [row sep=1mm,column sep=2mm]{
+    \node [minimum width=4.35cm, title] (formule_foreign_name) {\textbf{Formule - Forfait étranger}};\\
+    \node [minimum width=4.35cm] {\bddkey \bddfkey formule};\\
+    \node [minimum width=4.35cm] {\bddkey \bddfkey forfait\_etranger};\\
+  };
+
+  \matrix [minimum width=4.35cm, right=of formule_foreign, draw] (foreign) at ([xshift=1cm]formule_foreign.east) [row sep=1mm,column sep=2mm]{
+    \node [minimum width=4.35cm, title] (foreign_name) {\textbf{Forfait étranger}};\\
+    \node [minimum width=4.35cm] {\bddkey id};\\
+    \node [minimum width=4.35cm] {nom};\\
+    \node [minimum width=4.35cm] {limite\_appel};\\
+    \node [minimum width=4.35cm] {limite\_sms};\\
+    \node [minimum width=4.35cm] {limite\_data};\\
+    \node [minimum width=4.35cm] {prix\_hors\_forfait\_appel};\\
+    \node [minimum width=4.35cm] {prix\_hors\_forfait\_sms};\\
+    \node [minimum width=4.35cm] {prix\_hors\_forfait\_data};\\
+    \node [minimum width=4.35cm] {bloque};\\
+    \node [minimum width=4.35cm] {zone};\\
+    \node [minimum width=4.35cm] {is\_deleted};\\
+  };
+
+  \matrix [right=of foreign, draw] (zone) at ([xshift=.5cm]foreign.east) [row sep=1mm,column sep=2mm]{
+    \node [title] (zone_name) {\textbf{Zone géo}};\\
+    \node {\bddkey id};\\
+    \node {nom};\\
+  };
+
+  \matrix [above=of zone, draw] (zone_pays) at ([yshift=.5cm]zone.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (zone_pays_name) {\textbf{Zone géo - Pays}};\\
+    \node {\bddkey \bddfkey zone\_geo};\\
+    \node {\bddkey \bddfkey pays};\\
+  };
+
+  \matrix [above=of zone_pays, draw] (pays) at ([yshift=.5cm]zone_pays.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (pays_name) {\textbf{Pays}};\\
+    \node {\bddkey id};\\
+    \node {nom};\\
+  };
+
+  \matrix [above=of foreign, draw] (foreign_plage) at ([yshift=.5cm]foreign.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (plage_name) {\textbf{\'Etranger - Plage horaire}};\\
+    \node {\bddkey \bddfkey forfait};\\
+    \node {\bddkey \bddfkey plage};\\
+  };
+
+  \matrix [above=of foreign_plage, draw] (plage) at ([yshift=.5cm]foreign_plage.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (plage_name) {\textbf{Plage horaire}};\\
+    \node {\bddkey id};\\
+    \node {nom};\\
+    \node {heure\_debut};\\
+    \node {heure\_fin};\\
+    \node {jour};\\
+  };
+
+  \path
+  let \p1 = (formule.north),
+      \p2 = (plage.north)
+  in coordinate (whereformuleplage) at ({(\x1+\x2)/2},{\y1+2});
+
+  \matrix [above=of formule, draw] (formule_plage) at (whereformuleplage) [row sep=1mm,column sep=2mm]{
+    \node [title] (formule_plage_name) {\textbf{Formule - Plage horaire}};\\
+    \node {\bddkey \bddfkey formule};\\
+    \node {\bddkey \bddfkey plage\_horaire};\\
+  };
+
+  \matrix [left=of formule, draw] (achat) at ([xshift=-1cm]formule.west) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.5cm] (achat_name) {\textbf{Achat}};\\
+    \node [minimum width=3.5cm] {\bddkey idachat};\\
+    \node [minimum width=3.5cm] {date};\\
+    \node [minimum width=3.5cm] {\bddfkey telephone};\\
+    \node [minimum width=3.5cm] {\bddfkey id\_utilisateur};\\
+    \node [minimum width=3.5cm] {\bddfkey id\_formule};\\
+  };
+
+  \matrix [above=of achat, draw] (user) at ([yshift=1cm]achat.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (user_name) {\textbf{Utilisateur}};\\
+    \node {\bddkey idutilisateur};\\
+    \node {nom};\\
+    \node {mail};\\
+    \node {adresse};\\
+    \node {mot\_de\_passe};\\
+    \node {admin};\\
+  };
+
+  \matrix [minimum width=3.3cm, left=of formule, draw] (phone) at ([xshift=-5cm, yshift=-3cm]formule.south west) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.3cm] (phone_name) {\textbf{Téléphone}};\\
+    \node {\bddkey idtelephone};\\
+    \node {écran};\\
+    \node {tv};\\
+    \node {appareil\_photo};\\
+    \node {vidéo\_numérique};\\
+    \node {ram};\\
+    \node {carte\_sd};\\
+    \node {double\_sim};\\
+    \node {photo\_url};\\
+    \node {modele};\\
+    \node {marque};\\
+    \node {prix};\\
+    \node {stockage};\\
+    \node {capacité\_internet};\\
+  };
+
+  \path
+  let \p1 = (phone.north),
+      \p2 = (formule.west),
+      \p3 = (phone.east)
+  in coordinate (wherephoneassoc) at ({(\x3+\x2)/2},\y1);
+
+  \matrix [minimum width=4.35cm, anchor=north, draw] (formule_phone) at (wherephoneassoc) [row sep=1mm,column sep=2mm]{
+    \node [minimum width=4.35cm, title] (formule_phone_name) {\textbf{Formule - Téléphone}};\\
+    \node [minimum width=4.35cm] {\bddkey \bddfkey formule};\\
+    \node [minimum width=4.35cm] {\bddkey \bddfkey telephone};\\
+  };
+
+  \matrix [left=of user, draw] (mms) at ([xshift=-.5cm]user.west) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.5cm] (mms_name) {\textbf{MMS}};\\
+    \node [minimum width=3.5cm] {\bddkey idmms};\\
+    \node [minimum width=3.5cm] {volume};\\
+    \node [minimum width=3.5cm] {date};\\
+    \node [minimum width=3.5cm] {\bddfkey destination};\\
+    \node [minimum width=3.5cm] {\bddfkey consommation};\\
+  };
+
+  \matrix [left=of mms, draw] (sms) at ([xshift=-.5cm]mms.west) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.5cm] (sms_name) {\textbf{SMS}};\\
+    \node [minimum width=3.5cm] {\bddkey idsms};\\
+    \node [minimum width=3.5cm] {volume};\\
+    \node [minimum width=3.5cm] {date};\\
+    \node [minimum width=3.5cm] {\bddfkey destination};\\
+    \node [minimum width=3.5cm] {\bddfkey consommation};\\
+  };
+
+  \matrix [left=of sms, draw] (appel) at ([xshift=-.5cm]sms.west) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.5cm] (appel_name) {\textbf{Appel}};\\
+    \node [minimum width=3.5cm] {\bddkey idappel};\\
+    \node [minimum width=3.5cm] {debut\_appel};\\
+    \node [minimum width=3.5cm] {duree};\\
+    \node [minimum width=3.5cm] {\bddfkey destination};\\
+    \node [minimum width=3.5cm] {\bddfkey consommation};\\
+  };
+
+  \path
+  let \p1 = (achat.west),
+      \p2 = (sms.south)
+  in coordinate (whereconso) at (\x2,\y1);
+
+  \matrix [draw] (conso) at (whereconso) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.8cm] (conso_name) {\textbf{Consommation}};\\
+    \node [minimum width=3.8cm] {\bddkey idconsommation};\\
+    \node [minimum width=3.8cm] {date\_début};\\
+    \node [minimum width=3.8cm] {conso\_data};\\
+    \node [minimum width=3.8cm] {\bddfkey id\_achat};\\
+  };
+
+  \matrix [below=of conso, draw] (facture) at ([yshift=-.5cm]conso.south) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.5cm] (facture_name) {\textbf{Facture}};\\
+    \node [minimum width=3.5cm] {\bddkey idfacture};\\
+    \node [minimum width=3.5cm] {\bddfkey consommation};\\
+    \node [minimum width=3.5cm] {prix};\\
+    \node [minimum width=3.5cm] {payé};\\
+  };
+
+  \draw let \p0 = (formule.north), \p1 = (formule_plage.west) in (\x0,\y0) -- (\x0,\y1) -- (\x1,\y1);
+  \draw let \p0 = (formule_plage.east), \p1 = (plage.north) in (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+  \draw let \p1 = (conso.east), \p2 = (achat.west) in (\x1,\y2) -- (\x2,\y2);
+  \draw let \p1 = ([yshift=-.5cm]conso.north west), \p2 = (appel.south) in (\x1,\y1) -- (\x2,\y1) -- (\x2,\y2);
+  \draw let \p1 = ([yshift=-.7cm]conso.north east), \p2 = (mms.south) in (\x1,\y1) -- (\x2,\y1) -- (\x2,\y2);
+
+  \draw (foreign.east) -- (zone.west);
+  \draw (zone.north) -- (zone_pays.south);
+  \draw (zone_pays.north) -- (pays.south);
+  \draw (achat.east) -- (formule.west);
+  \draw let \p1 = ([yshift=.5cm]achat.south west), \p2 = (phone.north) in (\x1,\y1) -- (\x2,\y1) -- (\x2,\y2);
+  \draw (user.south) -- (achat.north);
+  \draw (facture.north) --  (conso.south);
+  \draw (conso.north) -- (sms.south);
+  \draw (foreign.north) -- (foreign_plage.south);
+  \draw (foreign_plage.north) -- (plage.south);
+  \draw let \p0=([yshift=2cm]appel.north), \p1=([xshift=.75cm]pays.north) in (appel.north) -- (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+  \draw let \p0=([yshift=1.75cm]sms.north), \p1=(pays.north) in (sms.north) -- (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+  \draw let \p0=([yshift=1.5cm]mms.north), \p1=([xshift=-.75cm]pays.north) in (mms.north) -- (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+  \draw (formule.south) -- (formule_foreign.north);
+  \draw (formule_foreign.east) -- (foreign.west);
+  \draw let \p0=(formule_phone.west), \p1=(phone.east) in (\x0,\y0) -- (\x1,\y0);
+  \draw let \p0=(formule_phone.east), \p1=(formule.west) in (\x0,\y0) -- (\x1,\y0);
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Rapport_BDD"
+%%% End:

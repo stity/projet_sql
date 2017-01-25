@@ -8,20 +8,20 @@
 % 1 - Positionnement des TOC - LOF - LOT dans le document
 %
 \newcommand\whereTOC{beginning}          % Parmis beginning - end
-\newcommand\whereLOF{end}                % Parmis beginning - end
-\newcommand\whereLOT{end}                % Parmis beginning - end
+\newcommand\whereLOF{beginning}                % Parmis beginning - end
+\newcommand\whereLOT{beginning}                % Parmis beginning - end
 \newcommand\TOCLOFTNumStyle{Roman}       % Parmis Roman - roman - Arabic - arabic
 \newcommand\LOFLOTSeparator{\vfill}      % Séparateur après une LOF ou LOT
 \newcommand\TOCSeparator{\newpage}       % Séparateur après un TOC
 \newcommand\inclureTOC{true}             % Mettre la TOC (true) ou pas (false)
-\newcommand\inclureLOF{false}            % Mettre la LOF (true) ou pas (false)
-\newcommand\inclureLOT{false}            % Mettre la LOT (true) ou pas (false)
+\newcommand\inclureLOF{true}            % Mettre la LOF (true) ou pas (false)
+\newcommand\inclureLOT{true}            % Mettre la LOT (true) ou pas (false)
 
 %
 % 2 - Fichiers à inclure
 %
 \newcommand\inclureIntroduction{true}   % Mettre l'introduction (true) ou pas (false)    -> Position imposée
-\newcommand\inclureConclusion{false}     % Mettre la conclusion (true) ou pas (false)     -> Position imposée
+\newcommand\inclureConclusion{true}     % Mettre la conclusion (true) ou pas (false)     -> Position imposée
 \newcommand\inclureRemerciements{false}  % Mettre les remerciements (true) ou pas (false)
 \newcommand\inclureResume{false}         % Mettre le résumé (true) ou pas (false)
 \newcommand\inclureAbstract{false}       % Mettre le résumé anglais (true) ou pas (false)
@@ -33,9 +33,9 @@
 %
 % 3 - Informations pour en-têtes et pieds de page
 %
-\newcommand\footerRight{\textbf{Année 2017}   }                    % À gauche séparation du footer
+\newcommand\footerRight{\textbf{Janvier 2017}   }                    % À gauche séparation du footer
 \newcommand\footerLeft{\textbf{\thepage}}                          % À droite séparation du footer
-\newcommand\headerText{\textbf{Principe et applications de XGBoost}}   % Texte de l'en-tête
+\newcommand\headerText{\textbf{Site d'un opérateur téléphonique}}   % Texte de l'en-tête
 \newcommand\headerLogo{logo}                                       % Logo de l'en-tête (optionnel)
 
 %

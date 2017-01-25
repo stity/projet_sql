@@ -1,0 +1,209 @@
+\begin{tikzpicture}[
+  every matrix/.style= {minimum width=3cm, inner sep=0cm},
+  every node/.style=   {inner sep=.15cm, minimum width=3cm},
+  auto,
+  title/.style=         {inner sep=.25cm, fill=themeColor!25},
+  >=Stealth[scale=3]
+  ]
+
+  \matrix [minimum width=4.35cm, draw] (formule) at (0,0) [row sep=1mm,column sep=2mm]{
+    \node [minimum width=4.35cm, title] (formule_name) {\textbf{Formule}};\\
+    \node {nom};\\
+    \node {prix};\\
+    \node {limite\_appels};\\
+    \node {limite\_sms};\\
+    \node {limite\_data};\\
+    \node {prix\_hors\_forfait\_appel};\\
+    \node {prix\_hors\_forfait\_sms};\\
+    \node {prix\_hors\_forfait\_data};\\
+    \node {bloque};\\
+  };
+
+  \node [below=of formule, minimum width=.5cm] (isa) at ([yshift=-.25cm]formule.south) {isa};
+  \draw ([yshift=.5cm]isa.north) -- ([yshift=-.4cm, xshift=.4cm]isa.south east) -- ([yshift=-.4cm, xshift=-.4cm]isa.south west) --cycle;
+
+
+  \matrix [below=of isa, draw] (promo) at ([yshift=-.5cm]isa.south) [row sep=1mm,column sep=2mm]{
+    \node [title] (promo_name) {\textbf{Promotion}};\\
+    \node {prix\_base};\\
+    \node {date\_debut};\\
+    \node {date\_fin};\\
+  };
+
+  \matrix [minimum width=4.35cm, right=of promo, draw] (foreign) at ([xshift=1cm]promo.east) [row sep=1mm,column sep=2mm]{
+    \node [minimum width=4.35cm, title] (foreign_name) {\textbf{Forfait étranger}};\\
+    \node [minimum width=4.35cm] {nom};\\
+    \node [minimum width=4.35cm] {limite\_appels};\\
+    \node [minimum width=4.35cm] {limite\_sms};\\
+    \node [minimum width=4.35cm] {limite\_data};\\
+    \node [minimum width=4.35cm] {prix\_hors\_forfait\_appel};\\
+    \node [minimum width=4.35cm] {prix\_hors\_forfait\_sms};\\
+    \node [minimum width=4.35cm] {prix\_hors\_forfait\_data};\\
+    \node [minimum width=4.35cm] {bloque};\\
+  };
+
+  \matrix [right=of foreign, draw] (zone) at ([xshift=.5cm]foreign.east) [row sep=1mm,column sep=2mm]{
+    \node [title] (zone_name) {\textbf{Zone géo}};\\
+    \node {nom};\\
+  };
+
+  \matrix [above=of zone, draw] (pays) at ([yshift=.5cm]zone.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (pays_name) {\textbf{Pays}};\\
+    \node {nom};\\
+  };
+
+  \matrix [above=of pays, draw] (plage) at ([yshift=2cm]foreign.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (plage_name) {\textbf{Plage horaire}};\\
+    \node {nom};\\
+    \node {heure\_debut};\\
+    \node {heure\_fin};\\
+    \node {jour};\\
+  };
+
+  \matrix [left=of formule, draw] (achat) at ([xshift=-1cm]formule.west) [row sep=1mm,column sep=2mm]{
+    \node [title] (achat_name) {\textbf{Achat}};\\
+    \node {date};\\
+  };
+
+  \matrix [above=of achat, draw] (user) at ([yshift=1cm]achat.north) [row sep=1mm,column sep=2mm]{
+    \node [title] (user_name) {\textbf{Utilisateur}};\\
+    \node {nom};\\
+    \node {mail};\\
+    \node {adresse};\\
+    \node {mot\_de\_passe};\\
+  };
+
+  \matrix [minimum width=3.3cm, below=of achat, draw] (phone) at ([yshift=-.5cm]achat.south) [row sep=1mm,column sep=2mm]{
+    \node [title, minimum width=3.3cm] (phone_name) {\textbf{Téléphone}};\\
+    \node {écran};\\
+    \node {tv};\\
+    \node {appareil\_photo};\\
+    \node {vidéo\_numérique};\\
+    \node {ram};\\
+    \node {carte\_sd};\\
+    \node {double\_sim};\\
+    \node {photo\_url};\\
+    \node {modele};\\
+    \node {marque};\\
+    \node {prix};\\
+    \node {stockage};\\
+    \node {capacité\_internet};\\
+  };
+
+  \matrix [left=of user, draw] (mms) at ([xshift=-.5cm]user.west) [row sep=1mm,column sep=2mm]{
+    \node [title] (mms_name) {\textbf{MMS}};\\
+    \node {volume};\\
+    \node {date};\\
+  };
+
+  \matrix [left=of mms, draw] (sms) at ([xshift=-.5cm]mms.west) [row sep=1mm,column sep=2mm]{
+    \node [title] (sms_name) {\textbf{SMS}};\\
+    \node {volume};\\
+    \node {date};\\
+  };
+
+  \matrix [left=of sms, draw] (appel) at ([xshift=-.5cm]sms.west) [row sep=1mm,column sep=2mm]{
+    \node [title] (appel_name) {\textbf{Appel}};\\
+    \node {debut\_appel};\\
+    \node {duree};\\
+  };
+
+  \path
+  let \p1 = (achat.west),
+      \p2 = (sms.south)
+  in coordinate (whereconso) at (\x2,\y1);
+
+  \matrix [draw] (conso) at (whereconso) [row sep=1mm,column sep=2mm]{
+    \node [title] (conso_name) {\textbf{Consommation}};\\
+    \node {date\_début};\\
+    \node {conso\_data};\\
+  };
+
+  \matrix [below=of conso, draw] (facture) at ([yshift=-.5cm]conso.south) [row sep=1mm,column sep=2mm]{
+    \node [title] (facture_name) {\textbf{Facture}};\\
+    \node {prix};\\
+    \node {payé};\\
+  };
+
+  \draw[->] let \p0 = (formule.east), \p1 = (plage.west) in (\x0,\y1) -- (\x1,\y1);
+    \draw[->] let \p1 = (promo.west), \p2 = (phone.east) in (\x1,\y1) -- (\x2,\y1);
+  \draw[->] let \p1 = (conso.east), \p2 = (achat.west) in (\x1,\y2) -- (\x2,\y2);
+  \draw[->] let \p1 = ([yshift=-.5cm]conso.north west), \p2 = (appel.south) in (\x1,\y1) -- (\x2,\y1) -- (\x2,\y2);
+  \draw[->] let \p1 = ([yshift=-.5cm]conso.north east), \p2 = (mms.south) in (\x1,\y1) -- (\x2,\y1) -- (\x2,\y2);
+
+  \draw[->] (foreign.east) -- (zone.west);
+  \draw[->] (zone.north) -- (pays.south);
+  \draw[->] (achat.east) -- (formule.west);
+  \draw[->] (achat.south) -- (phone.north);
+  \draw[->] (user.south) -- (achat.north);
+  \draw[->] (facture.north) --  (conso.south);
+  \draw[->] (conso.north) -- (sms.south);
+  \draw[->] (foreign.north) -- (plage.south);
+  \draw[->] ([yshift=.5cm]isa.north) -- (formule.south);
+  \draw     (promo.north) -- ([yshift=-.4cm]isa.south);
+  \draw[->] let \p0=([yshift=2cm]appel.north), \p1=([xshift=.75cm]pays.north) in
+  (appel.north) -- (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+  \draw[->] let \p0=([yshift=1.75cm]sms.north), \p1=(pays.north) in
+  (sms.north) -- (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+  \draw[->] let \p0=([yshift=1.5cm]mms.north), \p1=([xshift=-.75cm]pays.north) in
+  (mms.north) -- (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+  \draw[->] let \p0=([yshift=.5cm]formule.south east), \p1=([xshift=.5cm]foreign.north west) in
+  (\x0,\y0) -- (\x1,\y0) -- (\x1,\y1);
+
+  \coordinate [label=above right:0..*] (1) at ([yshift=-.3cm]formule.east);
+  \coordinate [label=above left:0..*] (2) at (plage.west);
+
+  \coordinate [label=below right:1] (3) at ([xshift=-1cm]user.south);
+  \coordinate [label=above right:1..*] (4) at ([xshift=-1cm]achat.north);
+
+  \coordinate [label=below right:0..*] (5) at ([xshift=-1cm]achat.south);
+  \coordinate [label=above right:0..+] (6) at ([xshift=-1cm]phone.north);
+
+  \coordinate [label=above left:0..*] (7) at ([xshift=1cm]promo.west);
+  \coordinate [label=above right:0..1] (8) at ([xshift=-1cm,yshift=-1.1cm]phone.east);
+
+  \coordinate [label=below right:1] (9) at ([xshift=-1cm]conso.east);
+  \coordinate [label=below left:1..6] (10) at ([xshift=1cm]achat.west);
+
+  \coordinate [label=above right:1] (11) at ([xshift=-1cm]conso.north);
+  \coordinate [label=below right:0..*] (12) at ([xshift=-1cm]sms.south);
+
+  \coordinate [label=right:1] (13) at ([xshift=-1.1cm]conso.north east);
+  \coordinate [label=below left:0..*] (14) at ([xshift=1cm]appel.south);
+
+  \coordinate [label=left:1] (15) at ([xshift=1.1cm]conso.north west);
+  \coordinate [label=below left:0..*] (16) at ([xshift=1cm]mms.south);
+
+  \coordinate [label=above left:0..*] (17) at ([xshift=1cm]appel.north);
+  \coordinate [label=above left:0..*] (18) at ([xshift=1cm]sms.north);
+  \coordinate [label=above left:0..*] (19) at ([xshift=1cm]mms.north);
+
+  \coordinate [label=above left:1] (20) at ([xshift=.95cm]pays.north);
+  \coordinate [label=above left:1] (21) at ([xshift=1.7cm]pays.north);
+  \coordinate [label=above left:1] (22) at ([xshift=2.45cm]pays.north);
+
+  \coordinate [label=above right:0..*] (23) at ([xshift=-1cm]foreign.north);
+  \coordinate [label=below right:0..*] (24) at ([xshift=-1cm]plage.south);
+
+  \coordinate [label=above right:0..*] (25) at ([xshift=-1cm]zone.north);
+  \coordinate [label=below right:0..*] (26) at ([xshift=-1cm]pays.south);
+
+  \coordinate [label=above right:0..*] (27) at ([xshift=-1cm]facture.north);
+  \coordinate [label=below right:1] (28) at ([xshift=-1cm]conso.south);
+
+  \coordinate [label=right:0..*] (29) at ([yshift=.2cm, xshift=-1cm]formule.south east);
+  \coordinate [label=above left:0..*] (30) at ([xshift=1.5cm]foreign.north west);
+
+  \coordinate [label=below right:0..*] (31) at ([xshift=-1cm]achat.east);
+  \coordinate [label=below left:1] (32) at ([xshift=1cm]formule.west);
+
+  \coordinate [label=above right:1] (33) at ([xshift=-1.2cm]foreign.east);
+  \coordinate [label=above left:0..*] (34) at ([xshift=1.1cm]zone.west);
+
+\end{tikzpicture}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Rapport_BDD"
+%%% End:

@@ -27,6 +27,7 @@
     "text/Travail_realise/rendu"
     "text/Travail_realise/installation"
     "text/Elaboration/ER"
+    "text/Elaboration/bdd"
     "text/Plateforme/vues"
     "text/Plateforme/users"
     "text/Plateforme/phones"
@@ -34,7 +35,10 @@
     "text/Plateforme/abonnements"
     "text/Technique/mvc"
     "text/Technique/connexion_db"
+    "text/Technique/requetes"
+    "text/Technique/pdf"
     "text/Ameliorations/plateforme"
+    "text/Pages_gnl/conclusion"
     "article"
     "art11")
    (TeX-add-symbols

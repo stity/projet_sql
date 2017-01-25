@@ -2,127 +2,180 @@
 
 \subsubsection{Entités}
 
-Nous avons pu identifier les entités suivantes :
+À la lecture de l'énoncé, nous avons extrait les entités suivantes des paragraphes suivants.
+
+\subParagraphe{Utilisateur}
+Chaque client doit être enregistré dans la base de données et dispose des champs suivants :
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Nom}Son nom.
+    \itemperso{Mail}Une adresse mail.
+    \itemperso{Adresse}Une adresse de facturation.
+    \itemperso{Mot de passe}Pour identifier à la connexion.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Achat}
+Les achats permettent de représenter les achats de téléphone, de formules ou des deux. Ils sont constitués :
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Date}Celle de l'achat.
+    \itemperso{Téléphone}Le téléphone acheté.
+    \itemperso{Formule}La formule achetée.
+    \itemperso{Utilisateur}L'utilisateur qui a fait l'achat.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Consommation}
+Une consommation va identifier l'ensemble des consommations effectuées par un utilisateur avec un forfait sur une période donnée.
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Date début}Date de début de la période d'enregistrement (de durée un mois).
+    \itemperso{Consommation Données}Le montant de données consommées sur le mobile.
+    \itemperso{Achat}L'achat avec lequel a été réalisé cette consommation.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{SMS et MMS}
+Les SMS et les MMS envoyés par les utilisateurs ont les propriétés suivantes :
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Date}La date et l'heure d'envoi.
+    \itemperso{Volume}Le nombre de SMS/MMS correspondant au message envoyé.
+    \itemperso{Destination}Pays de destination.
+    \itemperso{Consommation}La consommation à laquelle ce message est rattaché.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Appel}
+Les appels ont des propriétés similaires aux SMS et MMS, mais avec quelques détails supplémentaires :
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Date}La date et l'heure du début de l'appel.
+    \itemperso{Durée}La durée de l'appel.
+    \itemperso{Destination}Pays de destination de l'appel.
+    \itemperso{Consommation}La consommation à laquelle cet appel est rattaché.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Facture}
+Les factures permettent de regrouper les éléments financiers relatifs à la facturation à partir des consommations. On retrouve ainsi les propriétés suivantes :
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Prix}Le montant de la facture.
+    \itemperso{Payé}Si le client a payé ou non cette facture.
+    \itemperso{Consommation}La consommation à laquelle cette facture est rattachée.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Téléphone}
+Cette entité permet de représenter les téléphones proposés par l'opérateur téléphonique. On retrouve alors les différentes propriétés permettant de caractériser ces produits:
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{\'Ecran}Type et de la taille de l'écran.
+    \itemperso{Technologie Internet}Quelle technologie est utilisée par l'appareil.
+    \itemperso{TV}De même pour la TV.
+    \itemperso{Appareil Photo}Résolution et type d'appareil photos
+    \itemperso{RAM}La RAM du téléphone.
+    \itemperso{Stockage}Capacité de stockage maximale.
+    \itemperso{Carte SD}Possibilité de mettre une carte SD.
+    \itemperso{Double SIM}Possibilité de faire du double SIM.
+    \itemperso{Photo}L'URL présentant une photo de l'appareil.
+    \itemperso{Modèle}Le modèle de l'appareil.
+    \itemperso{Marque}La marque de l'appareil.
+    \itemperso{Prix}Son prix de vente.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Formule}
+Les formules permettent de représenter les forfaits \og classiques\fg{} disponibles à la vente. Ces forfaits sont caractérisés par :
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Nom}Le nom du forfait.
+    \itemperso{Prix}Le prix du forfait.
+    \itemperso{Limite d'appel, SMS et data}Une limite pour les SMS, les appels (en durée) et les données internet (en Mo).
+    \itemperso{Plage horaire}Plage dans laquelle les communications sont gratuites.
+    \itemperso{Prix hors forfait}Différent pour les appels, les SMS et les données.
+    \itemperso{Bloqué}Si le forfait est bloqué ou non.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Forfait étranger}En plus des forfaits usuels, il est demandé de pouvoir gérer les forfaits vers l'étranger. Pour cela, on introduit l'entité \og Forfait étranger\fg, qui sera définie par les propriétés suivantes :
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Champs d'une formule}Tous les champs d'une formule \og classique\fg{} permettent aussi de spécifier forfait étranger.
+    \itemperso{Destination}La zone géographique correspondant à ce forfait étranger.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Promotion}Une promotion permet de fournir un rabais par rapport à une formule de base. Elle peut également être associée à un/des téléphones
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Prix de base}Le prix de la formule initiale.
+    \itemperso{Nouveau prix}Le prix après rabais.
+    \itemperso{Date de début}Début de la promotion, éventuellement nulle si promotion \og permanente\fg.
+    \itemperso{Date de fin}Fin de la promotion, éventuellement nulle si promotion \og permanente\fg.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Plage horaire}Les plages horaires permettent de découper la semaine pour adapter des forfaits à certains besoins en plage horaires.
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Nom}Nom associé à la plage horaire pour plus de clarté.
+    \itemperso{Heure de début}Heure de début pour les jours concernés.
+    \itemperso{Heure de fin}Idem pour l'heure de fin.
+    \itemperso{Jour}Les jours de la semaine concernés (sous forme de plages éventuellement).
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Zone géographique}Pour définir les grandes zones géographiques desservies par l'opérateur.
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Nom}Le nom de la zone.
+  \end{itemize}
+\end{multicols}
+
+\subParagraphe{Pays}Pour définir les différents pays desservis par l'opérateur.
+\begin{multicols}{2}
+  \begin{itemize}
+    \itemperso{Nom}Le nom du pays.
+  \end{itemize}
+\end{multicols}
+
+\subsubsection{Les Relations}
+\subParagraphe{Relations \texttt{1..N}}La plupart de ces relations ont été évoquées précédemment, nous les redétaillons cependant ici :
 \begin{itemize}
-  \itemperso{Utilisateur}Chaque client doit être enregistré dans la base de données et dispose des champs suivants :
-  \begin{itemize}
-    \subitemperso{Nom}Son nom.
-    \subitemperso{Mail}Une adresse mail.
-    \subitemperso{Adresse}Une adresse pour la facturation.
-    \subitemperso{Mot de passe} Un mot de passe pour l'identification lors de la connexion.
-  \end{itemize}
-  \itemperso{Achat}Achat d'un téléphone, d'une formule ou les deux. Ils ont chacun :
-  \begin{itemize}
-    \subitemperso{Date} Une date d'achat
-    \subitemperso{Téléphone} Le téléphone acheté
-    \subitemperso{Formule} La formule achetée
-    \subitemperso{Utilisateur} L'utilisateur qui a fait l'achat
-  \end{itemize}
-  \itemperso{Consommation} Identifie l'ensemble des consommations effectuées par un utilisateur avec un forfait sur une période donnée.
-  \begin{itemize}
-    \subitemperso{Date début}Date de début de la période d'enregistrement (période de 1 mois)
-    \subitemperso{Consommation Données}Le montant de données consommées sur le mobile
-    \subitemperso{Achat}L'achat avec lequel a été réalisé cette consommation
-  \end{itemize}
-  \itemperso{SMS et MMS} Les SMS et MMS envoyés ont les propriétés suivantes :
-  \begin{itemize}
-    \subitemperso{Date} La date et l'heure d'envoi
-    \subitemperso{Volume} Le nombre de SMS/MMS correspondant au message envoyé
-    \subitemperso{Destination} Le pays de destination du SMS/MMS
-    \subitemperso{Consommation} La consommation à laquelle ce message est rattaché
-  \end{itemize}
-  \itemperso{Appel} Les appels émis ont les propriétés suivantes :
-  \begin{itemize}
-    \subitemperso{Date} La date et l'heure du début de l'appel
-    \subitemperso{Durée} La durée de l'appel
-    \subitemperso{Destination} Le pays de destination de l'appel
-    \subitemperso{Consommation} La consommation à laquelle cet appel est rattaché
-  \end{itemize}
-  \itemperso{Facture} Les factures des clients ont les propriétés suivantes :
-  \begin{itemize}
-    \subitemperso{Prix} Le montant de la facture
-    \subitemperso{Payé} Si le client a payé ou non cette facture
-    \subitemperso{Consommation} La consommation à laquelle cette facture est rattaché
-  \end{itemize}
-  \itemperso{Téléphone} Tous les modèles de téléphones en vente et leurs caractéristiques :
-  \begin{itemize}
-    \subitemperso{Ecran}
-    \subitemperso{Technologie Internet}
-    \subitemperso{TV}
-    \subitemperso{Appareil Photo}
-    \subitemperso{RAM}
-    \subitemperso{Stockage}
-    \subitemperso{Carte SD}
-    \subitemperso{Double SIM}
-    \subitemperso{Photo}
-    \subitemperso{Modele}
-    \subitemperso{Marque}
-    \subitemperso{Prix}
-  \end{itemize}
-  \itemperso{Formule} Tous les forfaits en vente disposent de :
-  \begin{itemize}
-    \subitemperso{Nom} Le nom du forfait
-    \subitemperso{Prix} Le prix du forfait
-    \subitemperso{Limite d'appel, SMS et data} Une limite pour les sms, les appels (en durée) et les données internet (en Mo).
-    \subitemperso{Plage Horaire} Plage dans laquelle les communications sont gratuites
-    \subitemperso{Prix hors forfait} Différent pour les appels, les SMS et les données.
-    \subitemperso{Bloqué} Si le forfait est bloqué ou non
-  \end{itemize}
-  \itemperso{Forfait étranger} Conditions tarifaires pour la communication vers un pays ce qui comprend les même conditions qu'une formule plus :
-  \begin{itemize}
-    \subitemperso{Destination} La zone géographique correspondant à ce forfait étranger
-  \end{itemize}
-  \itemperso{Promotion} Une promotion sur une formule
-  \begin{itemize}
-    \subitemperso{Prix de base}
-    \subitemperso{Nouveau prix}
-    \subitemperso{Téléphone} Eventuellement un autre téléphone
-    \subitemperso{Date de début} Début de la promotion
-    \subitemperso{Durée} Durée de la promotion
-  \end{itemize}
-  \itemperso{Plage Horaire} Définit une période dans la semaine
-  \begin{itemize}
-    \subitemperso{Nom} Nom associé à la plage horaire pour plus de clarté
-    \subitemperso{Heure de début}
-    \subitemperso{Heure de fin}
-    \subitemperso{Jour} Les jours de la semaine concernés
-  \end{itemize}
-  \itemperso{Zone géographique} Définit une partie du monde
-  \begin{itemize}
-    \subitemperso{Nom}
-  \end{itemize}
-  \itemperso{Pays} Les pays du monde
-  \begin{itemize}
-    \subitemperso{Nom}
-  \end{itemize}
+  \itemperso{Consommation - Appel}Une consommation est associée à plusieurs appels.
+  \itemperso{Consommation - SMS}Une consommation est associée à plusieurs SMS.
+  \itemperso{Consommation - MMS}Une consommation est associée à plusieurs MMS.
+  \itemperso{Appel/SMS/MMS - Pays}Un pays peut être associé à plusieurs de ces éléments, mais chacun d'eux ne peut être à destination (ou depuis) un seul pays donné.
+  \itemperso{Utilisateur - Achat}Un utilisateur peut réaliser plusieurs achats, qui n'appartiennent qu'à lui.
+  \itemperso{Formule - Achat}Une formule peut être utilisée dans différents achat, mais un achat ne peut concerner qu'une seule formule.
 \end{itemize}
+
+\subParagraphe{Relations \texttt{N..N}}Ces relations sont les suivantes :
+\begin {itemize}
+  \itemperso{Formule - Plage horaire}Les plages horaires sont utilisées par plusieurs formules, qui en retour peuvent avoir plusieurs plages horaires.
+  \itemperso{Forfait étrangers - Plage horaire}Même principe que pour les formules et les plages horaires.
+  \itemperso{Formule - Forfait étranger}Une formule peut être associé à plusieurs forfaits étrangers (formules monde, Europe,...). De même, un forfait étranger peut être utilisé par plusieurs formules.
+  \itemperso{Formule - Téléphone}Même principe que la relation entre formule et forfait étranger.
+  \itemperso{Zone géographique - Pays}Si le fait que plusieurs pays appartiennent à une même zone est intuitif, l'autre sens l'est moins. L'idée est ici d'avoir des \og sous-zones\fg{} plus fines. Par exemple, on peut envisager une zone Maghreb et une zone Afrique, qui auront des pays en communs. De même, le réseau satellitaire peut couvrir des pays couverts par des réseaux traditionnels.
+\end {itemize}
+
+\subsubsection{Spécialisation}
+Comme cela a été sous-entendu, les promotions sont en fait des formules spécialisées, et apportent une \og sur-couches\fg{} à ces dernières. Il s'agit de la seule spécialisation que nous avons mise en place dans cette analyse.
+
+\subsubsection{Diagramme récapitualtif}
+En résumé des différents éléments exposés, nous avons établi le diagramme entité-relation que vous pourrez trouver à la Figure~\ref{fig:diag-er}.
 
 \begin{figure}[ht]
   \centering
-    \includegraphics[width=.9\textwidth]{images/Elaboration/diagramme}
-    \caption{Le diagramme Entité-Relation de notre base de données}
-    \label{fig:diagrammeER}
+  \resizebox{\textwidth}{!}{\input{images/Elaboration/diagramme_er.tex}}
+  \caption{Le diagramme Entité-Relation de notre base de données}
+  \label{fig:diag-er}
 \end{figure}
 
-
-\subsubsection{Les Relations}
-Certaines relations \texttt{1..N} ont déjà été mentionnées ci-dessus.
-Les relations \texttt{N..N} sont les suivantes :
-\begin {itemize}
-  \itemperso{Formule - Plage Horaire}
-  \itemperso{Forfait Etrangers - Plage Horaire}
-  \itemperso{Formule - Forfait Etrangers}
-  \itemperso{Formule - Téléphone}
-  \itemperso{Zone Géographique - Pays}
-\end {itemize}
-
-
-\subsubsection{Implémentation}
-Toutes les entités donneront lieu à des tables à l'exception de Promotion qui est une spécialisation de Formule. On ajoute alors les champs spécifiques à Promotion dans Formule sans toujours les utiliser.
-Toutes les relations \texttt{N..N} donnent également lieu à des tables d'associations.
-
-Cette vision est résumée par le diagramme Entité-Relations présentés en Figure~\ref{fig:diagrammeER}.
-
+On retrouve sur ce diagramme les différents éléments évoqués précédemment. Il nous a alors servi à définir les tables que nous désirions utiliser pour notre base de données.
 
 %%% Local Variables:
 %%% mode: latex

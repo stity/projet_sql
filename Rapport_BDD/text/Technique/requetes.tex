@@ -19,12 +19,12 @@ CREATE PROCEDURE addConso (
     BEGIN
         IF NOT EXISTS (SELECT * FROM consommation WHERE idconsommation=id AND date_debut=debut AND id_achat=achat) THEN
             START TRANSACTION;
-			/* insert new user */
+        	/* insert new user */
         	INSERT INTO consommation (date_debut, conso_data, id_achat) VALUES (debut, conso, achat);
-			/* get generated id */
+		/* get generated id */
         	SET id = (SELECT idconsommation FROM consommation WHERE date_debut=debut AND conso_data=conso AND id_achat=achat ORDER BY idconsommation DESC LIMIT 1);
             COMMIT;
-		END IF;
+        END IF;
     END|
 
 \end{lstlisting}
@@ -46,7 +46,7 @@ La procédure \texttt{getTotalPriceConso} est l'une des plus compliquée car ell
 On considère ici que si un appel commence pendant une période illimitée alors il est gratuit même s'il se conclut après la fin de la période de gratuité.
 
 Attachons nous déjà à calculer le prix des SMS et MMS émis vers la France et qui dépende donc uniquement du forfait principal. Les opérations à réaliser sont les suivantes :
-\begin{enumerate}
+\begin{enumerate}[label=\textbf{\thColor{\arabic*}}]
 	\item Récupérer uniquement les SMS et MMS correspondant à la consommation en question et ceux émis vers la France
 	\item Garder uniquement ceux envoyés en dehors des périodes de gratuités
 	\item Sommer le volume des messages restants
@@ -58,26 +58,27 @@ Ce qui nous donne la portion de procédure suivante (la France a l'ID 1 dans la 
 
 \begin{lstlisting}[language=sql]
 /* get the number of sms and mms sent outside every unlimited period to a french phone for the right month*/
-            SET numberFrenchSMS = (SELECT SUM(volume) FROM  /*get sum of the remaining volume of sms and mms */
-                                   (SELECT volume,isInPlageHoraire(date, formule_plage_horaire.plage_horaire) as appartient_plage
-                                        FROM (SELECT CONCAT('m',idmms) as id, volume, date
-                                              FROM mms WHERE consommation=consoId AND destination=1
-                                              UNION ALL /* union des sms (dont l'id est préfixé par s) et des mms (dont l'id est préfixé par m) */
-                                              SELECT CONCAT('s',idsms) as id, volume, date
-                                              FROM sms WHERE consommation=consoId AND destination=1) u,
-                                        formule_plage_horaire
-                                    WHERE formule_plage_horaire.formule=@formule_id /*récupération des plages horaires correspondant à la formule */
-                                    GROUP BY u.id /* pour chaque sms/mms...*/
-                                    HAVING SUM(appartient_plage)=0)  /* ... on regarde si la date d'envoi est compris dans au moins une plage */
-                                   temp);
-            IF numberFrenchSMS > @limite_sms THEN
-                SET cost = cost+(numberFrenchSMS-@limit_sms)*@prix_sms;
-            END IF;
+SET numberFrenchSMS = (SELECT SUM(volume) FROM  /*get sum of the remaining volume of sms and mms */
+    (SELECT volume,isInPlageHoraire(date, formule_plage_horaire.plage_horaire) as appartient_plage
+        FROM (
+            SELECT CONCAT('m',idmms) as id, volume, date
+                FROM mms WHERE consommation=consoId AND destination=1
+            UNION ALL /* union des sms (dont l'id est préfixé par s) et des mms (dont l'id est préfixé par m) */
+            SELECT CONCAT('s',idsms) as id, volume, date
+                FROM sms WHERE consommation=consoId AND destination=1) u, formule_plage_horaire
+    WHERE formule_plage_horaire.formule=@formule_id /*récupération des plages horaires correspondant à la formule */
+    GROUP BY u.id /* pour chaque sms/mms...*/
+    HAVING SUM(appartient_plage)=0)
+    /* ... on regarde si la date d'envoi est compris dans au moins une plage */
+    temp);
+    IF numberFrenchSMS > @limite_sms THEN
+        SET cost = cost+(numberFrenchSMS-@limit_sms)*@prix_sms;
+    END IF;
 \end{lstlisting}
 
 
 Calculons maintenant le coût des SMS et MMS émis vers l'étranger. Les étapes sont plus nombreuses :
-\begin{enumerate}
+\begin{enumerate}[label=\textbf{\thColor{\arabic*}}]
 	\item Récupérer uniquement les SMS et MMS correspondant à la consommation en question
 	\item Associer les messages à leur forfait étranger parmis ceux associés au forfait principal en fonction de leur destination
 	\item Garder uniquement ceux qui, pour chaque forfait, ne correspondent pas à une période de gratuité

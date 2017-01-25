@@ -20,9 +20,19 @@ Ainsi, pour installer la base de données, seule deux étapes sont nécessaires 
 \end{itemize}
 
 \subsubsection{Installation du code source}
-Une fois l'installation de la base de données réalisée, il est alors nécessaire d'installer le code source de l'application sur votre poste afin de pouvoir tester l'interface développée pour ce projet.
+\subParagraphe{Extraction de l'archive}Une fois l'installation de la base de données réalisée, il est alors nécessaire d'installer le code source de l'application sur votre poste afin de pouvoir tester l'interface développée pour ce projet.
 
 Pour se faire, il vous faudra extraire le dossier \texttt{telephonie} de l'archive qui a été remise dans le dossier \texttt{www} correspondant à votre installation locale de WAMP/MAMP. Par exemple pour un poste équipé de Windows, ce dossier se situe généralement à \texttt{C:\textbackslash wamp\textbackslash www}.
+
+\subParagraphe{Téléchargement d'un module}Le code fourni est cependant incomplet, et ne permettra pas de gérer la génération du PDF de facture pour un client. En effet, nous avons pour cela utilisé une bibliothèque supplémentaire. Cependant, le code de cette dernière faisant 13Mo, nous n'avons pu l'inclure à cette archive, sans quoi nous ne pouvions plus la poster sur \texttt{pedagogie} (limite élève à $7,5$Mo).
+
+Ainsi, nous vous proposons de récupérer le contenu de cette bibliothèque directement sur le GitHub du projet :
+\begin{center}
+  \texttt{https://github.com/stity/projet\_sql/tree/master/vue}
+\end{center}
+Le fichier à récupérer est le fichier \texttt{fop}, à inclure dans le dossier \texttt{vue} de l'application.
+
+Il est à noter que ce module sert uniquement pour la génération de PDF, et n'est pas utilisé pour le reste de la plateforme...
 
 \subsubsection{Test de bon fonctionnement}
 Une fois le code installé et la base de données préparée, vous êtes désormais prêt pour tester l'application! Pour cela, lancer votre serveur WAMP/MAMP, et rendez vous à l'adresse suivante :

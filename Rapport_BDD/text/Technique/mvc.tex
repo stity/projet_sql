@@ -1,6 +1,66 @@
 \subsection{Architecture de la plateforme}
 
-La plateforme a été élaborée en ayant en tête la mise en place d'une architecture MVC. Cette partie du rapport est à finir de détailler.
+\subsubsection{Architecture MVC}
+La plateforme a été réalisée en ayant pour volonter de mettre en place une architecture MVC minimale.
+
+Pour cela, le code a été organisé selon trois dossiers principaux :
+\begin{itemize}
+  \itemperso{\texttt{controleur}}Ce fichier contient tous les contrôleurs associés au modèle.
+  \itemperso{\texttt{vue}}Ce fichier contient toutes les vues du site, ie. des visuels qui réutilisent des informations calculées par les contrôleurs.
+  \itemperso{\texttt{database}}Normalement, le fichier aurait dû être appelé \texttt{modèle} dans une architecture MVC classique, cependant, toutes les opérations liées au modèle sont presque exclusivement réalisées en SQL dans cette application, ce fichier a donc \og pris sa place\fg.
+\end{itemize}
+Dans la suite, nous allons préciser comment les ressources sont chargées pour chaque page.
+
+\subsubsection{Appel des vues}
+\subParagraphe{Charger les fichiers}Le centre de l'architecture mise en place est le fichier \texttt{index.php}. Ce dernier réalise toutes les inclusions nécessaires en PHP, via les commandes :
+
+\begin{lstlisting}[language=php]
+  require 'database/DB.php';
+  require 'controleur/users_controller.php';
+  require 'controleur/bills_controller.php';
+  require 'vue/vue.php';
+  .../...
+\end{lstlisting}
+
+\subParagraphe{Création d'une vue}Ensuite, nous créons dans ce fichier une vue (instance de l'objet \texttt{Vue}). Cet instance permettra d'afficher les éléments dans la page.
+
+\subParagraphe{Assignation de la vue à un contrôleur}Enfin, le fichier va récupérer via les paramètres passés dans l'URL, le nom de la vue qui est demandée. En fonction du résultat, il va créer le contrôleur associé à la vue. Ceci est réalisée par le \texttt{swicth} suivant :
+
+\begin{lstlisting}[language=php]
+  if (isset($_GET['vue'])){
+    switch($_GET['vue']){
+      case 'users':
+        $controleur = new UsersController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
+        break;
+      case 'bills':
+        $controleur = new BillsController($vue, $_SESSION['log_in'], $_SESSION['login_level']);
+        break;
+      case .../...
+\end{lstlisting}
+
+Ainsi, chaque contrôleur est crée avec la vue pour l'afficher en paramètre. Chaque contrôleur va alors appeler spécifiquement son affichage via des commandes de la forme :
+
+\begin{lstlisting}[language=php]
+  function __construct($vue)  {
+    $vue->display('bills', 'Factures', 'Consulter ma facture', $this);
+  }
+\end{lstlisting}
+% $
+
+\subParagraphe{Récupération du fichier spécifique à la vue}Enfin, la dernière étape revient à charger le fichier de la vue associée au contrôleur (et non plus la classe \texttt{Vue}). Pour cela, l'instance \texttt{\$vue} dispose d'une méthode \texttt{determine\_vue} qui est appelée par \texttt{display} et qui contient les associations entre les vues demandées et leur fichier associé.
+
+\subParagraphe{Relancer le processus}Ce processus sera relancé à partir de la recherche du contrôleur dès que le client clique sur un des liens du panneau latéral.
+
+\subsubsection{Les fichiers affichés}
+Comme nous l'avons évoqué, les fichiers affichés sont situés dans le répertoire \texttt{vue}. De manière plus précise, le fichier contenant la bare latéral de navigation et qui est affiché quelle que soit la situation est nommé \texttt{main.html.php}. Tous les autres fichiers ont des noms relatifs aux objets donc ils sont les vues. Ainsi, \texttt{phone.html.php} correspond par exemple à la vue pour les téléphones.
+
+Comme cela a été expliqué, toutes les correspondances sont visibles dans le fichier \texttt{vue.php} qui contient la classe \texttt{Vue}.
+
+\subsubsection{Scripts, styles et autres éléments}
+\subParagraphe{Feuilles de style}Les feuilles de styles de l'application sont stockées dans le dossier \texttt{assets/styles}.
+\subParagraphe{Scripts JS}Les scripts Javascript utilisés pour l'application sont stockées dans le dossier \texttt{assets/scripts}.
+\subParagraphe{Polices}L'application utilise avec parcimonie la police Font Awesome pour afficher des éléments graphiques (\faChevronDown, \faUser, \faRemove,...). Cette police est contenue dans le dossier \texttt{assets/fonts}.
+\subParagraphe{Fichiers XSL et XML}Ces fichiers utilisés pour la génération du PDF (voir Section~\ref{sec:pdf}) sont directement disposés dans le dossier \texttt{vue}, car directement liés à ces dernières.
 
 %%% Local Variables:
 %%% mode: latex

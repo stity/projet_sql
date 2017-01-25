@@ -1,0 +1,43 @@
+\subsection{Définition des tables à utiliser}
+\subsubsection{Gestion des relations \texttt{N..N}}
+Pour ces relations, nous créons systématiquement une table par entité et une table de couples de clés provenant de ces tables pour réaliser la jonction entre les deux notions.
+
+Ces tables seront mentionnées sous la forme \texttt{nom\_entité\_1\_nom\_entité\_2}.
+
+\subsubsection{Gestion des relations \texttt{1..N}}
+Pour ces relations, on créé une table par entité. De plus, pour la table provenant de l'entité ne pouvant être associé qu'à un élément de l'autre entité, on ajoute une colonne contenant la clé d'une valeur de l'autre table.
+
+Par exemple pour entre \texttt{achat} et \texttt{formule}, on trouvera dans la table \texttt{achat} une colonne \texttt{id\_formule}.
+
+\subsubsection{Gestion de la généralisation \texttt{isa}}
+Dans le cadre de ce projet, nous avons choisi de transformer cette généralisation via une table regroupant les entités \og Formule\fg{} et \og Promotion\fg{}, mais avec des champs avec des valeurs par défaut de \texttt{-1} ou \texttt{NULL} pour différencier les éléments.
+
+De plus, ceci nous a permis de créer des formules associées à des téléphones, ce qui a enrichi le modèle.
+
+\subsubsection{Diagramme final}
+Ainsi, nous avons en définitive aboutit au diagramme de la Figure~\ref{fig:tables}, qui présente toutes les tables proposées, ainsi que leurs liens.
+
+La légende de cette figure est la suivante :
+\begin{itemize}
+  \itemperso{\bddkey}Il s'agit des clés primaires des tables. Si une table dispose de plus d'une clé primaire, alors c'est la valeur de la paire, du triplet,...qui fait office de clé primaire.
+  \itemperso{\bddfkey}Il s'agit des champs utilisant la valeur d'une clé primaire d'une autre table (clé étrangère).
+\end{itemize}
+
+De plus, les tables ayant des liens entre elles (ie. utilisation de clés étrangères), sont reliés dans le schéma de la Figure~\ref{fig:tables}.
+
+On remarquera en particulier sur cette figure, le fait que l'entité promotion ait été \og comprise\fg{} dans \texttt{formule}, avec les champs \texttt{formule\_base}, \texttt{date\_debut} et \texttt{date\_fin} qui soient pris en compte dans cette table.
+
+Une dernière remarque concerne les champs \texttt{is\_deleted} des tables \texttt{formule} et \texttt{forfait\_etranger}. Ils ont été mis en place pour persister dans la base de données les formules n'étant plus disponibles à la vente, mais qui restent utilisées par des utilisateurs.
+
+\begin{figure}[ht]
+  \centering
+  \resizebox{\textwidth}{!}{\input{images/Elaboration/diagramme_tables.tex}}
+  \caption{Relations entre les tables de la base de données}
+  \label{fig:tables}
+\end{figure}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../Rapport_BDD"
+%%% End:

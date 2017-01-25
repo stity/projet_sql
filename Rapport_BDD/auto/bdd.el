@@ -1,9 +1,9 @@
 (TeX-add-style-hook
- "ER"
+ "bdd"
  (lambda ()
    (TeX-run-style-hooks
-    "images/Elaboration/diagramme_er")
+    "images/Elaboration/diagramme_tables")
    (LaTeX-add-labels
-    "fig:diag-er"))
+    "fig:tables"))
  :latex)
 
